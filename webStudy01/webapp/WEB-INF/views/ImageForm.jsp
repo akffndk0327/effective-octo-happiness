@@ -13,7 +13,7 @@
 %>
 <form action="<%=request.getContextPath() %>/image.do">
 <select name="image" onchange="document.forms[0].submit();">
-	<option value> ㅇ미ㅣ지선택 </option>
+	<option value> 이미지선택 </option>
 <%
 	for(String name :images){
 		%>

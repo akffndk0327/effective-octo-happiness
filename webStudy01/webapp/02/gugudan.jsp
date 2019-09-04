@@ -33,7 +33,7 @@
       
       int min = 0;
       int max = 0;
-      String minDan = req.getParameter("minDan");
+      String minDan = req.getParameter("minDan"); //여기서 받는 이유,,,? 원래 servlet에서 받아햐하는거 아닌가?
       String maxDan = req.getParameter("maxDan");
       if(minDan!=null && minDan.matches("[0-9]+") && 
             maxDan!=null && maxDan.matches("[0-9]+")){

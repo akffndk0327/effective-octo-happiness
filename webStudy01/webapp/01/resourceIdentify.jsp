@@ -17,8 +17,8 @@ URC(Uniform Resource Content) : ex)책을 식별할때 출판사로 식별 ? - �
 	String url = request.getRequestURL().toString();
 	
 %>
-<%=uri %>
-<%=url %>
+uri : <%=uri %>
+url : <%=url %>
 
 경로 표기방식
 1. 상대경로 표기 : 현재 위치를 기준으로 자원을 식별하는 방법 .
@@ -31,7 +31,7 @@ ex) ../images/Desert.jpg
 ex) http ://localhost/webStudy01/images/Desert.jpg
 현재 위치(주소의 사용위치)-클라이언트사이드 에서 기억된 정보를 생략 가능
 **클라이언트 사이드 절대경로 표시 : 도메인이후의 모든 경로가 표기.
-**서버 사이드 절대경로 포기 : context name 이후의 모든 경로가 표기됨.
+**서버 사이드 절대경로 표기 : context name 이후의 모든 경로가 표기됨.
 </pre>
 
 <!-- <img src="http://localhost/webStudy01/images/Desert.jpg"> -->

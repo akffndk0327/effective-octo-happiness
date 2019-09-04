@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static java.util.Calendar.*;
 
 /**
  * Servlet implementation class CalculateServlet
@@ -16,7 +15,7 @@ import static java.util.Calendar.*;
 @WebServlet("/calculator")
 public class CalculateServlet extends HttpServlet {
 	public static enum OperatorType{
-		pLUS('+', new Operator() {
+		PLUS('+', new Operator() {
 			@Override
 			public int operate(int left, int right) {
 				return left + right;

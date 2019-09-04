@@ -15,20 +15,22 @@
 	characterEncoding : <%=request.getCharacterEncoding() %> :" <% %>" 표현식 
 	contentLength : <%=request.getContentLength() %>
 	contextType : <%=request.getContentType() %> : body message mime
-	contextPath : <%=request.getContextPath()%>	 ** 가장많이 쓰고 client  side 절대 경로에 사용 
+	contextPath : <%=request.getContextPath()%>	 ** 가장많이 쓰고 client  side 절대 경로에 사용  <!-- /webStudy01 -->
 	requestURI : <%=request.getRequestURI() %>
-	Server Info
+	
+	&lt;Server Info&gt;
 	localAddr : <%=request.getLocalAddr() %>
 	loacalName : <%=request.getLocalName() %>
-	localPort: <%=request.getLocalPort() %>
-	Client Info
-	remoteAddr : <%=request.getRemoteAddr() %> : 클라이언트 정보
+	localPort: <%=request.getLocalPort() %> <!-- 80 -->
+	
+	&lt;Client Info&gt;
+	remoteAddr : <%=request.getRemoteAddr() %> : 클라이언트의 ip 주소 정보
 	remoteHost : <%=request.getRemoteHost() %> 
-	remotePort : <%=request.getRemotePort() %> 
+	remotePort : <%=request.getRemotePort() %>  : 클라이언트 ip 소스 
 	queryString : <%=request.getQueryString() %> : 폼태그없이 바디없이 데이터 보내는 방법
 	serverName : <%=request.getServerName() %> :서버의 도메인 이름
 	serverPort : <%=request.getServerPort() %>
-	servletContext : <%=request.getServletContext().hashCode() %> /*org.apache.catalina.core.ApplicationContextFacade@354d391f*/, hashcode :894253343 
+	servletContext : <%=request.getServletContext().hashCode() %> <!-- org.apache.catalina.core.ApplicationContextFacade@354d391f-->, hashcode :894253343 
 	<%=request.getServletContext().getContextPath() %>
 	
 	

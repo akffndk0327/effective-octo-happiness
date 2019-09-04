@@ -78,17 +78,14 @@ public class GugudanServlet extends HttpServlet{
 		gugudan.append("</body>");
 		gugudan.append("</html>"); 
 		
-		
 		 try(
 			//closable 객체의 선언.
 			PrintWriter out =resp.getWriter() ; //예외 발생 될때 자동적으로 생성됨 
 		){
 			out.println(html); 
 		 }
-		 
 	}
 	
-
 	private StringBuffer readTemplate(String name) throws IOException{
 		StringBuffer template = new StringBuffer();
 		try(
