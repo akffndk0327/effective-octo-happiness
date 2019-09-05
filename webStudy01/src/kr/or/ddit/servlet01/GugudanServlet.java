@@ -82,7 +82,9 @@ public class GugudanServlet extends HttpServlet{
 			//closable 객체의 선언.
 			PrintWriter out =resp.getWriter() ; //예외 발생 될때 자동적으로 생성됨 
 		){
-			out.println(html); 
+			out.println(html); //최종적인응답데이터 나감
+			out.println(getServletContext().hashCode()); // application예제
+			
 		 }
 	}
 	

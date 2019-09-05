@@ -9,7 +9,7 @@ public class ImageListService {
 		File imgFolder = new File("d:/contents");
 		String[] images = imgFolder.list((dir,name)->{return name.endsWith(".jpg")||name.endsWith(".gif");});
 		//=> 모델데이터 생성함. 모델은 images임 ! 아직 서블릿에 머물러잇어서 jsp로 보내야되 => scope
-				//서비스로 보내기 
+		//서비스로 보내기 
 		return images;
 	}
 }
