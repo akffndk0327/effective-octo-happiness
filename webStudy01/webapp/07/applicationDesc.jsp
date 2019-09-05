@@ -41,7 +41,7 @@ web.xml = application이 하고잇더?
   <%
  	File file1 = new File("d:/contents/Desert.jpg");
  	DescriptionServlet.class.getResource("Desert.jpg"); //서블릿이 있는 위치에서부터 뒤져 로컬 호스트 이후의 주소로 검색? 
- 	// 	String uri = "webStudy01/images/Desert.jpg";
+ 	///// 	String uri = "webStudy01/images/Desert.jpg";
  	String uri2 = "/images/Desert.jpg";
  	//  	String path = application.getRealPath(uri2);  //가상경로를 통해 진짜 통로로 간다 ;/uri : 서버가 사용하고있음 
  	//서버사이드는 컨텍스트패스이후부터나와야함 :/images/Desert.jpg" 부터
