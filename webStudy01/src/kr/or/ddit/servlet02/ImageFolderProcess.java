@@ -53,13 +53,13 @@ public class ImageFolderProcess extends HttpServlet{
 		 		IOUtils.copy(is, os);
 		 	}
 			break;
-		case "move": //이동
+		case "move": // 이동
 			try (
-			 			FileInputStream is = new FileInputStream(img);
-						FileOutputStream os = new FileOutputStream(img2);
-					) {
-			 		IOUtils.copy(is, os);
-			 	}
+				FileInputStream is = new FileInputStream(img); 
+				FileOutputStream os = new FileOutputStream(img2);
+			) {
+				IOUtils.copy(is, os);
+			}
 			File file2 = new File(img);
 			file2.delete();
 			break;
