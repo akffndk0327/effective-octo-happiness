@@ -8,8 +8,14 @@
 </head>
 <body>
 <form method="post">
+<%=request.getContextPath() %>/imagesFolderProcess
+<%-- <% --%>
+<!-- // 	String[] images = (String[])request.getAttribute("images"); -->
+<%-- %> --%>
+
 <%
-	String[] images = (String[])request.getAttribute("images");
+String[] imageFiles = (String[])request.getAttribute("imageFiles");
+String[] targetFiles = (String[])request.getAttribute("targetFiles");
 %>
 <!-- 서블릿 최소 2개  -->
 <!-- 1.여기오려는 애 1개 doget() : 페이지 이동까지 하기. 3가지 중에서 forward... 골라써  -->
@@ -26,18 +32,40 @@
 
 <option value> 이미지선택 </option>
 <%
-for(String name :images){
+for(String file :imageFiles){
 	%>
-	<option><%=name %></option>
+	<option><%=file %></option> <!-- text면서 value -->
 	<%
 }
 %>
-
-<input type="radio" value="copy" name ="command"/>복사
-<input type="radio" value="move" name ="command"/>이동
-<input type="radio" value="delete" name ="command"/>삭제
+<!-- required : 아무것도 선택안햇을때 경고창 -->
+<input type="radio" value="COPY" name ="command" required/>복사
+<input type="radio" value="MOVE" name ="command" required/>이동
+<input type="radio" value="DELETE" name ="command" required/>삭제
 <input type="submit" value="명령을 처리해"/>
 </select>
 </form>
+<ul>
+	<%
+		for( String file : targetFiles){
+			%>
+			<li><%=file %></li>
+			<%
+		}
+	%>
+</ul>
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

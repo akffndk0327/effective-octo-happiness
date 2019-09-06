@@ -9,6 +9,13 @@
 </head>
 <body>
 <h4> jsp 표준 구성 요소  </h4>
+<div style="background-color:yellow;">
+	<%=pageContext.getAttribute("pageAttr") %><br/>
+	<%=pageContext.getAttribute("requestAttr",PageContext.REQUEST_SCOPE) %><br/>
+	<%=session.getAttribute("sessionAttr") %>
+	<%=application.getAttribute("applicationAttr") %>
+
+</div>
 <pre>
 	1. 정적 텍스트 분량 많어: 텍스트, HTML, css, javascript 공통점은 1개 : 클라이언트 사이드에서 동작 함 ! 
 	
