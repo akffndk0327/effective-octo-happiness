@@ -31,12 +31,12 @@ import javax.servlet.http.HttpServletResponse;
  * 3. Request(Message/Content) Body  : method가 post일 경우 만들어짐. 
  * 									   : 서버로 전송할 컨텐츠가 포함됨. 
  * 		** 요청 파라미터를 확보하는 방법
- * 		method GET : Request Line을 통해 전달됨. 
+ * 		1)method GET : Request Line을 통해 전달됨. 
  *		URL ? -> queryString
  *			queryString :section1&section2&section3.... ?뒤에 붙은걸 "queryString"
  *						 section : name=value
  *		ex) gugudan?minDan=2&maxDan =4
- * 		method POST : Request Body 를 통해(section1&section2&section3 이것이 ) 전달되.
+ * 		2)method POST : Request Body 를 통해(section1&section2&section3 이것이 ) 전달되.
  *  --이것들이 필요하진않지만 Map 쓰면돼
  *  parameterMap 을 통해 모든 요청 파라미터를 확보함.
  *  String getParamether(name) : 하나밖에못 뽑아 . String[] getParameterValues(name)
@@ -72,17 +72,17 @@ public class HttpRequestDescServlet extends HttpServlet{
 		
 		//동작하기위해선 doget이 요청되어야함. ->@WebServlet("/httpRequest") 쓰기
 		
-		//reques header, iterator(set , enum : 가상의 컬렉션 ,컬렉션 뷰 
+		//request header, iterator(set , enum : 가상의 컬렉션 ,컬렉션 뷰 
 		Enumeration<String> en = req.getHeaderNames();
 		while (en.hasMoreElements()) {
 			String headerName = (String) en.nextElement();
 			String headerValue = req.getHeader(headerName);
-			System.out.printf("%s : %s\n", headerName,headerValue);
+			System.out.printf("헤더 이름, 값, : %s : %s\n", headerName,headerValue);
 		}
 		
 		//request body : POST
 		InputStream is =req.getInputStream();
-		System.out.println(is.available()); //들어있는 바디의 크기가얼마인지 알려줌 이게 돌아갈려면 바디가 있어야해 
+		System.out.println("바디크기 : " + is.available()); //들어있는 바디의 크기가얼마인지 알려줌 이게 돌아갈려면 바디가 있어야해 
 		//form구성한적 없으니 무조건 get방식 ! 
 		//body 확인하고 싶으면 form태그 발생하고 POST잇어야해
 		
@@ -92,11 +92,10 @@ public class HttpRequestDescServlet extends HttpServlet{
 		// 파라미터 명 == 입력 태그의 name 속성 이 ()안에 들어가야해 
 		// 서버에 넘길때도 String 으로
 		// 파라미터는 특별한 설정없으면 문자열로 전송됨. 
-		String value = req.getParameter(""); //?파라미터 명을 어캐 설정할것이냐???? 1
-		
+		String value = req.getParameter(""); //?파라미터 명을 어캐 설정할것이냐???? 방법1
 		// 하나의 파라미터명으로여러개의 값이 전송될떄 사용 .
-		String[] values = req.getParameterValues(""); //둘의 차이는? 하나로 여러개 배열 가능함.
-		//		key : 파라미터명, value : 파라미터값
+		String[] values = req.getParameterValues(""); //방법2 둘의 차이는? 하나로 여러개 배열 가능함
+//		key : 파라미터명, value : 파라미터값
 		Map<String, String[]> pMap = req.getParameterMap(); //값이 배열임.
 		//넘길땐 검증 해야해 
 		Enumeration<String> names = req.getParameterNames();

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
  * kr.or.ddit.se~01.Sample~vlet작성
  * 전송되는 모든 파라미털ㄹ
  * name : value 형식으로 시스템 콘솔에출력 
- * @author PC-03
  *
  */
 @WebServlet("/sampleProcess") //절대경로이지만 많이 생략되잇어서 찾을수 있어 여기서 현재 위치는? server 
@@ -41,10 +40,10 @@ public class SampleProcessingServlet extends HttpServlet {
 		String selectParame1 = req.getParameter("selectParam1");
 		
 		String[] selectParame2 = req.getParameterValues("selectParam2");
-		
+	
 		//파싱모아둔거 방법2
 		Map<String, String[]> pMap = req.getParameterMap(); //이게없으면 위에거 모두 존재 x 
-		Set<String> nameSet = pMap.keySet(); //다이렉트 접근 불가+ 진짜 컬렉션. keyset으로 key값 뽑아오기 + entryset()
+		Set<String> nameSet = pMap.keySet(); //다이렉트 접근 불가+ 진짜 컬렉션. keyset으로 key값 뽑아오기 + 2)entryset()
 		Iterator<String> it = nameSet.iterator(); //인터페이스만 갖고잇는 객체 = 컬렉션 뷰 
 		//Iterator는 자바의 컬렉션 프레임웍에서 컬렉션에 저장되어 있는 요소들을 읽어오는 방법을 표준화 하였는데 그 중 하나가 Iterator이다.
 		//자동으로 Index 를 관리해주기 때문에,사용에 편리함이 있을수 있으나
