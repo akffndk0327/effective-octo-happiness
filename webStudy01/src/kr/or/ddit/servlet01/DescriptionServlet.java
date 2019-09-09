@@ -61,8 +61,10 @@ public class DescriptionServlet extends HttpServlet {
 	}
 	
 	String paramValue;
-	@Override
-	public void init(ServletConfig config) throws ServletException { //ServletConfig config : web.xml의 모든 정보 다 갖고잇어.
+	@Override //서블릿 초기화 메서드 
+	public void init(ServletConfig config) throws ServletException { 
+		//라이언트로부터 최초 요청시 서블릿 객체 생성 후 init()메서드를 호출할때 ServletConfig를 자동으로 생성하여 넘겨줌.
+		//ServletConfig :  서블릿당 하나가 생성되며 web.xml에서 우리가 필요에 따라 입력한 파라미터 값들을 담고 있습니다.
 		super.init(config);
 		paramValue = config.getInitParameter("param");
 	}

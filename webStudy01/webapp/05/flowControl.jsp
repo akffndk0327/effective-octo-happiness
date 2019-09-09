@@ -27,12 +27,12 @@
 		오고가는 응답데이터 2쌍
 		<%
 // 			1.Request dispath, forward
-// 			분기제어관리자 requeat dispather
+// 			분기제어관리자 request dispather
 			String path ="/02/standard.jsp"; //서버사이트에서는 상대경로 나오면안되! 상대경로 의미없어
 // 			String path =request.getContextPath()+"/02/standard.jsp"; //서버사이드에서 쓰면안됌 
 			//=>/webStudy01/webStudy01/02/standard.jsp 중복되서 나옴 
 			RequestDispatcher rd = request.getRequestDispatcher(path); 
-			//서버사이드 따라가닌까 컨텍스트 안붙여도돼
+			//서버사이드 따라가닌까 컨텍스트(/webStudy01) 안붙여도돼
 // 			rd.forward(request, response);
 // 			2.Request dispatch, include
 // 			rd.include(request, response);

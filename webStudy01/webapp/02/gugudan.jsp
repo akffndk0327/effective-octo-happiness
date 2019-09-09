@@ -24,7 +24,8 @@
 <%! 
    private String gugudan(int dan, int mul){
       String ptrn = "%d*%d=%d";
-      String result = String.format(ptrn, dan, mul, dan*mul);
+      String result = String.format(ptrn, dan, mul, dan*mul); //format :지정된 위치에 값을 대입해서 문자열을 만들어 내는 용도
+
       return result;
    }
 

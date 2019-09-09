@@ -24,6 +24,9 @@ import kr.or.ddit.enums.CommandType;
 @WebServlet("/serverFileManager")
 public class FileManagerServlet extends HttpServlet {
 	private ServletContext application;
+	//ServletContext : 하나의 context내에서 다른 servlet간 공유 가능한 data 혹은 자원
+	//Context 는 application의 최상위 개념/
+	//ServletConfig : 하나의 servlet에만 쓸수있음 
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -47,8 +50,8 @@ public class FileManagerServlet extends HttpServlet {
 		String message = null;
 		try {
 //			File[] files = traversing(folder); // 여기로 예외넘어와, File[] 파일대신 wrapper가 와야해 기존개체 wrapper하는거 에서 ... 또다른 ..
-			List<FileWrapper> leftfiles = traversing(folderLeft); // 여기로 예외넘어와, File[] 파일대신 wrapper가 와야해 기존개체 wrapper하는거 에서 ... 또다른 ..
-			List<FileWrapper> rightfiles = traversing(folderRight); // 여기로 예외넘어와, File[] 파일대신 wrapper가 와야해 기존개체 wrapper하는거 에서 ... 또다른 ..
+			List<FileWrapper> leftfiles = traversing(folderLeft); 
+			List<FileWrapper> rightfiles = traversing(folderRight);
 			req.setAttribute("leftfiles", leftfiles);
 			req.setAttribute("rightfiles", rightfiles);
 			
@@ -66,6 +69,7 @@ public class FileManagerServlet extends HttpServlet {
 		if (status == 200) {
 			String viewName = "/WEB-INF/views/serverFileManager.jsp";
 			req.getRequestDispatcher(viewName).forward(req, resp);
+//		RequestDispatcher :요청을 보내주는 클래스
 		} else {
 			resp.sendError(status, message);
 		}
@@ -84,7 +88,7 @@ public class FileManagerServlet extends HttpServlet {
 		
 //		application.getRealPath("");
 		URL root = application.getResource("");
-		URL current = folder.toURL();
+		URL current = folder.toURL(); //왜 씀?
 		if(!root.equals(current)) {
 			File parent = folder.getParentFile(); //상위파일
 			result.add(new FileWrapper(parent, application,true));

@@ -18,7 +18,7 @@
 web.xml = application이 하고잇더?
 <pre>
  : 서블릿의 어플리케이션과 서버에 대한 정보를 가진 객체
- 컨텍스트 하나를 기준으로 싱글컨의 형태.
+ 컨텍스트 하나를 기준으로 싱글톤의 형태.
  ServletContext --> <%=application.hashCode() %>
  <a href="<%=request.getContextPath() %>/gugudan">구구단 서블릿</a>
  1. 서버의 정보 확보 : <%=application.getServerInfo() %> 
@@ -43,7 +43,7 @@ web.xml = application이 하고잇더?
  	DescriptionServlet.class.getResource("Desert.jpg"); //=> 클래스 패스 리소스 서블릿이 있는 위치에서부터 뒤져 로컬 호스트 이후의 주소로 검색?  
  	// 	String uri = "webStudy01/images/Desert.jpg";
  	String uri2 = "/images/Desert.jpg";
-//	String path = application.getRealPath(uri2);  //고정된 경로. 가상경로를 통해 진짜 통로로 간다 ;/uri : 서버가 사용하고있음 
+// 	String path = application.getRealPath(uri2);  //고정된 경로. 가상경로를 통해 진짜 통로로 간다 ;/uri : 서버가 사용하고있음 
  	//서버사이드는 컨텍스트패스이후부터나와야함 :/images/Desert.jpg" 부터
  	///webStudy01 :는 배포하는 파일명이기 때문에 안써 
  	//localhost 는 언제든 바뀔수있다.

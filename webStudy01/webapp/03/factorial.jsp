@@ -3,7 +3,8 @@
     pageEncoding="UTF-8"%>
 <%!
 	long factorial(int leftOp){ //양수가 맞는지 확인 ... 졸려 ...
-		if(leftOp <=0) throw new IllegalArgumentException("피연산자 확인 :"+leftOp); //발생키기고 싶은 예외는 illegalargument exception!! -enum안 ㄴ에있음 
+		if(leftOp <=0) throw new IllegalArgumentException("피연산자 확인 :"+leftOp); 
+	//발생키기고 싶은 예외는 illegalargument exception!! -enum안 ㄴ에있음 
 			if(leftOp ==1){				//1이 되면 리턴 해야함. 
 				return 1;
 			}else{
@@ -36,7 +37,7 @@
 </head>
 <body>
 <!-- 먼저 숫자를 받을때 검즈을 해야지 숫자만오게금  -->
-action, href 처러 ㅁ다음 요청으 ㅣ주소를 기술하는 속성에, 값이 생략되면 ,현재 주소가 그대로 반영 
+<!-- action, href 처러 ㅁ다음 요청으 ㅣ주소를 기술하는 속성에, 값이 생략되면 ,현재 주소가 그대로 반영  -->
 
 <form id="facForm">
 	피연산자 : <input type="number" name="leftOp" min="1" max="19"/> <!-- 양수만 입력가느으... 양수로 얼마 이하만 입력하게끔 클라이언트에서 검증해야함., 서버에서도 받을때 검증해야함  -->
@@ -49,7 +50,7 @@ action, href 처러 ㅁ다음 요청으 ㅣ주소를 기술하는 속성에, 값
 		%>
 			<div>
 			<!-- 포맷팅해야함 표현식 필요해 -->
-				<%=String.format("%s !=%d", leftParam,result ) %>
+				<%=String.format("%s! = %d", leftParam,result ) %>
 				<!-- 어디선가 10!을 받는데가잇어야하는데 그곳은 서버  -->
 				<!--  for문, 재귀호출... -->
 			</div>

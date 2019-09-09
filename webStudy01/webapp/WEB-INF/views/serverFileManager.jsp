@@ -30,9 +30,9 @@ li.active {
 		String srcFile = request.getParameter("srcFile");
 	%>
 	<form id="serverFileForm">
-		<%-- 	<input type="text" readonly name ="leftSrc" id ="leftSrc" value=" <%=leftSrc %>" /> <!-- 여기에 데이터 있어야하고 코드에 의해 sumbmit잇어야해  --> --%>
+<%-- 	<input type="text" readonly name ="leftSrc" id ="leftSrc" value=" <%=leftSrc %>" /> <!-- 여기에 데이터 있어야하고 코드에 의해 sumbmit잇어야해  --> --%>
 		<input type="text" readonly name="leftSrc" id="leftSrc"
-			value="<%=Objects.toString(leftSrc, "")%>" />
+			value="<%=Objects.toString(leftSrc, "")%>" /> <!-- readonly : 변경불가  -->
 		<!-- 여기에 데이터 있어야하고 코드에 의해 sumbmit잇어야해  -->
 		<input type="text" readonly name="rightTarget" id="rightTarget"
 			value="<%=Objects.toString(rightTarget, "")%>" />
