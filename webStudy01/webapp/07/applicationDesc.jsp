@@ -57,7 +57,7 @@ web.xml = application이 하고잇더?
 //  		FileInputStream inStream = new FileInputStream(srcFile);
  			InputStream is = application.getResourceAsStream(uri2); //ResourceAsStream : 절대경로만, 혹은 캡슐화까지, 혹은 알아서 가져옴 
  			FileOutputStream outStream = new FileOutputStream(targetFile);) {
- 		IOUtils.copy(is, outStream);
+ 			IOUtils.copy(is, outStream);
  	}
  %>
   <%=path %>
