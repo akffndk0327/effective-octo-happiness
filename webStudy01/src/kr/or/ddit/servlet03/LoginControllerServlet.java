@@ -46,7 +46,7 @@ public class LoginControllerServlet extends HttpServlet {
 			resp.sendRedirect(req.getContextPath()+"/login");
 			//2. 아이디 비번틀렷을떄 메세지 어떻게 전달?
 			String message ="아이디나 비번 오류";
-			//세션
+			//세션 =>최소한의 이동 
 			session.setAttribute("message", message); //메세지는 jsp에서 꺼내야햄 
 		}
 		
