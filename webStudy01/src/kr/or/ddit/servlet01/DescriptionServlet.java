@@ -17,8 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * 1.HttpServlet 하위 구현체 정의(DescriptionServlet)
  * 	: 필요한 "callback" 메소드를 overriding 함. 척척박사님 졸려요 쉬고싶어요  
- *	: callback 메소드란? 특정 이벤트가 발생한 경우 , 시스템에 의해 자동 호출되는 ㄱ구조.- javafx에서 들어왓데요.. ^^ 모르겟네요 
- *
+ *	: callback 메소드란? 특정 이벤트가 발생한 경우 , 시스템에 의해 자동 호출되는 ㄱ구조. 밑에 설명 잇음 
  * 2. 컴파일 -> 해당 컨텍스트의 classpath에 배치 (/WEB-INF/classes)
  * 
  * 3. web.xml에 등록/매핑
@@ -40,11 +39,11 @@ import javax.servlet.http.HttpServletResponse;
  * 					hook method
  * 
  * ** Servlet Container(Web Application Server, tomcat) 
- * 	  : Servlet의 lifecycleㅇ르 관리하며, 매핑된 요청이 발생하면, 
+ * 	  : "Servlet의 lifecycle"을 관리하며, 매핑된 요청이 발생하면, 
  * 		해당 서블릿의 콜백을 호출하여 요청에 대한 처리를 하는 주체. 
  * 
  * ** JSP Container(WAS, tomcat) : 둘의 사전 작업이 다름 .
- * 	  : JSP의 lifecycleㅇ르 관리하며, 매핑된 요청이 발생하면, 
+ * 	  : "JSP"의 lifecycle을 관리하며, 매핑된 요청이 발생하면, 
  * 		해당 서블릿의 콜백을 호출하여 요청에 대한 처리를 하는 주체. 
  * 
  * 컨테이너 : 물건관리해 . ->문짝열어서  이걸 꺼내서 써야되는걸 허가해야해.

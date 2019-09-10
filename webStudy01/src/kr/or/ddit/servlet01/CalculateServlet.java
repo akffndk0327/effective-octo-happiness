@@ -32,6 +32,7 @@ public class CalculateServlet extends HttpServlet {
 			this.sign = sign;
 			this.operator = operator;
 		}
+		
 		private char sign;
 		private Operator operator; //오퍼레이터 타입이 쓸수있는 전략???
 		//미리 전략이 정해져잇어야해 
@@ -50,13 +51,14 @@ public class CalculateServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		//1. 파라미터 값 가져옴. -> 2. 텍스트입력 값 잘 들어왓나확인 ->3. 연산자검증 ->4. 
 		String leftParam = request.getParameter("leftOp");
 		String rightParam = request.getParameter("rightOp");
 		String opParam = request.getParameter("operator");
-		int status = 200;
-		if (leftParam == null || !leftParam.matches("\\d+") || rightParam == null 
-				|| rightParam.matches("\\d+")) {
-			// status는 400번대로 바껴야해
+		int status = 200; //성공일때 
+		if (leftParam == null || !leftParam.matches("\\d+") 
+				|| rightParam == null || rightParam.matches("\\d+")) {
+			// status는 400번대로 바껴야해 =?클라이언트 잘못 에러메세지 출력 
 			status = 400;
 		}
 		// 연산자 검증 ! ->아무것도 없는데 선택하면 문제된다.
@@ -76,9 +78,9 @@ public class CalculateServlet extends HttpServlet {
 		}else { 
 			response.setContentType("text/plain");
 			try(
-			PrintWriter out = response.getWriter();
+			PrintWriter out = response.getWriter(); //3. 응답으로 내보낼 출력 스트림을 얻어냄.
 			){
-			out.println(plain); 
+			out.println(plain);  //plain : 텍스트 파일을 위한 기본값
 			}
 //			out.close(); //버퍼 방출 
 		}//여기서 스타트는 get방식으로 실행함 => 405에러남 .서버는 post인데 클라이언트가 get으로 넘긴거

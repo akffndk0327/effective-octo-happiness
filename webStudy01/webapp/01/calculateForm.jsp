@@ -14,7 +14,7 @@
 <!-- 1. homework 컨텍스트로 프로젝트 생성. -->
 <!-- 2. webStudy01 대신 homework에서 작업... -->
 <!-- 3. 연산의 결과는 plain으로 .... MIME설정 하기.. ^_^ 아이고 포맷팅도 해야함.... -->
-<form action="<%=request.getContextPath()%>/calculator" method="post">
+<form action="<%=request.getContextPath()%>/calculator" method="post"> <!--action: 수신 대상  -->
 	연산을 수행하는 클라이언트의 이름 : <input type="text" name="name" />
 	<br />
 	<input type="number" name="leftOp"/>
