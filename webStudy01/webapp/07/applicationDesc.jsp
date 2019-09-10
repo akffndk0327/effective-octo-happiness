@@ -39,7 +39,7 @@ web.xml = application이 하고잇더?
   2. Classpath Resource
   3. Web Resource
   <%
- 	File file1 = new File("d:/contents/Desert.jpg"); //=> 파일 시스템 리소스 
+ 	File file11 = new File("d:/contents/Desert.jpg"); //=> 파일 시스템 리소스 
  	DescriptionServlet.class.getResource("Desert.jpg"); //=> 클래스 패스 리소스 서블릿이 있는 위치에서부터 뒤져 로컬 호스트 이후의 주소로 검색?  
  	// 	String uri = "webStudy01/images/Desert.jpg";
  	String uri2 = "/images/Desert.jpg";
