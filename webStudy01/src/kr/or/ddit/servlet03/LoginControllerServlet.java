@@ -11,6 +11,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 
+import kr.or.ddit.member.exception.NotAuthenticatedException;
+import kr.or.ddit.member.exception.UserNotFoundException;
+import kr.or.ddit.member.service.AuthenticateServiceImpl;
+import kr.or.ddit.member.service.IAuthenticateService;
+import kr.or.ddit.vo.MemberVO;
+
 @WebServlet("/login")
 public class LoginControllerServlet extends HttpServlet {
 	@Override
@@ -36,18 +42,29 @@ public class LoginControllerServlet extends HttpServlet {
 			resp.sendError(400,"로그인 철자 이상한뎁...");
 			return;
 		}
-		if(mem_id.equals(mem_pass)) { //내 세션 유지 하면서 로그인정보 남아잇어야해 
-			session.setAttribute("authMember", mem_id ); //mem_id : scope. 세션스코프에 authMember없으면 로그인 안한거
-			//00이 적용되면 dispath 나 redirect가 적용됨 .
-			//이동방식 : request  남길 필요없어.
-			resp.sendRedirect(req.getContextPath()+"/"); //인덱스가 웰컴페이지인 경우 "/"씀
-		}else {
-			//1,로그인 페이지 이동시 어떤 방식을 ㅗ이동 ? ==> 무조건 인증인가에 실패하면 정상적인 사람아니라고 생각하고 redirect
-			resp.sendRedirect(req.getContextPath()+"/login");
-			//2. 아이디 비번틀렷을떄 메세지 어떻게 전달?
-			String message ="아이디나 비번 오류";
-			//세션 =>최소한의 이동 
-			session.setAttribute("message", message); //메세지는 jsp에서 꺼내야햄 
+		IAuthenticateService service = new AuthenticateServiceImpl(); 
+		try {
+			MemberVO savedMember = service.authenticate(new MemberVO(mem_id, mem_pass));
+			session.setAttribute("authMember", savedMember); // mem_id : scope. 세션스코프에 authMember없으면 로그인 안한거
+			resp.sendRedirect(req.getContextPath() + "/");
+		} catch (UserNotFoundException | NotAuthenticatedException e) {
+			session.setAttribute("message", e.getMessage());
+			resp.sendRedirect(req.getContextPath() + "/login");
+
+//		}
+//		//아이디비번 동일하면 서공
+//		if(mem_id.equals(mem_pass)) { //내 세션 유지 하면서 로그인정보 남아잇어야해 
+////			session.setAttribute("authMember", mem_id ); //mem_id : scope. 세션스코프에 authMember없으면 로그인 안한거
+////			//00이 적용되면 dispath 나 redirect가 적용됨 .
+////			//이동방식 : request  남길 필요없어.
+////			resp.sendRedirect(req.getContextPath()+"/"); //인덱스가 웰컴페이지인 경우 "/"씀
+//		}else {
+//			//1,로그인 페이지 이동시 어떤 방식을 ㅗ이동 ? ==> 무조건 인증인가에 실패하면 정상적인 사람아니라고 생각하고 redirect
+////			resp.sendRedirect(req.getContextPath()+"/login");
+////			//2. 아이디 비번틀렷을떄 메세지 어떻게 전달?
+////			String message ="아이디나 비번 오류";
+////			//세션 =>최소한의 이동 
+////			session.setAttribute("message", message); //메세지는 jsp에서 꺼내야햄 
 		}
 		
 	}

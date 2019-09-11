@@ -67,7 +67,14 @@ public class FileManagerServlet extends HttpServlet {
 			message = e.getMessage();
 		}
 		if (status == 200) {
-			String viewName = "/WEB-INF/views/serverFileManager.jsp";
+			String accept = req.getHeader("Accept");
+			if(accept.contains("json")) {
+				//요청받고 jsp로 포워딩하기 .....
+				//json.jsp... 내가갖고잇는걸어떻게 json으로 바꿀것인지 
+			}else {
+				String viewName = "/WEB-INF/views/serverFileManager.jsp";
+				
+			}
 			req.getRequestDispatcher(viewName).forward(req, resp);
 //		RequestDispatcher :요청을 보내주는 클래스
 		} else {

@@ -100,6 +100,7 @@ li.active {
 				rightTarget.val($(this).prop("id"));
 			}
 			serverFileForm.submit();
+			//여기에 ajax코드 넣기 
 		});
 
 		$("#leftArea>.file").on("click", function() {

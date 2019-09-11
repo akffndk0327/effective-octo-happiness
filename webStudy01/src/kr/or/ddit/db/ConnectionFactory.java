@@ -7,11 +7,12 @@ import java.util.ResourceBundle;
 
 /**
  * Factory Object[Method] Pattern
+ * 객체 생성하는 공장객체
  * 이전에는 필요한거 일일이 만든엇는데 힘드닌까
  * 자동으로 만들기.
  */
 public class ConnectionFactory {
-	static {
+	static { //클래스 로딩되면 1번 실행됨
 		ResourceBundle bundle=  ResourceBundle.getBundle("kr.or.ddit.db.dbInfo"); //퀄러파이드? 클레스패스이후부터, 확장자 필요없어 
 		// 2.
 		try {
@@ -28,6 +29,7 @@ public class ConnectionFactory {
 	static String url;
 	static String user ;
 	static String password ;
+	
 	public static Connection getConnection() throws SQLException{
 		Connection conn = DriverManager.getConnection(url, user, password);
 		return conn;
