@@ -28,7 +28,8 @@
 		아이디 :	<input type="text" name ="mem_id" />  
 		</li>
 		<li> 
-		비밀번호 :<input type="text" name ="mem_pass" />
+		비밀번호 : <input type="text" name ="mem_pass" />
+		<input type="checkbox" name ="idSave" value="idSave" /> 아이디 기억하기  
 		<input type ="submit" value="로그인"> 
 		</li>
 	</ul>
