@@ -2,6 +2,7 @@ package kr.or.ddit.servlet01;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
+import java.net.URLEncoder;
 
 
 public class ImageServlet extends HttpServlet{
@@ -23,6 +24,17 @@ public class ImageServlet extends HttpServlet{
 		String folder = "d:/contents"; //이 코드가 하드코딩 되있는게 맞는지?
 		//변경될만한 코드와 변경안될거는 같이 있으면안되고 분리해야 함 @  ->web.xml에서 수정 
 		String imageName = req.getParameter("image");
+		
+		
+		//09.16 쿠키 예제
+				String value = URLEncoder.encode("한글값","UTF-8");
+				Cookie cookie = new Cookie(imageName,imageName); //쿠키 객체 생성 
+				cookie.setPath("/");
+				cookie.setMaxAge(60*60*24*2); //데이터 정보 2일 살아잉ㅆ어 
+				resp.addCookie(cookie); //응답보내기
+		
+		
+		
 		int status = 200;
 		if (imageName == null || imageName.trim().length() == 0) {
 			status = HttpServletResponse.SC_BAD_REQUEST; // 상수가 int형
