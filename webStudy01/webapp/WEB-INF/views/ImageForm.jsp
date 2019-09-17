@@ -1,3 +1,4 @@
+<%@page import="java.util.Objects"%>
 <%@page import="java.util.regex.Pattern"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.io.File"%>
@@ -19,6 +20,7 @@
 <body>
 <%	
 	String[] images = (String[])request.getAttribute("images"); //스코프안에 목록 데이터 꺼내고있음
+	String imageName = (String)request.getAttribute("imageName");
 	Cookie[] cookie = request.getCookies(); //응답 받기 
 %>
 <form action="<%=request.getContextPath() %>/image.do">
@@ -34,6 +36,7 @@
 </select>
 </form>
 <div id ="imageArea">
+
 </div>
 <script type="text/javascript">
 
@@ -55,20 +58,10 @@
 	
 	});
 // 	alert($("img").length);
+	$("[name='image']").val("<%=Objects.toString(imageName,"")%>"); 
+	//이옵션을 선택한다.
+	$("[name='image']").trigger("change");
 
-	//0916
-	$(function(){
-		<%
-		if(cookie != null){
-			for(int i =0; i <cookie.length ; i ++){
-				%>
-				imageArea.append(pattern.replace("%V",<%=cookie[i].getName()%>));
-		<%
-			}
-		}
-		%>
-		
-	});
 	
 
 

@@ -1,7 +1,12 @@
 package kr.or.ddit.servlet01;
 import javax.servlet.http.*;
+
+import kr.or.ddit.utils.CookieUtil;
+import kr.or.ddit.utils.CookieUtil.TextType;
+
 import javax.servlet.*;
 import java.io.*;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 
@@ -28,7 +33,7 @@ public class ImageServlet extends HttpServlet{
 		
 		//09.16 쿠키 예제
 				String value = URLEncoder.encode("한글값","UTF-8");
-				Cookie cookie = new Cookie(imageName,imageName); //쿠키 객체 생성 
+				Cookie cookie = new Cookie(imageName,value); //쿠키 객체 생성 
 				cookie.setPath("/");
 				cookie.setMaxAge(60*60*24*2); //데이터 정보 2일 살아잉ㅆ어 
 				resp.addCookie(cookie); //응답보내기
@@ -43,7 +48,14 @@ public class ImageServlet extends HttpServlet{
 		if(!imgFile.exists()) { //서비스가 불가능함 ....	//중간에서 이미지 정보 맞는 지확인하기 
 			status = HttpServletResponse.SC_NOT_FOUND;
 		}
-		if (status == 200) {
+		
+		if (status == 200) { //여기서 쿠키 기록 ....
+			//1. 어떤 ㅇ미지봣다 라는 정보 꺼내기
+			 Cookie imageCookie = CookieUtil.createCookie("imageCookie", imageName,
+					 				req.getContextPath(),TextType.PATH,60*60*24*7);//2. 서로 다른 경로 엣 ㅓ사용하게 => path설정
+			resp.addCookie(imageCookie); //이제 클라이언트로 감. 
+			
+			
 			byte[] buffer = new byte[1024];
 			try (
 					// 입력스트림 필요해

@@ -19,8 +19,8 @@
 		<%
 	}else{ //로그인 된 상태
 		%>
-<!-- 		누가 로그인 햇는디  -->
-		<%=authMember.getMem_name() %>님 <a href ="#" onclick="document.logoutForm.submit">로그아웃</a>  <!-- a태그이지만 post방식 임  -->
+<%-- 		누가 로그인 햇는디  --%>
+		<a href="<%=request.getContextPath() %>/mypage"> <%=authMember.getMem_name() %>님</a> <a href ="#" onclick="document.logoutForm.submit();">로그아웃</a>  <!-- a태그이지만 post방식 임  -->
 		<%
 	}
 %>

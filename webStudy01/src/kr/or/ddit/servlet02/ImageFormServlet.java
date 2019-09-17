@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kr.or.ddit.servlet02.service.ImageListService;
+import kr.or.ddit.utils.CookieUtil;
 
 @WebServlet("/imageForm.do")
 public class ImageFormServlet extends HttpServlet{
@@ -20,6 +21,9 @@ public class ImageFormServlet extends HttpServlet{
 		//모델 2 구조
 //		1. 요청받기 
 //		2. 요청 분석(request-line, header ,body)
+		//쿠기0917
+		String imageName= new CookieUtil(req).getCookieValue("imageCookie");
+		req.setAttribute("imageName", imageName);
 //		3. 서비스객체와의 의존관계 형성 -> 로직선택 
 		ImageListService service = new ImageListService();
 		String[] images = service.getImageList();
