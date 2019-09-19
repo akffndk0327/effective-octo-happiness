@@ -32,9 +32,11 @@ public class ImageFormServlet extends HttpServlet{
 //		5. view선택
 //		6. view 이동 
 		
+		//0919
 		String viewName = "/WEB-INF/views/ImageForm.jsp"; //서버사이드방식으로표기 
 		RequestDispatcher rd = req.getRequestDispatcher(viewName);
-		rd.forward(req, resp);
+//		rd.forward(req, resp);
+		rd.include(req, resp);
 
 	}
 }

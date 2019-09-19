@@ -12,7 +12,7 @@
 <div style="background-color:yellow;">
 	<%=pageContext.getAttribute("pageAttr") %><br/>
 	<%=pageContext.getAttribute("requestAttr",PageContext.REQUEST_SCOPE) %><br/>
-	<%=session.getAttribute("sessionAttr") %>
+	<%=session.getAttribute("sessionAttr") %><br/>
 	<%=application.getAttribute("applicationAttr") %>
 
 </div>

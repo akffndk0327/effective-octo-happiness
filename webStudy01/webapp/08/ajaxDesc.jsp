@@ -19,13 +19,12 @@
             var now = new Date();
             client.innerHTML = now;
          $.ajax({
-            url : 'getServerTime.jsp',
+            url : "<%=request.getContextPath()%>/08/getServerTime.jsp",
 //             method:"get",
 //             data:"param=value&param2=value2",
             dataType : 'json',   //accept:text/plain
                            //json인 경우 accept : application/json ==Content-Type(응답헤더)
             success:function(resp){
-               
                server.innerHTML=resp.time;
             },
             error:function(errorResp){

@@ -8,9 +8,10 @@
 </head>
 <body>
 필요한 구구단의 최소단과 최대단 입력 
-<form action="<%=request.getContextPath() %>/02/gugudan.jsp" method="post"> <!-- post -> get수정, ->post->get --> 
+<form action="<%=request.getContextPath() %>/module/layout.do" method="post"> <!-- post -> get수정, ->post->get --> 
 <input type ="number" name="minDan"/>
 <input type ="number" name="maxDan"/> <!--  요청받을수있게 만듬 -->
+<input type="hidden" name="command" value="gugudanProcess" />
 <input type ="submit" value="전송" />
 </form>
 </body>
