@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form name="logoutForm" method ="post" action="${pageConText.request.contextPath}/logout">
+<form name="logoutForm" method ="post" action="${pageContext.request.contextPath}/logout">
 
 </form>
 <%

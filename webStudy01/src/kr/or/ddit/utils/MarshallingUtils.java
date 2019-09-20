@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.text.MaskFormatter;
@@ -33,7 +34,6 @@ public class MarshallingUtils {
    private String marshallingObjectToJson(Object target) {
 //      "c",42,true,"ste",{},[],{}
       if(target==null) return null;
-      
       Class<?> targetType = target.getClass();
       String value = null;
       //CharSequence.class.isAssignableFrom(targetType) ->"ste"타입을 잡음
@@ -44,10 +44,10 @@ public class MarshallingUtils {
       }else if(ClassUtils.isPrimitiveOrWrapper(targetType)){ //위에서 문자를 잡았으므로 문자를 제외한 type들이 걸린다
          value = target.toString();
       }else if(targetType.isArray()) {
-
-//         Object[] array = (Object[])target; //기본형의배열인지 참조형배열인지를 구분 
+//      Object[] array = (Object[])target; //기본형의배열인지 참조형배열인지를 구분 
          value = marshallingArrayToJson(target);
-
+      }else if(target instanceof List) {
+    	  value =  marshallingListToJson(target);
       }else if(target instanceof Map) {
          Map map = (Map)target;
          value = marshallingMapToJson(map);
@@ -79,6 +79,24 @@ public class MarshallingUtils {
       
    }
    
+
+   private String marshallingListToJson(Object target) {
+      StringBuffer json = new StringBuffer("[");
+      if(target!=null) {
+    	  List list = (List) target;
+         int length = list.size();
+         for(int i=0; i<length; i++) {
+            json.append(marshallingObjectToJson(list.get(i))+",");
+         }
+         int lastIndex = json.lastIndexOf(",");
+         if(lastIndex==json.length()-1) {
+            json.deleteCharAt(lastIndex);
+         }
+      }
+      
+      json.append("]");
+      return json.toString();
+   }
    private final String PROPPATTERN = "\"%s\":%s,";
    
    private String marshallingMapToJson(Map map) {

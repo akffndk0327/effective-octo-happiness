@@ -1,3 +1,5 @@
+
+
 package kr.or.ddit.member.dao;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public interface IMemberDAO {
 	 * 회원목록 조회
 	 * @return 조건에 맞는 회원ㅇ ㅣ없는 경우, size() ==0
 	 */
-	public List<MemberVO>selectMemeberList();
+	public List<MemberVO> selectMemeberList();
 	/**
 	 * 회원 상세 조회
 	 * @param member 조회할 회원에 대한 조건을 가진 vo

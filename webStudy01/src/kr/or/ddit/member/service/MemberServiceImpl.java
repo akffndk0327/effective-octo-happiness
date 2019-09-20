@@ -5,6 +5,7 @@ import java.util.List;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.member.dao.IMemberDAO;
 import kr.or.ddit.member.dao.MemberDAOImpl;
+import kr.or.ddit.member.exception.NotAuthenticatedException;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.vo.MemberVO;
 
@@ -12,12 +13,22 @@ public class MemberServiceImpl implements IMemberService {
 	//다오랑 연ㄹ결
 	//결합력 최상  =>HCLC 지향 -> 1.Factory Object pattern, Stategy pattern(DI) 
 	public IMemberDAO dao =MemberDAOImpl.getInstance();
+	private IAuthenticateService service = new AuthenticateServiceImpl();
 	
+	private static MemberServiceImpl instance;
 	
 	@Override
 	public ServiceResult createMember(MemberVO member) {
 		return null;
 	}
+	
+	public static IMemberService getInstance() {
+		if(instance ==null) {
+			instance = new MemberServiceImpl();
+		}
+		return instance;
+	}
+
 
 	@Override
 	public MemberVO retrieveMember(MemberVO member) {
@@ -27,21 +38,20 @@ public class MemberServiceImpl implements IMemberService {
 	}
 
 	@Override
-	public List<MemberVO> retrieveMemberList(MemberVO member) {
+	public List<MemberVO> retrieveMemberList() {
 		// TODO Auto-generated method stub
-		return null;
+		return dao.selectMemeberList();
 	}
 
 	@Override
 	public ServiceResult modifyMember(MemberVO member) {
-		MemberVO savedMember = retrieveMember(member);
-		ServiceResult result =null;
-		//인증
-		if(savedMember.getMem_pass().equals(member.getMem_pass())) {
+		ServiceResult result = null;
+		try {
+			service.authenticate(member);
 			int cnt = dao.updateMember(member);
-			if(cnt>0) result = ServiceResult.OK;
-			else result= ServiceResult.FAILED;
-		}else {
+			if (cnt > 0) result = ServiceResult.OK;
+			else result = ServiceResult.FAILED;
+		} catch (NotAuthenticatedException e) {
 			result = ServiceResult.INVALIDPASSWORD;
 		}
 		return result;
@@ -49,8 +59,36 @@ public class MemberServiceImpl implements IMemberService {
 
 	@Override
 	public ServiceResult removeMember(MemberVO member) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult result = null;
+		try {
+			service.authenticate(member);
+			int cnt = dao.deleteMember(member);
+			if (cnt > 0)
+				result = ServiceResult.OK;
+			else
+				result = ServiceResult.FAILED;
+		} catch (NotAuthenticatedException e) {
+			result = ServiceResult.INVALIDPASSWORD;
+		}
+		return result;
 	}
+
+	
+		
+//	MemberVO savedMember = retrieveMember(member);
+//	ServiceResult result =null;
+//	// 인증
+//	if(savedMember.getMem_pass().equals(member.getMem_pass()))
+//	{
+//		int cnt = dao.deleteMember(member);
+//		if (cnt > 0)
+//			result = ServiceResult.OK;
+//		else
+//			result = ServiceResult.FAILED;
+//	}else
+//	{
+//		result = ServiceResult.INVALIDPASSWORD;
+//	}return result;
+//}
 
 }

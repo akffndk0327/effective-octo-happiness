@@ -27,7 +27,7 @@ public interface IMemberService {
 	 * @param member
 	 * @return 없으면 , size()== 0;
 	 */
-	public List<MemberVO> retrieveMemberList(MemberVO member);
+	public List<MemberVO> retrieveMemberList();
 	/**
 	 * 정보 수정 
 	 * @param member

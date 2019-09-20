@@ -147,14 +147,49 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-			
 			<input type="submit" class="btn btn-info" value="저장" />
             <input type="reset" class="btn btn-info" value="취소" />
+            <input type="button" class="btn btn-info" value="탈퇴" 
+            		id="deleteBtn"/> 
 			</td>
 			
 		</tr>
 	</table>
 </form>
-	<%=savedMember%>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">삭제비번입력</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+  	<form method ="post" action="<%=request.getContextPath()%>/member/memberDelete.do">
+      <div class="modal-body">
+   		<input type="password" name="password" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+      	</form>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	$('#exampleModal').on('hidden.bs.modal',function(){
+		$(this).find("form")[0].reset();
+		});
+	$('#deleteBtn').on('click',function(){
+		$('#exampleModal').modal('show');
+		
+	})
+
+</script>
+
 </body>
 </html>
