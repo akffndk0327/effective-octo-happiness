@@ -15,7 +15,7 @@ import javax.servlet.ServletContext;
  3. 클라이언트에서는 호출 결과를 받긴 하지만 중간에 어댑터가 껴 있는지는 전혀 알지 못한다.
  * 
  */
-public class FileWrapper { //감싸고 있는 객체
+public class FileWrapper { //파일(File resource)을 받아서 감싸고 있는 객체
 	public FileWrapper(File resource , ServletContext application) {
 		this(resource, application, false);
 	}
@@ -30,6 +30,8 @@ public class FileWrapper { //감싸고 있는 객체
 		String absolutePath = resource.getAbsolutePath();
 		id = absolutePath.substring(contextRealPath.length()-1);
 		id= id.replace(File.separatorChar, '/');
+		file = resource.isFile();
+		directory = resource.isDirectory();
 	}
 	
 	
@@ -40,6 +42,9 @@ public class FileWrapper { //감싸고 있는 객체
 	//서버사이트 전체 ..
 	private String id ; //li태그의 id(서버사이드경로 )
 	
+	private boolean file;
+	private boolean directory;
+	
 	public String getDisplayName() {
 		return displayName;
 	}
@@ -49,11 +54,39 @@ public class FileWrapper { //감싸고 있는 객체
 	public File getResource() {
 		return resource;
 	}
-	public boolean isDirectory() {
-		return resource.isDirectory();
+
+	public ServletContext getApplication() {
+		return application;
 	}
+
+	public void setApplication(ServletContext application) {
+		this.application = application;
+	}
+
+		
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public boolean isFile() {
-		return resource.isFile();
+		return file;
 	}
+
+	public void setFile(boolean file) {
+		this.file = file;
+	}
+
+	public boolean isDirectory() {
+		return directory;
+	}
+
+	public void setDirectory(boolean directory) {
+		this.directory = directory;
+	}
+	
 	
 }

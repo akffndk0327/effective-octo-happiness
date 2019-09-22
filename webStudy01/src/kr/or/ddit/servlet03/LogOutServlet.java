@@ -18,7 +18,6 @@ public class LogOutServlet extends HttpServlet{
 		if(session.isNew()) {
 			resp.sendError(400);
 		}
-		
 		session.invalidate(); //세션만료위해 강제 종료. request도 종료  로그인 상태 풀림 
 		//페이지 이동 : 로그인 화면 or 
 		resp.sendRedirect(req.getContextPath()+"/");

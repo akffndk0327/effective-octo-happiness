@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,12 +16,17 @@ import kr.or.ddit.member.exception.NotAuthenticatedException;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.member.service.AuthenticateServiceImpl;
 import kr.or.ddit.member.service.IAuthenticateService;
+import kr.or.ddit.utils.CookieUtil;
 import kr.or.ddit.vo.MemberVO;
 
 @WebServlet("/login")
 public class LoginControllerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//쿠기 0917
+		//전략의 주입자?
+		String saveId = new CookieUtil(req).getCookieValue("idCookie");
+		req.setAttribute("saveId", saveId); //scope로 forward할때 req로 같이 넘어가 ㅁ
 		//1 요청 분석 2. 가공 3. UI제공  4 UI선택5. ui 전달 :
 		String viewName = "/WEB-INF/views/login/loginForm.jsp";
 		req.getRequestDispatcher(viewName).forward(req,resp);
@@ -30,22 +36,39 @@ public class LoginControllerServlet extends HttpServlet {
 		//1. 파라메터잡기 2. 검증 3.인증 
 		String mem_id = req.getParameter("mem_id");
 		String mem_pass = req.getParameter("mem_pass");
+		
+		//검증
 		if(StringUtils.isBlank(mem_id) || StringUtils.isBlank(mem_pass)) { //필수파라미터 누락 됏을때 
 			resp.sendError(400, "아이디나 비번 누락 ");
 			return;
 		}
 		//인증이 뒤섞여 => 분리하기 
-		
 		HttpSession session = req.getSession(); //세션은 최초의 요청 이루어질때. false : 요청들어오면 만들고 빈칸은 true  
 		//아이디와 비번이 동일하면 성공 !
 		if(session ==null || session.isNew()) { //여기에 걸리면 정상적 절차 아님 .
 			resp.sendError(400,"로그인 철자 이상한뎁...");
 			return;
 		}
+		//인증성공실패
 		IAuthenticateService service = new AuthenticateServiceImpl(); 
 		try {
 			MemberVO savedMember = service.authenticate(new MemberVO(mem_id, mem_pass));
+			//쿠키 0917
+			String checkbox = req.getParameter("idSave");
+			Cookie idCookie = CookieUtil.createCookie("idCookie", mem_id);
+			int maxAge= 0;
+			if("idSave".equals(checkbox)) {
+				//1.어디에 저장할지
+//				Cookie idCookie = CookieUtil.createCookie("idCookie", mem_id);
+				//2. 언제까지 기억할지
+				//3.응답으로 보내기 resp.addCookie(idCookie);
+				maxAge = 60*60*24*2;
+			}
+			idCookie.setMaxAge(maxAge);
+			resp.addCookie(idCookie);
+			
 			session.setAttribute("authMember", savedMember); // mem_id : scope. 세션스코프에 authMember없으면 로그인 안한거
+			//이동 방식 
 			resp.sendRedirect(req.getContextPath() + "/");
 		} catch (UserNotFoundException | NotAuthenticatedException e) {
 			session.setAttribute("message", e.getMessage());

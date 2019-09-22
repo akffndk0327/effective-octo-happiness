@@ -9,6 +9,10 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <context-param>
+  	<param-name>service</param-name>
+  	<param-value>/kr/or/ddit/servlet05/service.xml</param-value>
+  </context-param>
   <servlet>
     <servlet-name>DescriptionServlet</servlet-name>
     <servlet-class>kr.or.ddit.servlet01.DescriptionServlet</servlet-class>
