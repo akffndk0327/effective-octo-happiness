@@ -16,10 +16,11 @@
 	if(authMember ==null){
 		%>
 		<a href = "<%=request.getContextPath()%>/login"> 로그인</a>
+		<a href = "<%=request.getContextPath()%>/member/memberInsert.do">가입하기</a>
 		<%
 	}else{ //로그인 된 상태
 		%>
-<%-- 		누가 로그인 햇는디  --%>
+<%-- 		누가 로그인 햇는지  --%>
 		<a href="<%=request.getContextPath() %>/mypage"> <%=authMember.getMem_name() %>님</a> <a href ="#" onclick="document.logoutForm.submit();">로그아웃</a>  <!-- a태그이지만 post방식 임  -->
 		<%
 	}

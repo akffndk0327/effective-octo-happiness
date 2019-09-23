@@ -79,13 +79,46 @@ public class MemberDAOImpl implements IMemberDAO {
 
 	@Override
 	public int insertMember(MemberVO member) {
-		int insertMember = 0;
-		if(insertMember>0) {
-			
+		StringBuffer sql = new StringBuffer();
+		sql.append(" INSERT INTO MEMBER (  ");
+		sql.append("     MEM_ID,    MEM_PASS,    MEM_NAME,    MEM_REGNO1,      ");
+		sql.append("     MEM_REGNO2,    MEM_BIR,    MEM_ZIP,    MEM_ADD1,      ");
+		sql.append("     MEM_ADD2,    MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,   ");
+		sql.append("     MEM_MAIL,    MEM_JOB,    MEM_LIKE,    MEM_MEMORIAL,   ");
+		sql.append("     MEM_MEMORIALDAY,    MEM_MILEAGE       ");
+		sql.append(" ) VALUES (                                                ");
+		sql.append(" 	?,    ?,    ?,    ?,                                   ");
+		sql.append("     ?,    ?,    ?,    ?,                                  ");
+		sql.append("     ?,    ?,    ?,    ?,                                  ");
+		sql.append("     ?,    ?,    ?,    ?,                                  ");
+		sql.append("     ?,    2000		                                   ");
+		sql.append(" )                                                         ");
+		try (Connection conn = ConnectionFactory.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {
+			// 쿼리 파라미터 설정
+			int idx = 1;
+			pstmt.setString(idx++, member.getMem_id());
+			pstmt.setString(idx++, member.getMem_pass());
+			pstmt.setString(idx++, member.getMem_name());
+			pstmt.setString(idx++, member.getMem_regno1());
+			pstmt.setString(idx++, member.getMem_regno2());
+			pstmt.setString(idx++, member.getMem_bir());
+			pstmt.setString(idx++, member.getMem_zip());
+			pstmt.setString(idx++, member.getMem_add1());
+			pstmt.setString(idx++, member.getMem_add2());
+			pstmt.setString(idx++, member.getMem_hometel());
+			pstmt.setString(idx++, member.getMem_comtel());
+			pstmt.setString(idx++, member.getMem_hp());
+			pstmt.setString(idx++, member.getMem_mail());
+			pstmt.setString(idx++, member.getMem_job());
+			pstmt.setString(idx++, member.getMem_like());
+			pstmt.setString(idx++, member.getMem_memorial());
+			pstmt.setString(idx++, member.getMem_memorialday());
+			return pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
-		return insertMember;
 	}
-
 	@Override
 	public List<MemberVO> selectMemeberList() {
 		List<MemberVO> list = new ArrayList<MemberVO>();
