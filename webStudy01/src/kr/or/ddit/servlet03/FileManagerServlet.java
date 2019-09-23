@@ -95,10 +95,7 @@ public class FileManagerServlet extends HttpServlet {
 
 			} else {
 				String viewName = "/WEB-INF/views/serverFileManager.jsp";
-<<<<<<< HEAD
 				req.getRequestDispatcher(viewName).forward(req, resp);
-=======
->>>>>>> branch 'master' of https://github.com/akffndk0327/effective-octo-happiness.git
 				req.getRequestDispatcher(viewName).include(req, resp);
 
 			}

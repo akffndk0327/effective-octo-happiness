@@ -40,7 +40,7 @@ public class MypageServlet extends HttpServlet {
 			viewName ="member/mypage";
 		}
 		
-		if(redirect) {//redirect 상태에 따라 달라져
+		if(redirect) {//redirect 상태에 따라 달라져 . 공유영역 결정 
 			resp.sendRedirect(req.getContextPath()+viewName); //나갓다가 다시들어옴. 
 		}else {
 			String prefix = "/WEB-INF/views/";
