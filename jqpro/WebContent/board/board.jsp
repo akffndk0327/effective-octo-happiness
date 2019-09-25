@@ -57,6 +57,7 @@
 				rtext=$(this).parent().find('.area').val();
 				//이름 작성 
 				rname = "qwer1234";
+				
 				replyServer(this); //댓글 저장 
 				bonum=$(this).attr('idx'); //replyListServer 로 갈때는 bonum이 필요함.
 				console.log(bonum);
@@ -102,6 +103,10 @@
 </style>
 </head>
 <body>
+	<!-- 댓글 수정을 위한 form -->
+
+
+
 	 <h2>Accodion Example</h2>
 	 
 	 <br>

@@ -48,7 +48,7 @@
 	</insert>
 	
 	<select id="replyList" parameterClass="int" resultClass="replyVO">
-		select * from reply where bonum=#data#
+		select * from reply where bonum=#data# order by renum
 	
 	</select>	
 

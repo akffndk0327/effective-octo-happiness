@@ -108,7 +108,7 @@ writeServer = function() {
 	})
 }
 
-replyServer = function(re) {
+replyServer = function(bb) {
 	$.ajax({
 		url:'/jqpro/ReplySave',
 		type : "post",
@@ -121,6 +121,7 @@ replyServer = function(re) {
 		success : function(res) {
 			console.log("댓글 : "+res.sw);
 			//댓글 출력 
+		replyListServer(bb);
 		},
 		error : function(xhr) {
 			alert("상태 : "+xhr.status)
@@ -130,7 +131,7 @@ replyServer = function(re) {
 }
 
 replyListServer=function(a){ //클릭한 a 태그 
-	$(a).parents('.panel').find('.pbody').find('rep').remove();
+	$(a).parents('.panel').find('.pbody').find('.rep').remove();
 	$.ajax({
 		url:"/jqpro/ReplyList",
 		method:"post",
