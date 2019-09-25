@@ -18,20 +18,26 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.HttpMethod;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.utils.MarshallingUtils;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/idCheck.do")
-public class IdCheckServlet extends HttpServlet{
+//@WebServlet("/member/idCheck.do")
+@CommandHandler
+public class IdCheckServlet {
 	IMemberService service =MemberServiceImpl.getInstance();
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	
+	@URIMapping(value = "/member/idCheck.do", method =HttpMethod.POST)
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		String mem_id = req.getParameter("mem_id");
+		String viewName= "redirect:/";
 		//검증하기
 		if(StringUtils.isBlank(mem_id)) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
+			return null;
 		}
 		Pattern regex = Pattern.compile("([a-z]+[a-zA-Z0-9]){3,11}");
 		Matcher matcher=regex.matcher(mem_id);
@@ -56,6 +62,7 @@ public class IdCheckServlet extends HttpServlet{
 		){
 			out.println(json);
 		}
+		return viewName;
 		
 	}
 }

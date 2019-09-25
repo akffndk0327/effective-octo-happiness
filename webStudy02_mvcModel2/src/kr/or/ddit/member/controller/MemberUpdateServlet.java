@@ -18,14 +18,18 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.HttpMethod;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberUpdate.do")
-public class MemberUpdateServlet extends HttpServlet {
+//@WebServlet("/member/memberUpdate.do")
+@CommandHandler
+public class MemberUpdateServlet {
 	IMemberService service = new MemberServiceImpl();
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@URIMapping(value = "/member/memberUpdate.do", method=HttpMethod.POST)
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		// 1. 요청(파라미터 헤더 바디.. ) 방고,
 		MemberVO member = new MemberVO();
@@ -41,7 +45,7 @@ public class MemberUpdateServlet extends HttpServlet {
 		// 2. 분석(검증) => 아이디 비번, 빈칸 검증
 		Map<String, String> errors = new HashMap<String, String>();
 		boolean valid = validate(member, errors);
-		String viewName = "/mypage";
+		String viewName = "redirect:/mypage";
 		String message = null;
 		if (valid) {
 			// 3. 통과
@@ -72,7 +76,8 @@ public class MemberUpdateServlet extends HttpServlet {
 			}
 			req.getSession().setAttribute("message",message);
 			req.getSession().setAttribute("errors",errors);
-			resp.sendRedirect(req.getContextPath() + "/mypage");
+//			resp.sendRedirect(req.getContextPath() + "/mypage");
+			return viewName;
 
 		}
 

@@ -16,6 +16,12 @@ public class MemberServiceImpl implements IMemberService {
 	private IAuthenticateService service = new AuthenticateServiceImpl();
 	
 	private static MemberServiceImpl instance;
+	public static IMemberService getInstance() {
+		if(instance ==null) {
+			instance = new MemberServiceImpl();
+		}
+		return instance;
+	}
 	
 	@Override
 	public ServiceResult createMember(MemberVO member) {
@@ -30,12 +36,6 @@ public class MemberServiceImpl implements IMemberService {
 		return result;
 	}
 	
-	public static IMemberService getInstance() {
-		if(instance ==null) {
-			instance = new MemberServiceImpl();
-		}
-		return instance;
-	}
 
 
 	@Override

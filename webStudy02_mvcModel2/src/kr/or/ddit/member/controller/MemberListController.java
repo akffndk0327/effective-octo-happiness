@@ -38,7 +38,9 @@ public class MemberListController { // 0924 서블릿 삭제, alt, shift r
 			// json을 만들기위한 marshalling
 			String json = new MarshallingUtils().marshalling(list);
 
-			try (PrintWriter out = resp.getWriter();) {
+			try (
+				PrintWriter out = resp.getWriter();
+			) {
 				out.println(json);
 			}
 			return null; // 0924 d여기 처리해야돼!!
@@ -47,9 +49,9 @@ public class MemberListController { // 0924 서블릿 삭제, alt, shift r
 		// 동기
 		// 0924
 //         String viewName = "/WEB-INF/views/member/memberList.jsp";
+//         req.getRequestDispatcher(viewName).forward(req, resp);
 			String viewName = "member/memberList"; // -\=> 논리적인 viewName = logical~
 			return viewName;
-//         req.getRequestDispatcher(viewName).forward(req, resp);
 		}
 
 	}

@@ -26,8 +26,7 @@
 	if (!StringUtils.isBlank(message)) {
 %>
 <script type="text/javascript">
-         alert("<%=message%>
-	");
+         alert("<%=message%>");
 </script>
 <%
 	}
@@ -151,7 +150,8 @@
 			</tr>
 		</table>
 	</form>
-	<!-- Modal -->
+	
+	<!--아이디 중복확인 Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -184,7 +184,7 @@
 		var checkMemId = $("#checkMemId")
 		var idCheckForm = $("#idCheckForm");
 		var mem_id = $("#mem_id");
-		var useId = $("useId").hide();
+		var useId = $("#useId").hide();
 		exampleModal.on("hidden.bs.modal", function() {
 			checkMemId.val("");
 			checkMemId.next(".signid").html();

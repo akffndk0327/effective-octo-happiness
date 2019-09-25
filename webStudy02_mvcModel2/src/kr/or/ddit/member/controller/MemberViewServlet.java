@@ -16,19 +16,23 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.utils.MarshallingUtils;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberView.do")
-public class MemberViewServlet extends HttpServlet {
+@CommandHandler //1. 주소지우고 커맨드핸들러 추가
+public class MemberViewServlet {
 	IMemberService service = MemberServiceImpl.getInstance();
- @Override
-protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	//오버라이드 지워 //2.
+	@URIMapping("/member/memberView.do")//3.
+	//4.
+	public String memberView(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 0923
 		String who = req.getParameter("who");
 		if (StringUtils.isBlank(who)) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "누구를 조회하나요??");
-			return;
+			return null; //1.응답데이터 커밋됫거나 안됐거나인데 이미 에러로 결정되있음  5.
 		}
 	    //정상적으로 넘어왔을때 
 	    //서비스 불러오기 
@@ -39,9 +43,8 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 	      
 	      req.setAttribute("member", saved);
 	         
-	         String viewName = "/WEB-INF/views/member/memberView.jsp"; //서버사이드 경로 ! -> 디스패치장식 
-	         req.getRequestDispatcher(viewName).forward(req, resp);
-	         
+	         String viewName = "member/memberView"; //서버사이드 경로 ! -> 디스패치장식 7. 
+	         return viewName; //6.
 	      }
 	 
 }

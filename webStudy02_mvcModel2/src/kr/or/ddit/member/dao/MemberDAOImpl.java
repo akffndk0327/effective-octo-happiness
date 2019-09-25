@@ -126,7 +126,8 @@ public class MemberDAOImpl implements IMemberDAO {
 		sql.append(" SELECT MEM_ID, MEM_NAME, MEM_HP, MEM_MAIL, MEM_ADD1, MEM_MILEAGE ");
 		sql.append(" FROM MEMBER ");
 
-		try (Connection conn = ConnectionFactory.getConnection();
+		try (
+				Connection conn = ConnectionFactory.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 		) {
 			ResultSet rs = pstmt.executeQuery(); // 쿼리문을 실행...

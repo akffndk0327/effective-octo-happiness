@@ -17,5 +17,9 @@ public interface IViewProcessor {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public void viewProcess(String viewName, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException;
+	public void viewProcess(String viewName, HttpServletRequest req, HttpServletResponse resp) 
+			throws IOException, ServletException;
+
+	
+	
 }

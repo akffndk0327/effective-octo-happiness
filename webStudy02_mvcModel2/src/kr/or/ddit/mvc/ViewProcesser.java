@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ViewProcesser implements IViewProcessor {
 	private String prefix;
 	private String suffix;
-	
+	private static final String REDIRECT = "redirect:";
 	@Override
 	public void SetPreFix(String prefix) {
 		this.prefix = prefix;
@@ -23,8 +23,12 @@ public class ViewProcesser implements IViewProcessor {
 	@Override
 	public void viewProcess(String viewName, HttpServletRequest req, HttpServletResponse resp)
 			throws IOException, ServletException {
-		// TODO Auto-generated method stub
-
+		if(viewName.startsWith(REDIRECT)) {
+			viewName = viewName.substring(REDIRECT.length());
+			resp.sendRedirect(req.getContextPath()+viewName);
+		}else {
+			req.getRequestDispatcher(prefix+viewName+suffix).forward(req, resp);
+		}
 	}
 
 }

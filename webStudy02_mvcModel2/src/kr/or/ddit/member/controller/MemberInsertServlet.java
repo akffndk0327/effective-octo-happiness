@@ -18,26 +18,30 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.HttpMethod;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberInsert.do")
-public class MemberInsertServlet extends HttpServlet {
+//@WebServlet("/member/memberInsert.do")
+@CommandHandler
+public class MemberInsertServlet {
 	IMemberService service = MemberServiceImpl.getInstance();
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@URIMapping("/member/memberInsert.do")
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 여기서는 jsp에 연결만 해주기.
-		String viewName = "/WEB-INF/views/member/memberForm.jsp";
-		RequestDispatcher disp = req.getRequestDispatcher(viewName);
-		disp.forward(req, resp);
+		String viewName = "/member/memberForm";
+//		RequestDispatcher disp = req.getRequestDispatcher(viewName);
+//		disp.forward(req, resp);
 
 		// 들어온느 요청 2개 구분하기 a태그로 들어오는지 form태그인지 => 잘못썻을 경우 기존 데이터 복원 !
 		// 파라미더
+		return viewName;
 	}
 
 	// 보내주는 데이터 받아야해
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@URIMapping(value = "/member/memberInsert.do", method=HttpMethod.POST)
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		// 입력한 데이터를
 		// memVO 만들고 안에 데이터 채우기
@@ -64,7 +68,7 @@ public class MemberInsertServlet extends HttpServlet {
 
 		String viewName = "member/memberForm";
 		String message = null;
-		boolean redirect = false;
+//		boolean redirect = false;
 		if (valid) {
 			ServiceResult result = service.createMember(member);
 			switch (result) {
@@ -79,8 +83,8 @@ public class MemberInsertServlet extends HttpServlet {
 			default:
 //				- OK   : 디스패쳐 -> welcome page
 				message = "수정 성공";
-				redirect = true;
-				viewName = "/";
+//				redirect = true;
+				viewName = "redirect:/";
 				break;
 			}
 
@@ -89,15 +93,16 @@ public class MemberInsertServlet extends HttpServlet {
 		}
 		
 		req.setAttribute("message", message);
+		return viewName;
 		
-		if(redirect) {
-			resp.sendRedirect(req.getContextPath() + viewName);
-		}else {
-			String prefix = "/WEB-INF/views/";
-			String suffix = ".jsp";
-			viewName = prefix + viewName + suffix;
-			req.getRequestDispatcher(viewName).forward(req, resp);
-		}
+//		if(redirect) {
+//			resp.sendRedirect(req.getContextPath() + viewName);
+//		}else {
+//			String prefix = "/WEB-INF/views/";
+//			String suffix = ".jsp";
+//			viewName = prefix + viewName + suffix;
+//			req.getRequestDispatcher(viewName).forward(req, resp);
+//		}
 	}
 
 		//스키마에 따라 검증 룰이 달라짐  
@@ -156,6 +161,7 @@ public class MemberInsertServlet extends HttpServlet {
 
 		return valid;
 	}
+	
 }
 
 
