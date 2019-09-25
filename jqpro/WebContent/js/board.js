@@ -165,7 +165,48 @@ replyListServer=function(a){ //클릭한 a 태그
 	})
 	
 }
+replyReset = function() {
+	
+}
 
+replyUpdateServer= function() {
+	$.ajax({
+		url:"/jqpro/ReplyUpdate",
+		type:"post",
+		data:{
+			'renum' : renum,
+			'cont' :modifyCont			
+		},
+		dataType:"json",
+		success:function(res){
+			console.log(res.sw);
+			
+		},
+		error : function(xhr) {
+			alert("상태 :"+xhr.status);
+		}
+		
+	})
+}
+replyDeleteServer =function(th){ //jsp에서 받은 this 매개변수를 th로 받는다 .
+	$.ajax({
+		url:"/jqpro/ReplyDelete",
+		type:"post",
+		data:{
+			'renum' : renum
+		},
+		dataType:"json",
+		success:function(res){
+			console.log(res.sw);
+			$(th).parents('.rep').remove(); //th의 부모로 가서 rep를 클래스로 갖는걸 삭제해라
+		},
+		error : function(xhr) {
+			alert("상태 :"+xhr.status);
+		}
+		
+	})
+	
+}
 
 
 

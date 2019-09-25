@@ -42,7 +42,7 @@
 			$('.txt').val(""); // 공통속성은 class로 처리.. 
 		});
 		
-		//수정,삭제 등록 버튼 클릭할때 
+		//수정,삭제 등록, 댓글수정, 댓글 삭제 버튼 클릭할때 
 		$('#accordionList').on('click','.action',function(){
 			name = $(this).attr('name');
 			idx = $(this).attr('idx');
@@ -64,14 +64,68 @@
 				//댓글 목록 
 // 				replyListServer(this);
 				
-			}else if(name=="list");
+			}else if(name=="list"){
 				//댓글 목록을 가져오기위해서 - 글번호 가져옴 
 				bonum=$(this).attr('idx');
 				
 				replyListServer(this);
+			}else if(name =="r_modify"){
+				//댓글 수정 클릭 시 
+				//modifyForm이 열려잇는걸 닫아야 한다 
+				//body로 modifyForm을 다시이동 시켜 놓는드ㅏ.
+			if($('#modifyForm').css('display') !="none"){
+				replyReset();
+			}
+			
+			renum=idx;
+			modifyCont=$(this).parents('.rep').find('.cont').html();
+			modifyCont = modifyCont.replace(/<br>/g,"\n") ;//replaceAll이 없어서 
+			
+			$('#modifyForm #test').val(modifyCont);
+			$(this).parents('.rep').find('.cont').empty().append($('#modifyForm')); 
+			//.append($('#modifyForm') :div 안에 들어가게 하기위해서 $ 씀 
+			
+			$('#modifyForm').show();
+			}else if(name =="r_delete"){
+				renum=idx;
+				replyDeleteServer(this); //삭제는 번호만 잇으면 돼.this : 삭제버튼 누르면 -> js로 보내기 
+// 				$(this).parents('.rep').remove(); //js로 보내
+			}
+		})
+		
+// 		modifyCont ="";
+		//이미 modifyForm이 열려 상태에서 다시 modifyForm이 열릴때  
+		replyReset=function(){
+			modispan= $('#modifyForm').parent();	
+			$('body').append($('#modifyForm')); //바디로 get으로 옮기고 set으로 받아야해
+			$('#modifyForm').hide();
+			modispan.html(modifyCont.replace(/\n/g,"<br>"));
+		}
+		
+		//댓글 수정폼에서 확인버튼클릭
+		$('#btnOK').on('click',function(){
+			//댓글내용 가져오기 \n을 <br>로 바꾼다
+			modifyCont=$('#modifyForm #test').val();
+			modispan= $('#modifyForm').parent();	
+			$('body').append($('#modifyForm')); 
+			$('#modifyForm').hide();
+			modispan.html(modifyCont.replace(/\n/g,"<br>")); // \n을 <br>로 바꾼다
+			
+			//db를 수정 =>sql문, dao, service에 메서드 추가 
+			//renum, modifyCont가져감. idx값 필요해 
+			
+			replyUpdateServer();
 			
 			
 		})
+		//댓글 수정 폼에서 취소버튼 클릭 
+		$('#btnReset').on('click',function(){
+			//창만 닫으면 되고 원래 내용갖다 놓면 돼./
+			replyReset();
+		})
+		
+		
+		
 		
 	})
 </script>
@@ -104,6 +158,12 @@
 </head>
 <body>
 	<!-- 댓글 수정을 위한 form -->
+	<div id = "modifyForm" style="display:none;">
+		<textarea id="test" class="" row="5" cols="30"></textarea>
+		<input type="button" value="확인" id="btnOK">
+		<input type="button" value="취소" id="btnReset">
+	
+	</div>
 
 
 

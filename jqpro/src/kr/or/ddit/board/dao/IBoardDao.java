@@ -19,4 +19,10 @@ public interface IBoardDao {
 	
 	public int insertReply(ReplyVO vo) throws SQLException; 
 	public List<ReplyVO> replyList(int bonum) throws SQLException;
+	
+	//댓글 수정
+	public int updateReply(ReplyVO vo) throws SQLException; //내용이랑 번호 가져감 
+	
+	//삭제
+	public int deleteReply(int renum) throws SQLException;
 }

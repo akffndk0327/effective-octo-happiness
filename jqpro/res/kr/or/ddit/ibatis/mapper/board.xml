@@ -49,9 +49,13 @@
 	
 	<select id="replyList" parameterClass="int" resultClass="replyVO">
 		select * from reply where bonum=#data# order by renum
-	
 	</select>	
-
+	<update id="updateReply" parameterClass="replyVO">
+		update reply set cont=#cont# where renum=#renum#
+	</update>
+	<delete id="deleteReply" parameterClass="int">
+		delete from reply where renum = #data#
+	</delete>
 		
 </sqlMap>
 

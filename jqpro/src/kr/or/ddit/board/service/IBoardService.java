@@ -26,5 +26,9 @@ public interface IBoardService {
 	//댓글 리스트 
 	public List<ReplyVO> replyList(int bonum);
 	
+	//댓글 수정 
+	public int updateReply(ReplyVO vo); //내용이랑 번호 가져감 
+	
+	public int deleteReply(int renum);
 	
 }

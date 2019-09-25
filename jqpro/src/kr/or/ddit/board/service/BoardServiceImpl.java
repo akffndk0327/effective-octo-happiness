@@ -93,4 +93,26 @@ public class BoardServiceImpl implements IBoardService {
 		return rpl;
 	}
 
+	@Override
+	public int updateReply(ReplyVO vo) {
+		int rpl = 0;
+		try {
+			rpl = dao.updateReply(vo);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rpl;
+	}
+
+	@Override
+	public int deleteReply(int renum) {
+		int rpl = 0;
+		try {
+			rpl = dao.deleteReply(renum);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rpl;
+	}
+
 }
