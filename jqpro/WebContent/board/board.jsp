@@ -11,7 +11,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script src="../js/board.js"></script>
 <script>
-	$(function () {
+	$(function () { 
 		readServer(1);
 		
 		//페이지번호를 클릭하면 이벤트 만들기 -delegate로 주기 
