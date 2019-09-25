@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>newhtml.html 0829</title>
+<link rel = "stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script>
+$(function(){
+	//바인드방식3개
+// 	$('button').click(function(){})
+// 	$('button').bind('click',function(){})
+ 	$('button').on('click',function(){
+		newele = $('<p>주연이꽃이 피었습니다 ^_^</p>'); 
+//		newele.appendTo('body'); //이걸 바디태그안에 추가해야함. 방법1
+		$('body').append(newele); //변수이름은 "" 안붙임 !!!	방법2 append + 새로운 내용 
+		
+	})
+// 	$('p').click(function(){ 
+// 		$(this).css('font-size','+=5px'); //=>  적용안됨. 새로만들어진 요소에 이벤트핸들러는 바인드가 아닌 delegate로 해야함.
+		
+// 	}) //바인드 적용이 안됨.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	$('body').delegate('p','click',function(){ 
+		$(this).css('font-size','+=5px'); //=>  적용안됨. 새로만들어진 요소에 이벤트핸들러는 바인드가 아닌 delegate로 해야함.
+		//p를 클릭하려는데 바디테그에 append되있어서 this: p 태그 
+	}) //바인드 적용이 안됨.
+	*/
+	//$('p').on('click','p',function(){})
+	$('body').on('click','p',function(){
+		//parseInt(Math.random()*256)
+		r=Math.floor(Math.random()*256)
+		g=Math.floor(Math.random()*256)
+		b=Math.floor(Math.random()*256)
+		$(this).css('color','rgb('+ r + ',' + g + ',' + b +')');
+		
+	})
+})
+</script>
+</head>
+<body>
+<pre>
+0830-1
+이벤트 핸들러 작성(등록)방법
+ - bind : body태그 안에 실행전부터 이미 만들어져 있는 요소 
+   1) $('p').click(function(){})
+   2) $('p').on('click',function(){})
+  
+ - delegate : 실행 후에 새롭게 동적으로 만들어지는 요소 
+	1) $('body').delegate('p','click',function(){ })
+	2) $('body').on('click','p',function(){})
+</pre>
+ <button type="button">새로만들기</button>
+ <br><br>
+</body>
+</html> 

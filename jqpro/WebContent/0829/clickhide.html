@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>clickhide.html 0829</title>
+<script src="../js/jquery-3.4.1.min.js"></script>
+
+<script>
+	$(function(){
+		$('h1').on('click',function(){ //이름없이 자동 호출 => call back cf) proc : 전면에서 요출함.
+			//$(this).css('display','none');
+			$(this).hide();
+			
+			if( $('h1:visible').length == 0) { //버튼안보임. 다 클릭하고 나면 보임 
+			//: 필터 걸러냄. h1:visible ->보이는것만 걸러냄=보이는 h1. 붙여서 써야함.  .length : 몇개잇는가
+			//h1객체가됨. 
+				$('button').css('display','block');
+				$('button').show();
+			}
+		})// h1 클릭 끝남
+		//버튼클릭하면 -h1 다시나와 - 버튼은 사라져 
+		$('button[type=button]').on('click',function(){
+			$('h1').show(); // -h1 다시나와
+			//버튼사라지기
+			$(this).hide(); // - 버튼은 사라져 
+			
+		})
+		
+		
+		
+	})//$function
+	
+</script>
+<style>
+	button{
+	 display: none;
+	}
+</style>
+</head>
+<pre>
+h1:visible  
+: 필터 걸러냄. h1:visible ->보이는것만 걸러냄=보이는 h1. 붙여서 써야함. 
+-표현방법 
+'button[type=button]'
+</pre>
+<body>
+<h1 > 클릭하면 사라짐 ! 뿅1 </h1>
+<h1> 클릭하면 사라짐 ! 뿅2 </h1>
+<h1> 클릭하면 사라짐 ! 뿅3 </h1>
+<h1> 클릭하면 사라짐 ! 뿅4 </h1>
+<h1> 클릭하면 사라짐 ! 뿅5 </h1>
+<h1> 클릭하면 사라짐 ! 뿅6 </h1>
+<h1> 클릭하면 사라짐 ! 뿅7 </h1>
+<h1> 클릭하면 사라짐 ! 뿅8 </h1>
+<h1> 클릭하면 사라짐 ! 뿅9 </h1>
+<h1> 클릭하면 사라짐 ! 뿅10 </h1>
+<button id ="btn1" type="button">보이기 </button> 
+
+
+</body>
+</html>

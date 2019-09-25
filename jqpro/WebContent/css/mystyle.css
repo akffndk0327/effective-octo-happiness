@@ -1,0 +1,27 @@
+@CHARSET "UTF-8";
+
+pre {
+	
+	font-size : 1.3em;
+	background : #efefef;
+	padding : 10px;
+	margin : 10px;
+	border-top : 1px solid gray;
+	border-bottom :1px solid gray;
+}
+
+div{
+		height :auto;
+		padding :20px; /* 테두리 안쪽 공간 없으면 그냥 줄로 보임  */
+		margin : 10px;
+		border : 1px dotted orange;
+	}
+	
+.box{
+	background : #efefef;
+	font-size : 1.2em;
+	border : none;
+	border-top : 1px solid gray; 
+	border-bottom : 1px solid gray; 
+	
+}

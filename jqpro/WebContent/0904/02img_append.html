@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		//p를 클릭하면 
+		//attr('title')
+		//새로운 img생성 하기 !
+		$('p').on('click',function(){
+			a=$(this).attr('title');
+			$('<img/>',{
+				'src' : '../images/'+ a +'.jpg'
+				
+			}).appendTo(this) //this : p, attendTo, prependTo
+			$(this).append(b);
+		})
+	})
+</script>
+<style>
+	img{
+		width : 100px;
+		height: 100px;
+	}
+</style>
+</head>
+
+<body>
+<pre>
+이미지 위에 마우스 올리면 말풍선처럼 뜨는게 'title'
+append :없었으면 추가되기. 있는건 잘라내고 붙여넣기(이동)
+
+attendTo : p태그 옆으로 생김 
+.insertAfter(this) :p 밖에(아래) 이미지 생김
+insertBefore(this) : p밖에(위)  이미지 생김 
+</pre>
+<p title="Tulips">튜울립</p>
+  <p title="Chrysanthemum">국화</p>
+  <p title="Koala">코알라</p>
+  <p title="Hydrangeas">수국     </p>  
+  <div id="result"></div>
+</body>
+</html>

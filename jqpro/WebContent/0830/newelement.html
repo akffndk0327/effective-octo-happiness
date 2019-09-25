@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>newelement.html 0830-2</title>
+<link rel ="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+
+<script> //<head> 사이가 <script>의 표준 위치! <body>에서도 써도되지만 순서대로 쓰거나 onload 적어서 실행시켜야함.
+	$(function(){
+		$('button#stop').on('click',function(){
+			clearInterval(a); //여러개 실행시키면 정지 버튼안먹힘.
+			
+		}) //'button #stop'  사이 띄우면 버튼 중에 stop id 가진애를 실행해라 라는 의미
+		
+		
+		$('button#btn1').on('click',function(){
+			$('<div/>',{ //{ id, class, 속성, 올수있어..  } / <div></div>
+				'text'  : '눌러줘잉',
+				'click'  : function() {
+					var mm =this;
+					//settimeout
+					//setinterval
+				  	a = setInterval(function(){ //a: 전역변수 var a : 지역변수
+						console.log(a);
+				  		cr = Math.floor(Math.random()*255);
+						cg = Math.floor(Math.random()*255);
+						cb = Math.floor(Math.random()*255);
+						//console.log(cr+","+cg+","+cb);
+						//10진수 -> 16진수로 바꾸기 .. 왜?
+						cr= cr.toString(16);
+						cg= cg.toString(16);
+						cb= cb.toString(16);
+						
+						$(mm).css('background','#'+cr+cg+cb); //this : 윈도우 객체여서 못받음 => div
+						
+					}, 500)
+					
+				}
+			}).appendTo('#div1');
+		});
+		
+		$('#btn2').on('click',function(){
+			$('<img/>',{
+				'src' : '../images/back.jpg',
+				'click' : function() {
+					//$(this).css('border','2px solid blue');
+					$(this).toggleClass('cborder'); // 누르면 파란테두리 생기고 다시누르면 테두리사라져
+				}
+			}).appendTo('#result');
+			
+		})
+		
+		
+	})
+
+</script>
+<style>
+	.cborder{
+		border : 1px solid blue;
+	}
+</style>
+</head>
+<body>
+<pre>
+버튼을 클릭하묜? 새로운 요소(div)를 생성하지요 ^^
+0.5초마다 배경색을 랜덤으로 바꾼다. 
+
+</pre>
+<button id="btn1" type="button">실행!</button> 
+<button id="stop" type="button">스타압!!</button> 
+
+<br><br>
+<div id="div1"></div>
+<hr>
+<pre>
+버튼을 클릭하면 이미지를 생성하고
+ 이미지를 클릭하면 테두리를 설정한다.
+</pre>
+<button id="btn2" type="button">이미지 생성</button>
+<br><br>
+<div id="result"></div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

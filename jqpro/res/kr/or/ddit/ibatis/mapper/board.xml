@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace = "board">
+	<select id ="selectBoard" resultClass="boardVO">
+		select * from board1 order by seq desc
+	</select>
+	
+	<select id="selectByPage" resultClass="boardVO" parameterClass="map">
+	  <![CDATA[
+		select A.* from (
+    	  select rownum as rnum, B.*  from (
+        	  select * from board1 
+        	  order by seq desc) B
+       		where rownum <=#end#) A 
+   		where A.rnum >=#start#
+   		]]>
+	</select>
+	
+	<select id ="countList" resultClass="int">
+		select count(*) from board1
+	</select>
+	
+	<insert id = "insertBoard"  parameterClass="boardVO">
+	insert into board1 
+		values(
+		board1_seq.nextval,
+		#subject#,#writer#,#mail#,#password#,#content#,0,#wip#,sysdate
+		)
+		<selectKey keyProperty ="seq" resultClass="int">
+			select board1_seq.currval from dual
+		</selectKey>
+	</insert>
+	
+	<insert id="insertReply" parameterClass="replyVO">
+		insert into reply
+		values(
+			reply_seq.nextval,
+			#bonum#,
+			#name#,
+			#cont#,
+			sysdate
+		)
+	 <selectKey keyProperty ="renum" resultClass="int">
+	 	select reply_seq.currval from dual
+	 </selectKey>	
+	</insert>
+	
+	<select id="replyList" parameterClass="int" resultClass="replyVO">
+		select * from reply where bonum=#data#
+	
+	</select>	
+
+		
+</sqlMap>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

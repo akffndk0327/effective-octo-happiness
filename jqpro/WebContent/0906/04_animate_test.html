@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('#left').click(function(){
+			$('img#img1').animate({left:'+=200px'},500); //200px 좌표 고정 
+			//이동하려면 포지션ㅇ 지정해야해 style에서 
+		})
+		$('#right').click(function(){
+			$('img#img1').animate({left:'-=200px'},500);
+		})
+		
+		//=======================================================
+		$('#start').click(function(){
+			setInterval(function(){
+				$('#img2').animate({left:'200px', opacity:'-=0.5'}, 500)
+		                  .delay(500)
+		                  .animate({left:'-=200px', opacity:'1'}, 500)
+		                  .delay(500);   
+						
+			}, 100)
+		})
+		//////////////////////////////////////////////////////////////////
+		$('#run').click(function(){
+			$('div').animate({left : '+=200px'},500)
+					.delay(500)
+					.queue(function(){//색변경
+						//css(색변경)
+						$(this).css('background','red');
+						//다시 나와야해 
+						$(this).dequeue();
+					})
+					.delay(500)
+					.animate({left : '-=200px'},500)
+					.dealy(500)
+					.queue(function(){//색변경
+						//css(색변경)
+						$(this).css('background','green');
+						//다시 나와야해 
+						$(this).dequeue();
+					})
+					
+		})
+		$('#size').click(function(){
+			setInterval(function(){
+				r=Math.floor(Math.random()*256);
+				g=Math.floor(Math.random()*256);
+				b=Math.floor(Math.random()*256);
+			
+			$('p').animate({left : '+=200px'},500)
+				  .animate({'font-size':'+=20px'},500)
+				  .queue(function(){//색변경
+					$(this).css('color','rgb('+r+','+g+','+b+')');
+					$(this).dequeue();
+					})
+				  .animate({left : '-=200px'},500)
+				  .animate({'font-size':'-=20px'},500)
+				  .queue(function(){//색변경
+					//css(색변경)
+					$(this).css('color','green');
+					//다시 나와야해 
+					$(this).dequeue();
+				})
+				
+			}, 1000)
+			
+		})
+		
+	})
+</script>
+<style>
+	img{
+		position : relative;
+		width:  100px;
+		height: 100px;
+	}
+	div{
+		position :relative;
+		width: 50px;
+		height:50px;
+		background: green;
+		border: none;
+	}
+	p{
+		position :relative;
+	}
+</style>
+</head>
+
+<body>
+<img id="img1" src="../images/Lighthouse.jpg">
+<br><br>
+<button id="left" type="button">오른쪽으로 </button>
+<button id="right" type="button">왼쪽으로  </button>
+<br><br>
+<hr>
+<img id="img2" src="../images/Lighthouse.jpg"><br>
+
+<button id="start" type="button">실행 </button>
+<br>
+<hr>
+<div></div>
+<button id="run" type="button">색변경</button>
+<br>
+<hr>
+<p>hello~~~~~</p>
+<button id="size" type="button">색변경</button>
+
+
+</body>
+</html>
+
+
+
+
+
+

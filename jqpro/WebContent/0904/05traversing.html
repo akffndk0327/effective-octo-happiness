@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+$(function() {
+   $('#parent').on('click', function() {
+      $('span').parent().css('border', '3px solid red');
+   })
+   
+   $('#parents').on('click', function() {
+      $('span').parents().css('border', '3px solid green');
+   })
+   
+   $('#parentpara').on('click', function() {
+      $('span').parents('ul').css('border', '3px solid blue');
+   })
+   
+   $('#parentUntil').on('click', function() {
+      $('span').parentsUntil('div').css('border', '3px solid orange');
+   })
+   
+   
+   $('span').on('click', function() {
+      //부모들 중에서 ul을 선택
+      $(this).parents('ul').css('background', 'yellow');
+   })
+})
+</script>
+<style>
+.siblings * {
+  display: block;
+  border: 2px solid lightgrey;
+  color: lightgrey;
+  padding: 5px;
+  margin: 15px;
+}
+</style>
+</head>
+<body class="ancestors">body (great-great-grandparent)
+  <div style="width:500px;" class="siblings">div (great-grandparent)
+    <ul>ul (grandparent)  
+      <li>li (direct parent)
+        <span>span</span>
+      </li>
+    </ul>   
+  </div>
+  <div style="width:500px;" class="siblings">div (great-grandparent)
+    <ul>ul (grandparent)  
+      <li>li (direct parent)
+        <span>span</span>
+      </li>
+    </ul>   
+  </div>
+  <div style="width:500px;" class="siblings">div (great-grandparent)
+    <ul>ul (grandparent)  
+      <li>li (direct parent)
+        <span>span</span>
+      </li>
+    </ul>   
+  </div>
+  <div style="width:500px;" class="siblings">div (great-grandparent)
+    <ul>ul (grandparent)  
+      <li>li (direct parent)
+        <span>span</span>
+      </li>
+    </ul>   
+  </div>
+  <br>
+  <button type="button" id="parent">parent</button>
+  <button type="button" id="parents">parents</button>
+  <button type="button" id="parentpara">parents_</button>
+  <button type="button" id="parentUntil">parentsUntil</button>
+</body>
+</html>

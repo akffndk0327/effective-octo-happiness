@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="buyer">
+	<select id="selectNameList" resultClass="buyerVO"> <!--resultClass="buyerVO" : config.xml에서 alias name 별칭준거  -->
+	select buyer_id,buyer_name
+	from buyer
+	</select>
+
+	<select id="buyerDetail" parameterClass="String" resultClass="buyerVO"> <!-- 쿼리포오브젝트로 실행됨. -->
+	select * from buyer where BUYER_id = #data#
+	</select>
+</sqlMap>

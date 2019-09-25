@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-3.4.1.min.js" type="text/javascript"></script>
+<script >
+$(function(){
+	$('li:first, li:last').css('background','yellow')
+	$('li:eq(5)').css('background','red')
+	$('li:lt(4)').css('font-size','2.0em')
+				 .css('font-weight','bold')
+	$('tr:even').css('background','lightblue') //짝수
+	$('tr:odd').css('background','lightgray') //홀수 
+	$('tr:first').css('background','black') //위에 먼저 쓰면 안먹히닌까 마지막에 써야함.
+				 .css('color','whites')
+})
+
+</script>
+<style>
+	table{
+/* 		border-collapse:collapse; /*선 하나로 합쳐짐 */
+ 		border-collapse:seperate; /*선 다시 나눠짐  */	
+		border-spacing :10px;
+/* 		margin-left : 200px; */
+		margin : 10px auto        /*위는 10px, 좌우는 30px or auto : 좌운 자동 가운데 맞춤*/
+
+	}
+	
+	td{
+		width : 200px;
+		height : 50px;
+		text-align: center;
+	}
+</style>
+</head>
+<pre>
+border-collapse:collapse; /*선 하나로 합쳐짐 */
+border-collapse:seperate; /*선 다시 나눠짐  */	
+$('tr:even') //짝수
+$('tr:odd') //홀수 
+</pre>
+<body>
+<ul>
+ <li> one </li>
+<li> two </li>
+<li>  three </li>
+<li> four </li>
+<li> five </li>
+<li> six</li>
+<li> seven</li>
+<li>eight</li>
+<li>nine</li>
+  </ul>
+ <hr>
+ <table border="1">
+ 	<tr>
+ 		<td>이름</td>
+ 		<td>주소</td>
+ 	</tr>
+ 	<tr>
+ 		<td>홍길동</td>
+ 		<td>100</td>
+ 	</tr>
+ 	<tr>
+ 		<td>개나리</td>
+ 		<td>150</td>
+ 	</tr>
+ 	<tr>
+ 		<td>진달래</td>
+ 		<td>250</td>
+ 	</tr>
+ 	<tr>
+ 		<td>무궁화</td>
+ 		<td>500</td>
+ 	</tr>
+ 	<tr>
+ 		<td>백장미</td>
+ 		<td>1750</td>
+ 	</tr>
+ 	<tr>
+ 		<td>백합</td>
+ 		<td>450</td>
+ 	</tr>
+ 	
+ 
+ 
+ 
+ 
+ </table>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script>
+	
+	$(function() {
+		$('#hidden').on('click', function() {
+			res = "hidden 결과 <br>";
+			$('#testForm :hidden').each(function() {
+				//태크네임 비교하기 
+				if (this.tagName == 'INPUT') {
+					res += "input hidden: [ " + $(this).attr('name');
+					res += " : " + $(this).val() + "]<br>";
+				} else {
+					res += $(this).text() + "<br>";
+				}
+				$('#result1').html(res);
+
+			})
+		})
+		
+		$('#visible').on('click',function(){
+			res = "visible 결과 <br>";
+			$('#testForm :visible').each(function(){ //#testForm :visible => : 띄우기 : form의 후손 부르기 
+				if (this.tagName == 'INPUT') {
+					res += "input visible: [ " + $(this).attr('name');
+					res += " : " + $(this).val() + "]<br>";
+				} else {
+					res += $(this).text() + "<br>";
+				}
+				$('#result2').html(res);
+			})
+		})
+	})
+</script>
+<style>
+	div{
+		height :auto;
+		padding :20px; /* 테두리 안쪽 공간 없으면 그냥 줄로 보임  */
+		
+		margin : 5px;
+		border : 1px dotted orange;
+	}
+</style>
+</head>
+<pre>
+if (this.tagName == 'INPUT') {
+**꼭 INPUT 대문자로 써야함 !!
+Opacity : 투명도 : 0~1  
+name="userAge" : attr
+value="33" : val
+ID가 중복됩니다 :text
+</pre>
+<body>
+<form id="testForm"> 
+	<input type="hidden" name="userAge" value="33">
+	<input type="hidden" name="userCity" value="대전">
+	
+	I D : 
+	<input type="text" name="userID" value="hong">  
+	<span style="display:none">ID가 중복됩니다. </span> 
+	<br>  
+	
+	이름 : 
+	<input type="text" name="userName" value="홍길동">   
+	<span style="visibility:hidden">이름을 입력하세요</span>
+	<br>  
+	
+	성별 : 
+	<input type="radio" name="sung" value="남" checked>남자  
+	<input type="radio" name="sung" value="여">여자  
+</form>
+<br><br>
+<button type="button" id="hidden">Hidden</button>
+<button type="button" id="visible">visible</button>
+<br>
+<div id ="result1"></div>
+<div id ="result2"></div>
+</body>
+</html>

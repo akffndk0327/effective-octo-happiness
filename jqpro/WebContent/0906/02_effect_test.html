@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('#show').click(function(){
+// 			$('img').show('slow'); //() 안에 숫자, 'fast'-200, 'slow' 입력하면됨 안쓰면 기본 400, 
+			$('img').show(2000,'swing',function(){ //알람뜰려면 실행완료 후 떠야하닌까 function줘
+				alert("커피가 필요해...");
+			}); //swing : 처음과 끝은 천천히  중간에는 빠르게
+// 			$('img').show(2000,'linear'); //linear – 움직이는 속도 일정 
+		})
+		$('#hide').click(function(){
+			$('img').hide('fast'); //() 안에 숫자, fast, slow 입력하면됨 
+		})
+		$('#toggle').click(function(){
+			$('img').toggle(); //() 안에 숫자, fast, slow 입력하면됨 
+		})
+		$('#sup').click(function(){
+			$('img').slideUp(500);
+		})
+		$('#sdown').click(function(){
+			$('img').slideDown(500);
+		})
+		
+		$('#stoggle').click(function(){
+			$('img').slideToggle(500);
+		})
+		
+		$('#fin').click(function(){
+			$('img').fadeIn(500);
+		})
+		
+		$('#fout').click(function(){
+			$('img').fadeOut(1000);
+		})
+		
+		$('#fto').click(function(){
+			$('img').fadeTo(1000,0.5);
+		})
+		
+		$('#ftoggle').click(function(){
+			$('img').fadeToggle(500);
+		})
+		
+		
+	})
+</script>
+<style>
+	img{
+		width : 300px;
+		height: 300px;
+	}
+</style>
+</head>
+<body>
+<button type="button" id="show">show</button>
+<button type="button" id="hide">hide</button>
+<button type="button" id="toggle">toggle</button>
+
+<button type="button" id="sup">slide up</button>
+<button type="button" id="sdown">slide down</button>
+<button type="button" id="stoggle">stoggle</button>
+<button type="button" id="fin">fin</button>
+<button type="button" id="fout">fout</button>
+<button type="button" id="fto">fto</button>
+<button type="button" id="ftoggle">ftoggle</button>
+<br><br>
+<img src ="../images/americano.jpg">
+</body>
+</html>

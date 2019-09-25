@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css"> <!-- 외부css적용 태그 !  -->
+<script src="../js/jquery-3.4.1.min.js"></script>
+
+<script type="text/javascript">
+	
+	$(function() {
+		$('#wrap').on('click', function() {
+			$('p').wrap('<div/>');
+		})
+		$('#wrapall').on('click', function() {
+			$('p').wrapAll('<div/>');
+		})
+
+		$('#unwrap').on('click', function() {
+			$('p').unwrap();
+		})
+// 		$('p').on('click',function(){
+// 			$(this).wrap('<div/>');
+// 		})
+		$('p').on('click', function() {
+			$(this).toggleClass('cwrap');
+		})
+
+		$('p').hover(function() {
+			//mouseover
+			//$(this).wrap('<div/>');
+			$(this).addClass('cwrap');
+		}, function() {
+			//mouseout
+			// 			$(this).unwrap();
+			$(this).removeClass('cwrap')
+		})
+
+	})
+</script>
+<style>
+	div{
+		background: yellow;
+	}
+	.cwrap{
+		background: pink;
+	}
+</style>
+</head>
+<body>
+<pre>
+wrap() : 각 줄에 div가 생김 .
+-$('p').wrap('&lt;div&gt;'); p요소를 각각 div요소로 감싸기 
+
+warpAll() : p요소 전체를 하나의 div요소로 감쌈
+-$('p').wrapAll('&lt;div&gt;');
+
+$('p').on('click',function(){
+  $(this).wrap('&lt;div/&gt;');
+ 	})
+
+-toggleClass('class이름') : on/off
+addClass('class이름') + removeClass('class이름')를 번갈아가면서 수행함 
+style에 class를 미리 등록 시킨다 .
+
+-hover(function(){},function(){}) :
+ mouseover,mouseout 이벤트를 실행 
+
+</pre>
+<p> 비가 옵니다.</p>
+<p> 주룩주룩 비가 옵니다. </p>
+<p> 집에 가서 쉬고 싶다 콜록콜록 </p>
+<span> 여기는 span </span> <!-- 인라인요소 ㅣ: 줄이 안바낌 -->
+<a> 여기는 a 태그 </a>
+<p> 졸리다.... 자고싶다 쿨쿨쿨쿨</p>
+<br><br>
+<button id="wrap" type="button">wrap</button>
+<button id="wrapall" type="button">wrapAll</button>
+<button id="unwrap" type="button">unwrap</button>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

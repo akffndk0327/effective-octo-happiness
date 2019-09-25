@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+// 		$('button[type=button]').on('click',function(){})
+		$('button').on('click',function(){
+		/*	$('div').eq(1).css('border','2px solid green')
+						  .siblings().css('border','3px solid hotpink')
+							.end().next().text("세번째 third")
+							.end().nextAll().css('background','yellow')
+							.end().prev().css('background','green');*/
+			//방법2
+			$('div').eq(1).css('border','2px solid green')
+			 		 .siblings().css('border','3px solid hotpink');
+							
+			$('div').eq(1).next().text("세번째 third");
+			
+			$('div').eq(1).nextAll().css('background','yellow');
+			$('div').eq(1).prev().css('background','green');
+			
+		})
+	})
+</script>
+<style>
+div {
+	width: 60px;
+	height: 60px;
+	margin: 10px;
+	float: left; /* 이거 떄문에 버튼이 왼쪽에 나와  */
+	border: 2px solid blue;
+}
+br{
+	clear : both;
+}
+</style>
+</head>
+<body>
+<pre>
+eq(1) : 다시돌아와서 
+.end() : 기준으로 돌아와서 ** 메소드 체인 ! 이거 안쓰면 계속 eq(1) 반복해서 써야해 
+prev() : 앞형제
+</pre>
+<div>a</div> 
+<div>b</div> 
+<div>c</div> 
+<div>d</div> 
+<div>e</div> 
+<div class="orange">f</div> 
+<div>g</div>
+
+<br><br>
+<button type="button"> 실행 </button>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

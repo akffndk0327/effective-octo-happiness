@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+
+	$(function() {
+		$('a').click(function() { //a태그 클릭하면 
+			event.preventDefault();
+			a = $(this).attr('href');  //href 속성을 가져와라 get
+			
+			$('img').fadeOut(500, function() { //사진이 사라지고
+				$('img').attr('src', a);
+				$('img').fadeIn('fast');
+			});
+		})
+	})
+</script>
+<style>
+	img{
+		width: :300px;
+		height: 300px; 
+	}
+</style>
+</head>
+<body>
+<pre>
+a태그 눌러도 페이지 안바뀌게 =>preventdefalut
+
+
+</pre>
+<ul>
+	<li><a href="../images/jQuery.jpg">JQuery교재</a></li>
+	<li><a href="../images/JSP2_1.jpg">JSP교재</a></li>
+	<li><a href="../images/UML.jpg">UML교재</a></li>
+	<li><a href="../images/americano.jpg">커피즐기기교재</a></li>
+	<li><a href="../images/dog.png">동물키우기교재</a></li>
+	<li><a href="../images/Hydrangeas.jpg">식물키우기교재</a></li>
+</ul>
+<br><br>
+<img src = "../images/noImage.png">
+
+</body>
+</html>

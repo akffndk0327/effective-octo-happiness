@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- <link rel="stylesheet" href="../css/mystyle.css"> -->
+
+<!-- w3school에서 복사함 밑에 4줄 -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+	$(function(){
+		$.ajax({ // 맨 처음 보여질때 
+			url:'/jqpro/LprodList', //컨트롤러
+			type :'get',
+			dataType : 'json',
+			success : function(v){
+				code = "";
+				$.each(v,function(i){
+					code+="<option value='"+v[i].lprod_gu+"'>"+v[i].lprod_nm+"</option>";
+				})
+				$('#lprod').html(code);
+				$('#lprod').trigger('change'); //밑에 체인지 이벤트로 넘어감 
+			}
+		})
+		
+		
+	$('#lprod').change(function(){ //대분류의 품목 리스트가 와야해 
+		//선택한 항목의 option vlaue 값을 가져온다.
+		guvalue = $(this).val();
+		$.ajax({
+			url:'/jqpro/ProdServlet',
+			type :'get',
+			dataType : 'json',
+			data :{"id" : guvalue},
+			success : function(res) {
+				/*
+				code = "";
+				$.each(res,function(i){
+					code += "<option value ='"+res[i].id+"'>"+res[i].name+"</option>";
+				})
+				$('#prod').html(code);
+				*/
+				code= "" ;
+				if(res.sw == "OK"){
+					$.each(res.data,function(i,v){ //res.data :  배열이닌까 이렇게 써얗ㅁ => v 가 res.data[i].id
+	 					code += "<option value ='"+v.id+"'>"+v.name+"</option>";
+	 				})
+				}else if(res.sw =="NO"){
+					code += "<option value ='0'>데이터 없음 </option>";
+					//이미지로 대체
+					noImg = $('<img>',{
+						'src' : '../images/noImage.png',
+						'width' : '200px',
+						'height': '200px',
+						
+					})
+					$('#result').empty(); //들어가 있던 div 요소 없애고 사진 넣기
+					$('#result').append(noImg);
+				}
+				$('#prod').html(code);
+				$('#prod').trigger('change');
+			},
+			error:function(xhr){
+				alert("상태 : " +xhr.status);
+			}
+		})
+		
+	})
+	
+	$('#prod').change(function(){
+		prodvalue= $(this).val();
+		$.ajax({
+			url : '/jqpro/ProdServlet',
+			type :'post',
+			data : {"id" : prodvalue},
+			dataType:'json',
+			success : function(result){
+				code="<table  class='table table-striped' border='1'>";
+				code+="<tr><td>ID</td>"
+				code+="<td>" + result.id + "</td><tr>"
+				
+				code+="<tr><td>NAME</td>"
+				code+="<td>" + result.name + "</td><tr>"
+				
+				code+="<tr><td>lgu</td>"
+				code+="<td>" + result.lgu + "</td><tr>"
+				
+				code+="<tr><td>buyer</td>"
+				code+="<td>" + result.buyer + "</td><tr>"
+
+				code+="<tr><td>cost</td>"
+				code+="<td>" + result.cost + "</td><tr>"
+				
+				code+="<tr><td>price</td>"
+				code+="<td>" + result.price + "</td><tr>"
+				
+				code+="<tr><td>sale</td>"
+				code+="<td>" + result.sale + "</td><tr>"
+								
+				code+="</table>";
+				$('#result').html(code);
+				
+			},
+			error:function(xhr){
+				alert("상태 : " +xhr.status);
+			}
+			
+		})
+		
+	})
+})
+</script>
+</head>
+<body>
+	<div class="container">
+		<h2>제품리스트</h2>
+		<form>
+			<div class="form-group">
+				<label for="sel1">제품분류 리스트 : </label> <select class="form-control"
+					id="lprod">
+				</select> <br>
+			</div>
+
+			<div class="form-group">
+				<label for="prod">상품리스트 </label> <select class="form-control"
+					id="prod">
+
+				</select> <br>
+			</div>
+		</form>
+		<div id="result"></div>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>selector1.html 0829-3</title>
+<script src="../js/jquery-3.4.1.min.js"></script>
+
+<script>
+	$(function(){ // window.ready의 ㅇ의미.
+		//전체 배경색을 변경
+		$('*').css('background','yellow');
+	
+		//h1요소의 글자색을 파랑		
+		$('h1').css('color','blue');
+		
+		//id가 para인 요소의 글자색은녹색
+		$('#para').css('color','green');
+		//class가 sample요소의 글자색은 빨강
+		$('.sample').css('color','red');
+		
+	})
+</script>
+</head>
+<pre>
+-전체 :  *
+-요소 : 'h1'
+-id  : '#id'
+-class : '.class'
+
+</pre>
+<body>
+<body> 
+          <h1> 제목입니다 </h1> <!-- 태그요소 -->
+          <h2 id="para"> 작은 제목입니다 </h2> <!-- id요소 -->
+          <h2 class="sample"> 샘플입니다 </h2> <!-- class요소 -->
+
+</body>
+</html>

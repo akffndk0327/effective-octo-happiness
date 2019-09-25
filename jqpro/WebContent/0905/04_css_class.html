@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+	/*	$('p').click(function(){ //클릭일땐 토글로 => 클릭하면 색 보이고 꺼지고 
+			$(this).toggleClass('back');
+		})*/
+	
+			//토글처럼 만들어보기
+		$('p').click(function() { //클릭하는 p 태그에 back 이라는 클래스가 있느냐 ?
+			if ($(this).hasClass('back')) {
+			 	$(this).removeClass('back'); //클릭하면 지워라 
+			} else {
+				
+				$(this).addClass('back'); //적용 안되있으면 적용시켜라 addClass
+			}
+		})
+
+		$('p').hover(function() {
+			$(this).addClass('back');
+		}, function() {
+			$(this).removeClass('back');
+		})
+	})
+</script>
+<style>
+	.back{
+		background: crimson;
+	}
+</style>
+
+</head>
+<body>
+ <p>오늘 점심 뭐먹지 ?</p>
+ <p>다온 밥상 가야지 </p>
+ <p>집에 가고 싶어요.......</p>
+
+</body>
+</html>

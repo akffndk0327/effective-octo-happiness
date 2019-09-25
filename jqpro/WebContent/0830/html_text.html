@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>html_text.html 0830-2</title>
+<link rel ="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+
+<script>
+	$(function(){
+// 		doucument.getElementById('d1').innerHTML ="//<h1>hello</h1>"
+		
+		res = $('#d1').html();
+		res += "<h1>hello</h1>";
+		//실행 하자마자 #d1 #d2의 내용을 "변경" 
+// 		$('#d1').html("<h1>hello</h1>"); // set으로 변경. h1태그가 실행됨. d1의 내용을 변경하라 라는 의미.
+		$('#d1').html(res); // set으로 변경. h1태그가 실행됨. d1의 내용을 변경하라 라는 의미.
+		
+		$('#d2').text("<h1>hello</h1>"); // set으로 변경. 그냥 글자로 인식함. d2의 내요을변경하라 
+		
+		//#d3, #d4의 내용을 가져오기 
+// 		alert($('#d3').html()); // get. <p>오늘은 즐거운 프라이데이~~</p> 태그포함출력.
+// 		alert($('#d4').text()); // get.  금요일은 토요일 전날 이비지요 . 텍스트만 출력됨. 
+
+// 		alert($('#d5 p').html()); //d5 밑에 잇는 p태그  1<a>홍길동</a> 이거만 나와 => 1개만 가져옴 
+// 		alert($('#d5 p').text()); //d5 밑에 잇는 p태그   1홍길동2개나리3진달래 a태그 없이 문자만 가져옴 
+
+		//p 태그가 여러개인 경우 html()사용시 반복문 사용 ! 
+		res="";
+		$('#d5 p').each(function(i, a){ //i ,a는 선택사항 i 안써도 증가는 함 .
+// 			a=p[0]
+// 		$(this)//this : a의 1번째 ,2번째 ...
+// 			res += $(this).html()+"\n";  //1
+// 			res += i+"번째 요소 : " + $(this).html()+"\n"; //2
+		//	res += i+"번째 요소 : " + $(a).html()+"\n"; 	//3 2,3은 같은 결과 나옴 
+			
+		})
+	//	alert(res);
+
+	})
+	
+
+</script>
+<style>
+	div{
+		width : 200px;
+		height: 200px;
+		border: 1px solid blue;
+		margin: 10px;
+		padding: 10px;
+	}
+</style>
+</head>
+<body>
+<pre>
+==#d1 #d2의 내용을 "변경" 
+html() : 변경할 내용 속에 html태그가 포함되어 있을 경우 태그가 실행되어 나타ㅇ남. 
+	$('#d1').html("&lt;h1&gt;hello&lt;/h1&gt;");
+	
+text() :변경할 내용 속에 html태그가 포함되어 있더라도 태그가 실행되지 않고 단순 글자로 표현된다 .
+	$('#d2').text("&lt;h1&gt;hello&lt;/h1&gt;");
+	
+==#d3, #d4의 내용 가져오기
+html() : 태그를 포함시켜 가져온다.
+	$('#d3').html();
+text() : 태그는 포함하지 않고 글자만 가져온다.
+	$('#d4').text();
+	
+-반복문 : .each(function(i,a)){}
+res="";
+$('#d5 p').each(function(i, a){ //i ,a는 선택사항 i 안써도 증가는 함 .
+	
+
+</pre>
+<div id="d1"></div>
+<div id="d2"></div>
+
+<div id="d3">
+	<p>오늘은 즐거운 프라이데이~~</p>
+</div>
+<div id="d4">
+	<p> 금요일은 토요일 전날 이비지요</p>
+</div>
+
+<div id="d5">
+  <p>1<a>홍길동</a></p>
+  <p>2<a>개나리</a></p>
+  <p>3<a>진달래</a></p>  
+
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

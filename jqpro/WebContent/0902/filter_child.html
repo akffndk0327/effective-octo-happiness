@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script>
+$(function(){
+	$('li:first-child').css('border', '2px solid red') //각 li의 첫번째 자식을 선택 
+	$('li:first').css('background','yellow')			//전체 통틀어서 첫번째 
+
+	$('td:first-child').css('background','gray')
+	$('td:nth-child(2)').css('background','skyblue')
+
+	$('tr:first-child td').css('background','black') //tr 자식인 td 가운데 띄어줘야해 
+					   .css('color','white')
+	
+})
+
+</script>
+<style>
+	td{
+		width:300px;
+		height:50px;
+		text-align:center;
+	}
+
+</style>
+</head>
+<pre>
+$('li:first-child')//각 li의 첫번째 자식을 선택 
+$('li:first')	  //전체 통틀어서 첫번째 
+$('td:nth-child(2)') //서울 서울 대전 부산 선택 
+$('tr:first-child td') /tr의 첫번째 자식 : 첫줄 => 이름 주소 전화번호
+</pre>
+<body>
+<h2>여자에게 인기있느 남자들</h2>
+<ol>
+<!-- ol밑에는 li만 들어갈수있음 <p> x -->
+	<li>매너<!-- li 요소안의 대부분으 블럭, 인라인 요소 들어갈수있음 <p></p> 가능  --></li>
+	<li>능력</li>
+	<li>돈</li>
+	<li>프로그래머</li>
+</ol>
+<h2>남자에게 인기있느여자들</h2>
+<ol>
+	<li>예쁜</li>
+	<li>귀염</li>
+	<li>섹시</li>
+	<li>능력</li>
+</ol>
+<hr>
+<table border="1">
+	<tr>
+		<td>이름</td>
+		<td>주소</td>
+		<td>전화번호</td>
+	</tr>
+	<tr>
+		<td>홍길동</td>
+		<td>서울</td>
+		<td>010-1245-7861</td>
+	</tr>
+	<tr>
+		<td>진달래</td>
+		<td>서울</td>
+		<td>1235</td>
+	</tr>
+	<tr>
+		<td>진날래</td>
+		<td>대전</td>
+		<td>1555</td>
+	</tr>
+	<tr>
+		<td>개나리</td>
+		<td>부산</td>
+		<td>123</td>
+	</tr>
+
+</table>
+<br><br>
+
+<table border="1">
+	<tr>
+		<td>이름</td>
+		<td>주소</td>
+		<td>전화번호</td>
+	</tr>
+	<tr>
+		<td>홍길동</td>
+		<td>서울</td>
+		<td>010-1245-7861</td>
+	</tr>
+	<tr>
+		<td>진달래</td>
+		<td>서울</td>
+		<td>1235</td>
+	</tr>
+	<tr>
+		<td>진날래</td>
+		<td>대전</td>
+		<td>1555</td>
+	</tr>
+	<tr>
+		<td>개나리</td>
+		<td>부산</td>
+		<td>123</td>
+	</tr>
+	
+	
+
+</table>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

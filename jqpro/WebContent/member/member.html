@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  
+  <script src="../js/regcheck.js"></script>
+
+<script type="text/javascript">
+	
+	$(function() {
+		$('#idcheck').on('click', function() {
+			idvalue = $('#id').val();
+			//정규식 체크 
+			if (idcheck() == true) {
+				$.ajax({
+					url : '/jqpro/CheckId',
+					type : 'post',
+					data : {
+						"id" : idvalue
+					},
+					dataType : 'json',
+					success : function(res) {
+						$('#spanid').html(res.sw).css('color', 'red');
+					},
+					error : function(xhr) {
+						alert("삳태 : " + xhr.status);
+					}
+
+				})// ajax end
+			}// if end 
+		})
+
+		$('#dongbut').on('click', function() {
+			dongvalue = $('#dong').val();
+			//공백 체크 
+			if (dongvalue.trim().length <= 0) {
+				alert("입력이 필요합니다.");
+				return false; // 입력 못하면 ajax 수행 못함. + function을 종료 시켜라 
+			}
+
+			$.ajax({
+				url : '/jqpro/SelectDong',
+				type : 'post',
+				data : {
+					'dong' : dongvalue
+				},
+				dataType : 'json',
+				success : function(res) {
+					code = "<table class ='table table-bordered'>";
+					$.each(res, function(i, v) {
+						code += "<tr class='ziptr'><td>" + v.zip + "</td>";
+						code += "<td>" + v.addr + "</td>";
+						code += "<td>" + v.bunji + "</td>";
+						code += "</tr>";
+					})
+					code += "</table>"
+					$('#result').html(code);
+				},
+				error : function(xhr) {
+					alert("상태 : " + xhr.status);
+				}
+			})
+
+		})
+
+		$('#result').on('click', '.ziptr', function() {
+			zip = $('td:eq(0)', this).text();
+			addr = $('td:eq(1)', this).text();
+			$('#zip').val(zip);
+			$('#addr1').val(addr);
+
+			$('#myModal').modal('hide');
+			//동 입력하고 내용지우기
+			// 			$('#dong').val("");
+			// 			$('#result').empty();
+		})
+
+		//모달이 사라질때 이벤트 생성.
+		$('#myModal').on('hide.bs.modal', function() {
+			//동 입력하고 내용지우기
+			$('#dong').val("");
+			$('#result').empty();
+		})
+		
+		//-----------------------------------------------------
+		//모달창 클릭하면 시도 리스트떠 있어
+					
+			$("#btncode2").on('click',function(){
+				$.ajax({
+					url : "/jqpro/SelectSido",
+					dataType : "json",
+					success : function(res){
+						code = "";
+							$.each(res,function(i,v){
+								code +="<option value = '"+v.sido+"'>"+v.sido+"</option>";
+							})
+							$('#sido').html(code);
+							$('#gugun').trigger('change');
+							$('#dong2').trigger('change');
+							
+					},
+					error : function(xhr){
+						alert("상태 : "+xhr.status);
+					}
+					
+				})
+			})
+		//시도를 change햇을때 구군이 나오면됨
+		$("#sido").change(function(){
+			sidoValue=$(this).val();
+			$.ajax({
+				url : "/jqpro/SelectGugun",
+				data:{"sido" :  sidoValue },
+				dataType:"json",
+				success : function(res){
+					code= "";
+					$.each(res,function(i,v){
+						code+="<option value ='"+v.gugun+"'>"+v.gugun+"</option>";
+					})
+					$('#gugun').html(code);
+					$('#gugun').trigger('change');
+				},
+				error : function(xhr) {
+					alert("상태 : " + xhr.status);
+				}
+				
+			})
+		})
+		
+		$("#gugun").change(function(){
+			sidoValue=$('#sido').val();
+			gugunValue=$(this).val();
+			
+			$.ajax({
+				url : "/jqpro/SelectDong2",
+				data:{"sido" :  sidoValue,
+					  "gugun" : gugunValue},
+				dataType:"json",
+				success : function(res){
+					code= "";
+					$.each(res,function(i,v){
+						console.log(v.dong);
+						code+="<option value ='"+v.dong+"'>"+v.dong+"</option>";
+					})
+					$('#dong2').html(code);
+					$('#dong2').trigger('change');
+				},
+				error : function(xhr) {
+					alert("상태 : " + xhr.status);
+				}
+				
+			})
+			
+		})
+		
+		//우편번호 검색 버튼눌렀을때 
+		$('#dongbut2').on('click', function() {
+			sidovalue = $('#sido').val();
+			gugunvalue =$('#gugun').val();
+			dongvalue = $('#dong2').val();
+				
+			$.ajax({
+				url : '/jqpro/detail',
+				type : 'get',
+				data : {
+					'sido' : sidovalue,
+					'gugun' : gugunvalue,
+					'dong': dongvalue
+				},
+				dataType : 'json',
+				success : function(res) {
+					code = "<table class ='table table-bordered'>";
+					$.each(res, function(i, v) {
+						code += "<tr class='ziptr2'><td>" + v.zip + "</td>";
+						code += "<td>" + v.addr + "</td>";
+						code += "<td>" + v.bunji + "</td>";
+						code += "</tr>";
+					})
+					code += "</table>"
+					$('#result2').html(code);
+				},
+				error : function(xhr) {
+					alert("상태 : " + xhr.status);
+				}
+			})
+
+		})
+
+		
+		
+		$('#result2').on('click', '.ziptr2', function() {
+			zip = $('td:eq(0)', this).text();
+			addr = $('td:eq(1)', this).text();
+			$('#zip').val(zip);
+			$('#addr1').val(addr);
+			$('#myModal2').modal('hide');
+
+		})
+
+		//모달이 사라질때 이벤트 생성.
+		$('#myModal2').on('hide.bs.modal', function() {
+			//동 입력하고 내용지우기
+			
+			
+			$('#sido').val("");
+			$('#gugun').val("");
+			$('#dong2').val("");
+			$('#result2').empty();
+		})
+		
+	$('#send').on('click', function() {
+		$('#reset').hide();
+			//입력한 모든 값 가져온다. -> 직렬화. serialize =><form id="" name= "">필요해 
+			datas = $("#inputform").serializeArray();
+			console.log(datas);
+			// 정규식체크 
+			if (datacheck() == true) {
+				$.ajax({
+					url : '/jqpro/InsertMember',
+					type : 'post',
+					// 				data : $("#inputform").serializeArray(), 
+					data : datas, //{"id" : sasdfaf} => datas 에 다 들어있어서 {} 필요없어
+					dataType : 'json',
+					success : function(res) {
+						//jsp의 name 값을 success에 가져온다.
+						$('#join').html(res.sw).css('color', 'skyblue');
+					},
+					error : function(xhr) {
+						alert("상태 : " + xhr.status);
+						//200번 에러는 f12 ->네트워크 -> response 확인 -> json확인 ->jsp에서 수정 or success 부분 확인 
+					}
+
+				}) // ajax end
+			}//if end
+
+		})
+
+	})
+</script>
+ <style>
+  .container{text-align:center;   }
+  .form-horizontal{  width:100%;   box-sizing:border-box; } 
+	  
+   fieldset {border: 10px solid #cacace; background: #fff; width:90%;} 
+  
+	.form-group {
+	        text-align:left; 
+	        padding: 8px; 
+	        border-bottom: 1px dashed #ababab;
+	 }
+	 
+    .form-group label.control-label { 
+	          /* background: #efefef;  */ 
+	          width: 120px;
+	          display: inline-block; 
+	          text-align: center; 
+	          box-sizing:border-box;
+	 }
+	
+	.form-group input {  
+	         box-sizing:border-box;  
+	        margin-left : 20px;
+	        padding: 10px 15px;  
+	        border-radius: 10px; 
+	        border: 0 none;  
+	        border : 1px solid gray;
+	 }
+	.form-group input#addr1, .form-group input#addr2{
+	           width:calc(90% - 127px);
+	           box-sizing:border-box;
+	 }
+	.form-group input.addr{
+	          margin : 5px 20px; 
+	          margin-right: 0px; 
+	}
+	.form-group:last-child {border-bottom: 0 none;} 
+	.form-group .btn{
+		   background:#fff; 
+		   font-weight: bold;
+		   border:1px solid #8888ff; 
+		   color:blue; 
+		   margin-left: 10px;
+		   padding: 5px 10px 8px; 
+		   border-radius: 50px; 
+		 /*   box-sizing:border-box; */
+	 } 
+	
+	.btn-wrap{margin-top:30px; text-align: left;}
+	.btn-wrap .btn{ 
+	        width:20%; 
+	        padding:10px;
+	        font-size:1.0em; 
+	      /*   box-sizing:border-box; */
+	        color: white;
+	        font-weight: bold; 
+	        background: Dodgerblue; 
+	        border:  none;  
+	        border-radius: 50px;
+	  }
+	.btn-wrap .btn.btn-default{background: DimGray;}
+	#myModal{
+		display : none;
+	}
+	.ziptr:hover{
+		background-color: skyblue;
+	}
+  </style>
+</head>
+<body>
+<div class="container">
+<h1>회원가입</h1>
+
+<form class="form-horizontal" action="aa.jsp" method="post" name="ff" id ="inputform">
+	 <fieldset> 
+		
+	   <div class="form-group">
+	      <label class="control-label" for="id">아이디:</label>
+	        <input type="text" class="form-control" id="id" placeholder="" name="mem_id">
+	      <button type="button" class="btn col-sm-1" id ="idcheck">중복검사</button>
+	      <span id ="spanid"></span>
+	    </div>
+	   
+	   
+		 <div class="form-group">
+	      <label class="control-label" for="name">이름:</label>
+	        <input type="text" class="form-control" id="name" placeholder="" name="mem_name">
+	    </div>
+	    
+	    <div class="form-group">
+	      <label class="control-label" for="birth">생년월일:</label>
+	        <input type="date" class="form-control" id="birth" placeholder="" name="mem_bir">
+	    </div>
+		  
+	    
+	    <div class="form-group">
+	      <label class="control-label" for="pwd">비밀번호:</label>
+	        <input type="password" class="form-control" id="pwd" placeholder="" name="mem_pass">
+	    </div>
+	   
+	    <div class="form-group">
+	      <label class="control-label" for="ptel">휴대폰 번호:</label>
+	        <input type="text" class="form-control" id="ptel" placeholder="010-1234-5678" name="mem_hp">
+	    </div>
+	    
+	    <div class="form-group">
+	      <label class="control-label" for="email">이메일:</label>
+	        <input type="email" class="form-control" id="email" placeholder="abcd123@email.com" name="mem_mail">
+	    </div>
+	    
+	    <div class="form-group">
+	      <label class="control-label" for="zip">우편번호</label>
+	         <input type="text" class="form-control addr" id="zip" placeholder="" name="mem_zip">
+	         <button data-toggle="modal" data-target="#myModal" id="btncode" type="button" class="btn col-sm-1">번호검색</button>
+	         <button data-toggle="modal" data-target="#myModal2" id="btncode2" type="button" class="btn col-sm-1">번호검색2</button><br>
+	       <label class="control-label" for="zip">주소:</label> 
+	         <input type="text" class="form-control addr"  id="addr1" placeholder="" name="mem_add1"><br>
+	        <label class="control-label" for="zip">상세주소:</label> 
+	         <input type="text" class="form-control addr"  id="addr2" placeholder="" name="mem_add2">
+	    </div>
+	    
+	    
+  </fieldset> 
+    <div class="btn-wrap">        
+        <input id="send" type="button" class="btn btn-primary btn-lg" value="제출"> 
+        <span id="join"></span>
+		<input id="reset" type="reset" class="btn btn-default btn-lg" value="초기화">
+    </div>
+  </form>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">우편번호 찾기 </h4>
+      </div>
+      <div class="modal-body">
+		동이름 입력 <input type = "text" id="dong">
+		<input type = "button" value="검색" id="dongbut">
+		<br><br>
+		<div id="result"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 모달2 -->
+<div id="myModal2" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">우편번호 찾기 </h4>
+      <div class="modal-body">
+        <lable for="sido"> 시도 : </lable>
+        <select class="sido" id="sido"></select>
+        <lable for="gugun"> 구군 : </lable>
+        <select class="gugun" id="gugun"></select>
+        <lable for="dong"> 동이름 : </lable>
+        <select class="dong" id="dong2"></select>
+		<input type = "button" value="검색" id="dongbut2">
+      </div>
+		<br><br>
+		<div id="result2"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+</html>

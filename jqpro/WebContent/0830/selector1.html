@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>selector1.html 0830-4</title>
+<script src ="../js/jquery-3.4.1.min.js"></script>
+<link rel ="stylesheet" href="../css/mystyle.css">
+
+<script>
+	$(function(){
+		//h2의 자식 a 태그의 스타일 에 테두리 설정 - solid
+		$('h2 > a').css('border','2px solid red')
+		//h2의 후손 a태그의 스타일 배경색 을 노란색으로 변경
+		$('h2 a').css('background','yellow')
+		
+		//h3 다음의 모든 형제의 배경색을 변경, 길이지정, 가운데정렬
+        /*$('h3 ~p').css('background','yellow')
+        		  .css('width','300px')
+        		  .css('text-align','center');*/
+         
+        		  //css 여러개 한꺼번에 지정하기 
+		  $('h3~p').css({'background' :'yellow' ,   
+			  			 'width' :'300px',
+			  			 'text-align':'center'	})        		  
+		//h3 다음의 첫번째 형제의 글자를 굵게, 크게  : font-weight 
+		/* $('h3+p').css('font-weight','bold') //key, value
+				 .css('font-size','1.5em')*/
+  			$('h3~p').css({'font-weight':'bold',   
+  				'font-size':'1.5em' })
+	
+		
+		
+	})
+</script>
+</head>
+<body>
+<pre>
+body  span : span까지 갈수 있는데(후손)
+body> span 은 안됌 왜냐면 span 은 p의 자식이고 body의 자손이닌까 span까지못감.
+body> p 가능 : 자식까지 갈수있어 
+ div + p: div 다음 의 p 1개 만 선택 / div ~ p : div뒤의 "모든" p선택 ! 
+ 앞의 형제는ㅁ ㅔ소드 이용해야함. ! 
+ 
+//h2의 자식 a 태그의 스타일 에 테두리 설정 - solid
+	$('h2 &gt; a').css('border','2px solid red')
+	//h2의 후손 a태그의 스타일 배경색 을 노란색으로 변경
+	$('h2 a').css('background','yellow')
+
+</pre>
+<h2> 문단 안에 <a>링크</a> 태그가 있다  <!-- 자식 a 태그-->
+두번째  <span><a>링크</a></span> 은 손자이다  <!-- 후손 a태그 -->
+</h2>
+<hr>
+<h3>
+<p>형제 선택자 에 대하여</p>
+ <h3> 텔레토비 가족을 소개 합니다</h3>
+ <p> 보라돌이</p>
+ <p> 뚜비</p>
+ <p> 나나 </p>
+ <p>뽀~ </p>
+
+</h3>
+</body>
+</html>

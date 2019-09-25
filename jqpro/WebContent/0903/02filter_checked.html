@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script>
+$(function(){
+// 	$('input[type=button]').on('click',function(){}) 이렇게도 쓸수 있음 
+		$('input:button').on('click',function(){
+			//선택 되어있는 체크박스의 value값을 가져와야함 ! 
+			//$('input[type=checkbox]').val()
+			//$('input[name=hobby]').val()
+			res = "선택한 값 : <br>";
+			$(':checkbox:checked').each(function(i,a){ //i : 인덱스 번호 , a: 인덱스 받는 변수 써도 되고 안써도됨.
+				//출력 내용 먼저 만들어야해 밑에 ㄱㄱ
+				res += $(this).val() + " " ; //누적시키기
+				
+				
+			}) //반복문 ! 
+			$('#result').html(res) //innerhtml
+// 			$(':checkbox:checked').val()
+		})
+})
+	
+</script>
+<style>
+	div{
+		height :auto;
+		padding :20px; /* 테두리 안쪽 공간 없으면 그냥 줄로 보임  */
+		
+		margin : 5px;
+		border : 1px dotted orange;
+	}
+</style>
+</head>
+<pre>
+-반복문 : .each()
+res = "선택한 값 : <br>";
+$(':checkbox:checked').each(function(i,a){ //i : 인덱스 번호 , a: 인덱스 받는 변수 써도 되고 안써도됨.
+	//출력 내용 먼저 만들어야해 밑에 ㄱㄱ
+	res += $(this).val() + " " ; //누적시키기
+}) //반복문 !
+-.html ==> 출력문인 res에 <br>태그가 포함되어있어서 html로 써야함 
+$('#result').html(res) //innerhtml
+ 
+</pre>
+<body>
+<form>
+취 미 :
+ <input type="checkbox" name="hobby" value="여행" checked >여행
+<input type="checkbox" name="hobby" value="장기">장기
+<input type="checkbox" name="hobby" value="바둑">바둑
+<input type="checkbox" name="hobby" value="독서" >독서
+<input type="checkbox" name="hobby" value="낚시">낚시<br><br>
+<input type="button" value="전송">
+<br><br>
+<div id="result"></div>
+</form>
+</body>
+</html>

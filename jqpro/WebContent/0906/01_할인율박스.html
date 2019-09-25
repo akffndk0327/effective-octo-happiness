@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('img').hover(function(){
+			$(this).addClass('cborder')
+			
+		},function(){
+			$(this).removeClass('cborder');
+		})
+		
+		$('.guess_box').on('click',function(){
+			//할인율 
+			$('#pp').remove();
+			
+			r=Math.floor(Math.random()*6+5);
+			a=$('<p/>',{
+				'text' : '할인율 :' + r +'%',
+				'id' : 'pp'
+			})
+			$(this).append(a);
+		})
+		
+	})
+</script>
+<style>
+.cborder{
+  border : 3px solid orange;
+}
+#header {
+  border : none; 
+}
+#main{
+  width : 600px;
+  height : 300px;
+  background : lightgray; 
+}
+.guess_box{
+   float : left;
+   width : 120px;
+   height : 180px;
+   padding : 2px;
+   margin : 2px;
+   background : #dfdfdf;
+   border : none;
+}
+img{
+  width : 100%;
+  height : 230px;
+}
+</style>
+
+</head>
+<body>
+<pre>
+Img 에 hover 메소드를 이용해 
+ mouseover, mouseout 에 로 파란색 테두리 설정및 해제 – class 지정 
+guess_box 를 클릭하면 랜덤을 이용해서 할인률 구하기 (5~10사이)
+할인률을  &lt;p&gt; 할인율 : 7 %&lt;/p&gt;의 형태로 만들기 
+append나 appendTo를 이용해서  할인률을  guess_box에 추가 
+클릭은 한번만 할 수 있게 한다 – 이벤트 해제 
+
+   다른 guest_box를 클릭하면 그의  할인률은 지우고 
+    현재 클릭한 guest_box의 할인율만 보여지게 한다  
+
+</pre>
+<div id="header">
+   <h2> Jump for Joy Sale </h2>
+</div>
+<div id="main">
+   <div class="guess_box"><img src="../images/풍차.jpg" /></div>
+   <div class="guess_box"><img src="../images/대나무숲.jpg" /></div>
+   <div class="guess_box"><img src="../images/산.png" /></div>
+   <div class="guess_box"><img src="../images/셔틀콕.jpg" /></div>
+</div>
+</body>
+</html>

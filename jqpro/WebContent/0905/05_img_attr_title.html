@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+// 		$('img').attr('title','korea'); //title : 그림위에 커서 올리면 말풍선처럼 나타남 
+// 		len =$('img').length;
+// 		for(i=0; i<len;i++){}
+		
+		$('img').each(function(i){
+// 			a=$(this).attr('title',i+"번째 이미지 입니다.");
+			$(this).attr('title',function(){
+				//src 속성값을 가져온다 
+				a = $(this).attr('src')
+				
+				//a에서 마지막 / 위치와 . 의 위치를 얻어낸다.
+				idx1 = a.lastIndexOf('/');
+				idx2 = a.lastIndexOf('.');
+				
+				b= a.substring(idx1+1,idx2);
+				//a에서 idx1 과 idx2번 사이의 문자를 추출 
+				return b;
+				
+			})
+		})
+		
+		$('img').on('click',function(){
+// 		$('img').click(function(){
+// 		$('img').bind('click',function(){
+			r=Math.floor(Math.random()*256);
+			g=Math.floor(Math.random()*256);
+			b=Math.floor(Math.random()*256);
+			//rgb(230,124,200)
+			$(this).css('border', '5px solid rgb(' + r + ',' + g + ',' + b +')');
+// 			$(this).unbind('click'); //한번 밖에 클릭 안돼 . 방법1
+			$(this).off('click');
+		})
+		
+		//////////////////////////////////////////////////////////////////
+	/*	$('img').one('click',function(){
+			r=Math.floor(Math.random()*256);
+			g=Math.floor(Math.random()*256);
+			b=Math.floor(Math.random()*256);
+		
+			$(this).css('border', '5px solid rgb(' + r + ',' + g + ',' + b +')');
+		})
+		*/
+		
+	})
+</script>
+<style>
+	img{
+		width : 100px;
+		height: 100px;
+	}
+</style>
+</head>
+<body>
+<pre>
+attr('title','korea'); //title : 그림위에 커서 올리면 말풍선처럼 나타남 
+이미지 이름 찾기  : subString, 구분하기
+.lastIndexOf('/')
+.lastIndexOf('.')
+rgb() 는 붙여쓰기 ! 
+one() : unbind없어도 한번만 실행할 수 있음. one을 쓰던가 unbind쓰던가 
+onclick,click,bindclick- unbind, off() 사용 가능 
+
+</pre>
+<img src= "../images/buffet.jpg">
+<img src= "../images/cafelatte.jpg">
+<img src= "../images/dog.png">
+<img src= "../images/Desert.jpg">
+<img src= "../images/computer.png">
+</body>
+</html>

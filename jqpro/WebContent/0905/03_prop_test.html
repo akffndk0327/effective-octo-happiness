@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('#checkAll').on('change',function(){
+			//checkAll 의 속성을 가져온다 get 
+			//속성을 변수에 담아 
+			a= $(this).prop('checked');
+			
+			//class ="check"의 checked 속성값을 a값으로  설정 
+			$('.check').prop('checked',a);
+// 			$('div').css('background','lightblue');
+			a = $('div').css('background');
+			alert(a);
+			
+		})
+		
+	})
+</script>
+</head>
+<body>
+<pre>
+type = attr(type)
+checked =prop
+prop('checked')
+</pre>
+<div class="box">
+	<h3>prop </h3>
+	속성 이름 없이 사용되는 속성을 설정하거나 설정 여부를 알수 있는 메소드<br>
+	(예: checked, selected, disabled, readonly, multiple )<br>
+	$(selector).prop("속성명", 값); =>set <br>
+		값 : true/false로 "설정"<br>
+		
+	$(selector).prop("속성명"); => get <br>
+		현재 속성 값이 true 인지 false인지 값을 가져오라는 것 
+	<br><br>
+	
+	<input type="checkbox" id = "checkAll"> 전체선택
+	<br>
+	<input type="checkbox" class = "check" checked>1반 
+	<input type="checkbox" class = "check">2반
+	<input type="checkbox" class = "check">3반 
+	<input type="checkbox" class = "check">4반
+	<input type="checkbox" class = "check">5반
+</div>
+
+</body>
+</html>

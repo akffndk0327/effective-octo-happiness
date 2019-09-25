@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#start').on('click',function(){ //실행버튼을 한번 누르면 
+		a=setInterval(function(){
+			$('img:first').appendTo('div') //뒤로 붙여넣어
+			//div 밖에 넣는 건 append
+			
+		}, 500);	
+		
+		//버튼을 클릭하지 못하도록 설정 한다. -사용불가능 설정 
+// 		$(this).prop('disabled',true); //this : 버튼 
+		$(this).attr('disabled','disabled'); //this : 버튼 
+		
+	})
+	$('#stop').on('click',function(){ //정비버튼누르면 
+		clearInterval(a); //a 종료됨
+		$('#start').prop('disabled',false);    //실행버튼은 다시 보여 
+// 		$('#start').attr('enabled','enabled'); // 버튼 다시 안보임 .그냥 정지만 됨 .
+	})
+	
+	$('#startpre').on('click',function(){
+		a=setInterval(function(){
+			$('img:last').prependTo('div');
+		}, 500);
+		$(this).attr('disabled','disabled'); //this : 버튼 
+	})
+	$('#stop').on('click',function(){ //정지버튼누르면 
+		clearInterval(a); //a 종료됨
+		$('#startpre').prop('disabled',false); //실행버튼은 다시 보여 
+// 		$('#start').attr('enabled','enabled'); // 버튼 다시 안보임 .그냥 정지만 됨 .
+	})
+	
+})
+</script>
+<style>
+
+	img{
+		width : 200px;
+		height : 200px;
+	}
+
+</style>
+</head>
+<body>
+<pre>
+append / appendTo  : 테두리 안쪽으로 <br>
+- 첨에 없없던 새로운 요소를 만들어서 추가한다.<br>
+- 기존에 존재하는 요소를 대상으로 실행하면 
+- 이동의 의미로 실행 되어 진다-> 잘라내기,이동하기  .<br>
+- disabled 속성을 설정 -prop('속성명',bool) true/false
+- true : 접근 불가능, false : 해제, 사용가능  
+
+after : ()append)~를
+insertAfter :appendTo 와 달리 추가 위치의 바깥쪽 뒤에 추가됨. 
+ 블럭요소 : 화면 한줄 다 채우는. 그 다음줄에 내용이 추가됨 .
+pretend 
+attr : $(selector).attr("속성명");
+==> selector에 의해 선택된 요소의 '속성명'에	설정된 속성값을 읽어온다.
+$(selector).val(값);==> selector에 의해 선택된 요소의 value속성의 값읽어온다.
+</pre>
+<div>
+	<img src ="../images/image.1.jpg">
+	<img src ="../images/image.2.jpg">
+	<img src ="../images/image.3.jpg">
+	<img src ="../images/image.4.jpg">
+	<img src ="../images/image.5.jpg">
+	<img src ="../images/image.6.jpg">
+	<img src ="../images/image.7.jpg">
+</div>
+<button id = "start" type="button">실행뒤로</button>
+<button id="stop" type="button">정지</button>
+<button id = "startpre" type="button">실행앞으로</button>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		//홀수번째 div 선택
+		$('div:odd')
+		/*
+		$('div').filter(':odd')
+				.eq(0).css('background','lightgreen')
+		$('div').filter(':odd').eq(1).css('background','lightblue') //매번 붙이거나
+				.eq(2).css('background','pink');
+		---------------------------------*/
+		$('div').filter(':odd')
+		.eq(0).css('background','lightgreen')
+		.end().eq(1).css('background','lightblue') //end로 체인 사요 ㅇ
+		.end().eq(2).css('background','pink');
+		//홀수번째가 고정되어있음 ! 
+	})
+</script>
+<style>
+div {
+	width: 60px;
+	height: 60px;
+	margin: 10px;
+	float: left;
+	border: 2px solid blue;
+}
+
+
+</style>
+</head>
+
+<body>
+<pre>
+-end().eq(): eq앞으로 돌아가기
+$('div').filter(':odd')
+		.eq(0).css('background','lightgreen')
+		.end().eq(1).css('background','lightblue') //end로 체인 사요 ㅇ
+		.end().eq(2).css('background','pink');
+</pre>
+<div>a</div> 
+<div>b</div> 
+<div>c</div> 
+<div>d</div> 
+<div>e</div> 
+<div class="orange">f</div> 
+<div>g</div>
+
+</body>
+</html>

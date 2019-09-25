@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>context.html 0829</title>
+<script src="../js/jquery-3.4.1.min.js"></script>
+
+<script >
+	$(function(){ 
+		//이벤트 핸들러 등록방식 : 바인드, 델리데이트 있음. 이 두개 구분하기 위해 on으로 구분 =바인드방식
+		//바인드(bind) : 미리 만들어진 요소에 이벤트핸들러 등록 => 아래 2가지 모두 쓸수있고 하나만 선택해서 쓰기 
+		//delegate : 동적으로 요소들이 추가되는 경우  클릭햇을때- 테이블만들어라, 이미지 추가해라. on만 쓸수있음.  
+		
+		//$('p').on('click',function(){ })
+// 		$('p').click(function(){ 
+// 			$(this).css('font-size','+=5px'); //동적으로 5씩 증가 시킨다. 	
+// 		})	
+
+		
+		$('div').click(function(){//클릭한div
+			//$('p').css('font-size','+=5px');// 모든 p가 선택 됨.
+			$('p',this).css('font-size','+=5px'); //클릭하는 div의 p만선택하라 
+		})	
+		
+	})
+
+</script>
+<style>
+	div{
+		background : pink;
+		padding : 10px;
+		margin : 10px;
+	}
+	
+	p{
+		font-size :1.5em; /* em: x배 */
+	}
+</style>
+</head>
+<pre>
+//이벤트 핸들러 등록방식 : 바인드, 델리데이트 있음. 이 두개 구분하기 위해 on으로 구분 =바인드방식
+//바인드(bind) : 미리 만들어진 요소에 이벤트핸들러 등록 => 아래 2가지 모두 쓸수있고 하나만 선택해서 쓰기 
+방법1 : $('p').on('click',function(){ })
+방법2 : $('p').click(function(){ 
+			$(this).css('font-size','+=5px'); //동적으로 5씩 증가 시킨다. 	
+		})	
+
+//delegate : 실행 후에 새롭게 동적으로 만들어지는 요소  테이블만들어라, 이미지 추가해라. on만 쓸수있음.  
+	1) $('body').delegate('p','click',function(){ })
+	2) $('body').on('click','p',function(){})
+$('p',this). : this가 부모역할 할 때 나타내는 표현 ! 
+
+</pre>
+<body>
+
+<p>장미꽃이 피었습니다.</p>
+
+<div>
+	<p> 무궁화꽃이 피었습니다. </p>
+</div>
+<div>
+	<p> 무궁화꽃이 피었습니다. </p>
+</div>
+<div>
+	<p> 무궁화꽃이 피었습니다. </p>
+</div>
+</body>
+</html>

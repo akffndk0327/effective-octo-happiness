@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('a').on('click',function(){
+			event.preventDefault(); //a의 기본 이벤트 실행 안한다.
+			$('div').toggle();
+		})
+	})
+</script>
+<style>
+	div{
+		display : none;
+	}
+</style>
+</head>
+<body>
+<pre>
+a 태그 : 페이지 이동 기능 ! 
+href="#" : 페이지이동안하겠다 
+-event.preventDefault()
+-toggle()
+
+</pre>
+<h1>이순신</h1>
+
+<a href="">자세히보기 </a>
+<br><br>
+<div>
+대한민국에서 독보적으로 유명한 무신이자 성웅이란 칭호가 따로 붙을 정도로 가장 드높은 영웅이며, 역사적 인물 전체로 넓혀도 세종대왕과 함께 한국에서 가장 유명한 인물이다. 무신으로서도 인간으로서도 희대의 걸물이요, 파란만장한 삶을 산 사내이다. 그는 임진왜란 시기 조선 수군을 이끌고 해상에서 연전연승을 거듭하며 일본군의 보급로를 차단하여 북상을 저지하였는데, 전쟁 내내 적과 싸워 모든 전투에서 최소한의 희생으로 항상 승전을 거두었으며, 당시 임금인 선조[7]와 조정에게 지원은 커녕 불합리한 모함과 추궁만 당하였으나 끝까지 충성을 다했고, 임진왜란 최후의 대전투인 노량 해전에서 장렬한 죽음을 맞이했다.
+
+</div>
+
+</body>
+</html>

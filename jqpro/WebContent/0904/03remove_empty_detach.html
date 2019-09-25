@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/mystyle.css">
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('p').on('click',function(){
+			$(this).css('font-size','+=3px');
+		})
+		$('#remove').on('click',function(){
+// 			a=$('#p1').remove();
+// 			$(a).appendTo('body'); //이벤트 삭제됨 .
+			$('div').remove(); //노란바탕도 사라짐 
+		})
+		$('#detach').on('click',function(){
+			a=$('#p2').detach();
+			$(a).appendTo('body'); //이벤트 실행됨 : 글자커져
+		})
+		$('#empty').on('click',function(){
+			$('div').empty(); //div 안에 다 사라져. 노란배경은 안사라져
+		})
+		$('#clone').on('click',function(){
+			a= $('#p1').clone(); //복사. false
+			//붙여넣기
+			$(a).appendTo('body'); //글씨 키운채로 복사하면 큰 채로 오지만 이벤트 핸들러는 안됨 .
+			$
+		})
+		$('#clonetrue').on('click',function(){
+			a= $('#p2').clone(true); //복사
+			//붙여넣기
+			$(a).appendTo('body'); //이벤트 핸들러까지 복사됨.
+		})
+		
+	})
+</script>
+<style>
+div{
+	background: yellow
+}
+</style>
+</head>
+<pre>
+$(this).css('font-size','+=3px');
+글자크기 : +=3px
+remove() : 대상을 삭제,이벤트핸들러도 삭제 
+empty() : 대상을 비운다
+detach() : 대상을 삭제, 이벤트핸들러 삭제 x 
+
+</pre>
+<body>
+<div>
+<p id="p1"> 무궁화 꽃이 피었다 졌다</p>
+<p id="p2"> 추석이 다가오고 있댜 헤헤</p>
+<p id="p3"> 추석이 즐거운가 ?</p>
+</div>
+
+<button id ="remove" type="button">remove</button>
+<button id="empty" type="button">empty</button>
+<button id="detach" type="button">detach</button>
+<br><br>
+<button id="clone" type="button">clone</button>
+<button id="clonetrue" type="button">clonetrue</button>
+</body>
+</html>
