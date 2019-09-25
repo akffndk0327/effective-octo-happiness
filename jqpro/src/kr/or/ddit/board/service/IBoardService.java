@@ -20,6 +20,9 @@ public interface IBoardService {
 	//새글 작성 저장하기 
 	public int insertBoard(BoardVO vo);
 	
+	//글 삭제
+	public int deleteBoard(int seq);
+	
 	//댓글 작성
 	public int insertReply(ReplyVO vo) ; 
 	

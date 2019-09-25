@@ -70,5 +70,11 @@ public class BoardDaoImpl implements IBoardDao {
 	public int deleteReply(int renum) throws SQLException {
 		return smc.delete("board.deleteReply",renum);
 	}
+
+	@Override
+	public int deleteBoard(int seq)throws SQLException {
+		
+		return smc.delete("board.deleteBoard",seq);
+	}
 	
 }

@@ -115,4 +115,15 @@ public class BoardServiceImpl implements IBoardService {
 		return rpl;
 	}
 
+	@Override
+	public int deleteBoard(int seq) {
+		int board = 0;
+		try {
+			board=dao.deleteBoard(seq);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return board;
+	}
+
 }

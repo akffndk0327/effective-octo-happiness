@@ -17,6 +17,9 @@ public interface IBoardDao {
 	
 	public int insertBoard(BoardVO vo)throws SQLException;
 	
+	//글 삭제
+	public int deleteBoard(int seq)throws SQLException;
+	
 	public int insertReply(ReplyVO vo) throws SQLException; 
 	public List<ReplyVO> replyList(int bonum) throws SQLException;
 	

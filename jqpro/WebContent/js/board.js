@@ -165,9 +165,6 @@ replyListServer=function(a){ //클릭한 a 태그
 	})
 	
 }
-replyReset = function() {
-	
-}
 
 replyUpdateServer= function() {
 	$.ajax({
@@ -207,7 +204,23 @@ replyDeleteServer =function(th){ //jsp에서 받은 this 매개변수를 th로 �
 	})
 	
 }
-
+deleteBoard = function(aa) {
+	$.ajax({
+		url:"/jqpro/BoardDelete",
+		type:"post",
+		data :{
+			'seq' :seq
+		},
+		dataType :"json",
+		success :function(res){
+			console.log(res.sw);
+			$(aa).parents('.panel').remove();
+		},
+		error :function(xhr){
+			alert("상태 :" + xhr.status);
+		}
+	})
+}
 
 
 

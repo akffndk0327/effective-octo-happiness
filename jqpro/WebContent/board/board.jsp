@@ -48,8 +48,16 @@
 			idx = $(this).attr('idx');
 			if(name == "modify"){
 				alert(idx+"번호의 글을 수정합니다 .");
+				//내용을 가져와야해ㅔ
+				
+				
 			}else if(name =="delete"){
 				alert(idx+"번호의 글을 삭제합니다 .");
+//				글번호 가지고 전체 div를 remove();
+				seq=idx;
+				deleteBoard(this);
+				
+				
 			}else if(name =='reply'){
 // 				alert(idx+"번호의 글의 댓글을 등록합니다.");	
 				
@@ -73,7 +81,7 @@
 				//댓글 수정 클릭 시 
 				//modifyForm이 열려잇는걸 닫아야 한다 
 				//body로 modifyForm을 다시이동 시켜 놓는드ㅏ.
-			if($('#modifyForm').css('display') !="none"){
+				if($('#modifyForm').css('display') !="none"){
 				replyReset();
 			}
 			

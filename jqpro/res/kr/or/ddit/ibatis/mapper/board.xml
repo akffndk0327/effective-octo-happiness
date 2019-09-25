@@ -56,7 +56,9 @@
 	<delete id="deleteReply" parameterClass="int">
 		delete from reply where renum = #data#
 	</delete>
-		
+	<delete id ="deleteBoard" parameterClass="int">
+		delete from board1 where seq=#seq# 
+	</delete>
 </sqlMap>
 
 
