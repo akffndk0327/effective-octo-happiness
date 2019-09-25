@@ -57,11 +57,11 @@
 				rtext=$(this).parent().find('.area').val();
 				//이름 작성 
 				rname = "qwer1234";
-				replyServer(); //댓글 저장 
+				replyServer(this); //댓글 저장 
 				bonum=$(this).attr('idx'); //replyListServer 로 갈때는 bonum이 필요함.
 				console.log(bonum);
 				//댓글 목록 
-				replyListServer(this);
+// 				replyListServer(this);
 				
 			}else if(name=="list");
 				//댓글 목록을 가져오기위해서 - 글번호 가져옴 

@@ -108,7 +108,7 @@ writeServer = function() {
 	})
 }
 
-replyServer = function() {
+replyServer = function(re) {
 	$.ajax({
 		url:'/jqpro/ReplySave',
 		type : "post",
