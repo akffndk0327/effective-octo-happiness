@@ -33,7 +33,7 @@ idcheck = function(idvalue) {
 }
 
 datacheck = function(data) {
-   // pass,name,hp,mail - 공백검증과 길이검증,정규식체크
+   // pass,name,hp,mail - 공백, 길이검증,정규식체크
 
    name = $('#name').val();
    pass = $('#psw').val();
