@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <title>mypage.jsp</title>
 <link rel="stylesheet"
-	href="<%=request.getContextPath()%>/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
 <style type="text/css">
 	.error{
 		color: "red";
@@ -21,8 +21,8 @@
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script type="text/javascript"
-	src="<%=request.getContextPath()%>/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-<jsp:useBean id="errors" class="java.util.HashMap" scope="session" />
+	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<%-- <jsp:useBean id="errors" class="java.util.HashMap" scope="session" /> --%>
 <%
 	session.removeAttribute("errors");
 	String message = (String) session.getAttribute("message");
@@ -32,7 +32,7 @@
 		session.removeAttribute("message");
 %>
 	<script type="text/javascript">
-		alert("<%=message%>");
+		alert("${sessionScope.message }");
 	</script>
 <%
 }
@@ -42,108 +42,108 @@
 	<%
 		MemberVO savedMember = (MemberVO) request.getAttribute("savedMember");
 	%>
-<form action="<%=request.getContextPath() %>/member/memberUpdate.do" method="post">
+<form action="${pageContext.request.contextPath }/member/memberUpdate.do" method="post">
 	<table class="table table-bordered">
 		<tr>
 			<th>회원아이디</th>
 			<td><input type="text" class="form-control"
-				name="mem_id" value="<%=savedMember.getMem_id()%>" />
-				<span class = "error">${errors["mem_id"] }</span>
+				name="mem_id" value="${savedMember.mem_id }" />
+				<span class ="error">${errors["mem_id"] }</span>
 			</td>
 		</tr>
 		<tr>
 			<th>비밀번호</th>
 			<td><input type="text" class="form-control"
-				name="mem_pass" value="<%=savedMember.getMem_pass()%>" />
-				<span class = "error"><%=errors.get("mem_pass") %> </span>	
+				name="mem_pass" value="${savedMember.mem_pass }" />
+				<span class = "error">${errors["mem_pass"] } </span>	
 			</td>
 		</tr>
 		<tr>
 			<th>이름</th>
 			<td><input type="text" required class="form-control"
-				name="mem_name" value="<%=savedMember.getMem_name()%>" />
+				name="mem_name" value="${savedMember.mem_name }" />
 				
 			</td>
 		</tr>
 		<tr>
 			<th>주민번호1</th>
 			<td><input type="text" class="form-control" name="mem_regno1"
-				value="<%=savedMember.getMem_regno1()%>" /></td>
+				value="${savedMember.mem_regno1 }" /></td>
 		</tr>
 		<tr>
 			<th>주민번호2</th>
 			<td><input type="text" class="form-control" name="mem_regno2"
-				value="<%=savedMember.getMem_regno2()%>" /></td>
+				value="${savedMember.mem_regno2 }" /></td>
 		</tr>
 		<tr>
 			<th>생일</th>
 			<td><input type="date" class="form-control" name="mem_bir"
-				value="<%=savedMember.getMem_bir()%>" /></td>
+				value="${savedMember.mem_bir }" /></td>
 		</tr>
 		<tr>
 			<th>우편번호</th>
 			<td><input type="text" required class="form-control"
-				name="mem_zip" value="<%=savedMember.getMem_zip()%>" /></td>
+				name="mem_zip" value="${savedMember.mem_zip }" /></td>
 		</tr>
 		<tr>
 			<th>주소1</th>
 			<td><input type="text" required class="form-control"
-				name="mem_add1" value="<%=savedMember.getMem_add1()%>" /></td>
+				name="mem_add1" value="${savedMember.mem_add1 }" /></td>
 		</tr>
 		<tr>
 			<th>주소2</th>
 			<td><input type="text" required class="form-control"
-				name="mem_add2" value="<%=savedMember.getMem_add2()%>" /></td>
+				name="mem_add2" value="${savedMember.mem_add2 }" /></td>
 		</tr>
 		<tr>
 			<th>집전화</th>
 			<td><input type="text" class="form-control" name="mem_hometel"
-				value="<%=savedMember.getMem_hometel()%>" /></td>
+				value="${savedMember.mem_hometel }" /></td>
 		</tr>
 		<tr>
 			<th>회사전화</th>
 			<td><input type="text" class="form-control" name="mem_comtel"
-				value="<%=savedMember.getMem_comtel()%>" /></td>
+				value="${savedMember.mem_comtel }" /></td>
 		</tr>
 		<tr>
 			<th>폰번호</th>
 			<td><input type="text" class="form-control" name="mem_hp"
-				value="<%=savedMember.getMem_hp()%>" /></td>
+				value="${savedMember.mem_hp }" /></td>
 		</tr>
 		<tr>
 			<th>이메일</th>
 			<td><input type="text" required class="form-control"
-				name="mem_mail" value="<%=savedMember.getMem_mail()%>" /></td>
+				name="mem_mail" value="${savedMember.mem_mail }" /></td>
 		</tr>
 		<tr>
 			<th>직업</th>
 			<td><input type="text" class="form-control" name="mem_job"
-				value="<%=savedMember.getMem_job()%>" /></td>
+				value="${savedMember.mem_job }" /></td>
 		</tr>
 		<tr>
 			<th>취미</th>
 			<td><input type="text" class="form-control" name="mem_like"
-				value="<%=savedMember.getMem_like()%>" /></td>
+				value="${savedMember.mem_like }" /></td>
 		</tr>
 		<tr>
 			<th>기념일</th>
 			<td><input type="text" class="form-control" name="mem_memorial"
-				value="<%=savedMember.getMem_memorial()%>" /></td>
+				value="${savedMember.mem_memorial }" /></td>
 		</tr>
 		<tr>
 			<th>기념일자</th>
 			<td><input type="date" class="form-control"
-				name="mem_memorialday" value="<%=savedMember.getMem_memorialday()%>" /></td>
+				name="mem_memorialday" value="${savedMember.mem_memorialday }" /></td>
 		</tr>
 		<tr>
 			<th>마일리지</th>
 			<td><input type="number" class="form-control" name="mem_mileage"
-				value="<%=savedMember.getMem_mileage()%>" /></td>
+				value="${savedMember.mem_mileage }" /></td>
 		</tr>
 		<tr>
 			<th>탈퇴여부</th>
 			<td><input type="text" class="form-control" name="mem_delete"
-				value="<%=savedMember.getMem_delete()%>" /></td>
+				value="${savedMember.mem_delete }" /></td>
 		</tr>
 		<tr>
 			<td colspan="2">

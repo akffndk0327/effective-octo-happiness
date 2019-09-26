@@ -13,7 +13,7 @@
 	각 기본 객체가 가진 Map&lt;String, Object&gt;.
 	모든 scope는 해당영역에 대한 제어를 담당하는 기본객체와 동일한 생명주기르 가지고 있다 .
 	언제까지 살아남는가. 최소한의 저장 scope를 선택함. 
-	1. page Scope : PageContext
+	1.page Scope : PageContext (제일 작아)
 	2 request Scope : HttpServletRequest
 	3 session Scope : HttpSession
 	4 application Scope : ServletContext

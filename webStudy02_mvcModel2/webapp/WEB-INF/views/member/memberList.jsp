@@ -50,7 +50,7 @@
 	})
 
 </script>
-<form id="listForm" action="<%=request.getContextPath()%>/member/memberView.do">
+<form id="listForm" action="${pageContext.request.contextPath }/member/memberView.do">
 	<input type="hidden" name="who"/> 
 </form>
 <%-- ui는 동기방식, 실제 데이터는 비동기 방식으로  --%>

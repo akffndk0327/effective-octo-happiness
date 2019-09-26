@@ -27,15 +27,16 @@
 	<tbody>
 	<%
 		for(ProdVO prod : prodList){
+		pageContext.setAttribute("prod", prod);
 	%>
 		<tr>
-			<td><%=prod.getProd_id() %></td>
-			<td><%=prod.getProd_name() %></td>
-			<td><%=prod.getLprod_nm() %></td>
-			<td><%=prod.getBuyer_name() %></td>
-			<td><%=prod.getProd_cost() %></td>
-			<td><%=prod.getProd_price() %></td>
-			<td><%=prod.getProd_mileage() %></td>
+			<td>${prod.prod_id}</td>
+			<td>${prod.Prod_name}</td>
+			<td>${prod.Lprod_nm}</td>
+			<td>${prod.Buyer_name}</td>
+			<td>${prod.Prod_cost}</td>
+			<td>${prod.Prod_price}</td>
+			<td>${prod.Prod_mileage}</td>
 		</tr>
 	<%
 		}
