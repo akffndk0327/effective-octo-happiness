@@ -76,5 +76,21 @@ public class BoardDaoImpl implements IBoardDao {
 		
 		return smc.delete("board.deleteBoard",seq);
 	}
+
+	@Override
+	public int updateHit(int seq) throws SQLException {
+		
+		return smc.update("board.updateHit",seq);
+	}
+
+	@Override
+	public int selectHit(int seq) throws SQLException {
+		return (Integer)smc.queryForObject("board.selectHit",seq);
+	}
+
+	@Override
+	public int updateBoard(BoardVO vo) throws SQLException{
+		return smc.update("board.updateBoard",vo);
+	}
 	
 }

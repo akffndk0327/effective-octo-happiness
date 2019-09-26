@@ -14,32 +14,32 @@ readServer = function(cpage) {
 				code += '<div class="panel panel-default">';
 				code += '<div class="panel-heading">';
 				code += '<h4 class="panel-title">';
-				code += '<a data-toggle="collapse" idx ="'+v.seq+'" name="list" class="action" data-parent="#accordion" href="#collapse'+v.seq+'">'+v.subject+'</a>';
+				code += '<a data-toggle="collapse" id="title" idx ="'+v.seq+'" name="list" class="action" data-parent="#accordion" href="#collapse'+v.seq+'">'+v.subject+'</a>';
 				code += '</h4>';
 				code += '  </div>                                                                   ';
 				code += '  <div id="collapse'+v.seq+'" class="panel-collapse collapse">              ';
 				code += '     <div class="panel-body pbody">                                      ';
-				code += '      <p style="width: 80%; float: left;">작성자 :                         ';
-				code += '     작성자 :'+v.writer;                         
+				code += '      <p style="width: 80%; float: left;">                        ';
+				code += '    <span class="update"> 작성자 :'+v.writer;                         
 				code += '          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;      ';
 				code += '	          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             ';
-				code += '			이메일 :'+v.email;                                                            
+				code += '			이메일 :'+v.email+"</span>";                                                            
 				code += '			  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             ';
 				code += '	          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             ';
 				code += '	          작성일 :'+v.date;                                                            
 				code += '	          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             ';
 				code += '	          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             ';
-				code += '	          조회수 :'+v.hit;                                                            
+				code += '	          조회수 : <span id="hitsp">'+v.hit;                                                            
 				code += '	          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             ';
 				code += '	          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             ';
 				code += '	       </p>                                                                   ';
 				code += '		   <p style="text-align : right; ">                                       ';
-				code += '		   	 <button idx="'+v.seq+'" type="button" name="modify" class="action">수정</button>     ';
+				code += '		   	 <button idx="'+v.seq+'" type="button" name="modify" class="action" data-toggle="modal" data-target="#updateModal">수정</button>     ';
 				code += '		   	 <button idx="'+v.seq+'" type="button" name="delete" class="action">삭제</button>     ';
 				code += '		   </p>                                                                   ';
 				code += '		   <hr>                                                                   ';
 				code += '		   <p style="width:80%; float="left">';
-				code += 			v.content;
+				code += 			'<span class="update">' + v.content +'</span>'
 				code += '		   </p>                                                                   ';
 				code += '		   <textarea class="area" cols="80"> </textarea>          ';
 				code += '  <button idx="'+v.seq+'" style="width:40px; vertical-align:top " type="button" name="reply" class="action"> 등록 </button>';
@@ -222,7 +222,40 @@ deleteBoard = function(aa) {
 	})
 }
 
+readHitServer = function(th) {
+	hitspan = $(th).parents('.panel').find('#hitsp');
+	$.ajax({
+		url:"/jqpro/ReadHit",
+		data :{'bonum' :bonum},
+		dataType :"json",
+		success :function(res){
+			console.log(res.sw);
+			//여길 구현해야 실시간으로 조회수 바뀌는거 볼수있 음 
+			if(res.sw =="수정성공"){
+				$(hitspan).html(res.hit);
+			}
+		},
+		error :function(xhr){
+			alert("상태 :" + xhr.status);
+		}
+	})
+}
 
+updateBoard = function(th) {
+	$.ajax({
+		url:"/jqpro/BoardUpdate",
+		type:"post",
+		dataType:"json",
+		success:function(res){
+			console.log(res.sw);
+			
+		},
+		error : function(xhr) {
+			alert("상태 :"+xhr.status);
+		}
+		
+	})
+}
 
 
 

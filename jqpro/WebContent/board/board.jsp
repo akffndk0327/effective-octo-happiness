@@ -43,13 +43,22 @@
 		});
 		
 		//수정,삭제 등록, 댓글수정, 댓글 삭제 버튼 클릭할때 
+		//제목(list)클릭할 떄 - 댓글 가져오기, 조횟수 증가하기 
 		$('#accordionList').on('click','.action',function(){
 			name = $(this).attr('name');
 			idx = $(this).attr('idx');
 			if(name == "modify"){
-				alert(idx+"번호의 글을 수정합니다 .");
-				//내용을 가져와야해ㅔ
+// 				alert(idx+"번호의 글을 수정합니다 .");
+				//모달창 띄우기
+				$('#updateModal').show();
+				//적힌 내용 가져오기 
+				title=$(this).parents('.panel').find('#title').text();
+				$('#subject2').val(title);
+				indata = $(this).parents('.panel').find('.update').text();
+				$('txt').val(indata);
 				
+				
+				updateBoard(this);
 				
 			}else if(name =="delete"){
 				alert(idx+"번호의 글을 삭제합니다 .");
@@ -62,7 +71,7 @@
 // 				alert(idx+"번호의 글의 댓글을 등록합니다.");	
 				
 				//입력한 내용 가녀오기
-				rtext=$(this).parent().find('.area').val();
+				rtext=$(this).parent('.panel').find('.area').val();
 				//이름 작성 
 				rname = "qwer1234";
 				
@@ -75,8 +84,18 @@
 			}else if(name=="list"){
 				//댓글 목록을 가져오기위해서 - 글번호 가져옴 
 				bonum=$(this).attr('idx');
-				
 				replyListServer(this);
+				
+				//0926-----조회수증가하기 조회수+1 update,select -----//
+				//class 뒤에 "in" 이 써있으면 펼쳐진거, 아니면 닫혀진거 
+				//내가 클릭한 this를 기준으로 부모를 찾고 in 써진거 찾는다
+				inclass = $(this).parents('.panel').find('.in').attr('class'); //.attr('class') : class 속성에서 in을 찾아라 
+				//열려잇을떄 in, 닫혀잇을떄 undefined + 
+				//undefined 일때 조회수 증가 시킴. 
+				if(typeof inclass =="undefined"){ //typeof : undefined 비교할때 확인하기 ! 
+					readHitServer(this);				
+				}
+				
 			}else if(name =="r_modify"){
 				//댓글 수정 클릭 시 
 				//modifyForm이 열려잇는걸 닫아야 한다 
@@ -217,6 +236,37 @@
 
   </div>
 </div>
+	<!-- 글 수정   Modal -->
+<div id="updateModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">새글 작성 창입니다. </h4>
+      </div>
+      <div class="modal-body">
+      <form id="uform" name = "uform">
+	        제목 : <input class="txt2" type="text" name="subject" id="subject2"> <br><br>
+	        작성자 : <input class="txt" type="text" name="writer" id="writer2"> <br><br>
+	        비밀번호 : <input class="txt2" type="text" name="password" id ="password2"> <br><br>
+	        메일 : <input class="txt2" type="text" name="mail" id="mail2"> <br><br>
+	        내용 : <br>
+	        <textarea class="txt2" rows="10" cols="30" name="content" id="content2"> </textarea>
+	        <br><br>
+        </form>
+      </div>
+      <div class="modal-footer">
+	        <button type="button" class="action btn btn-warning" name="wok" id="wok2">확인</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 	
 
 </body>

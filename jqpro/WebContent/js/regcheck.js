@@ -7,10 +7,11 @@ idcheck = function(idvalue) {
    // 정규식.test(입력값) - 일치하면 true를 리턴 않으면 false를 리턴
    // 1.공백체크 // 2.길이체크  // 3.정규식
 
-   if (idvalue.trim().length == 0) {
-      alert("아이디를 입력해주세요.");
-      return false;
+   if (idvalue.trim().length == 0){
+	   alert("아이디를 입력해주세요.");
+	   return false;
    }
+   
 
 //   var whiteSpace = "/\s/g";
    if (idvalue.trim().length != idvalue.length) {
@@ -31,7 +32,7 @@ idcheck = function(idvalue) {
    return true;  
 }
 
-datacheck = function() {
+datacheck = function(data) {
    // pass,name,hp,mail - 공백검증과 길이검증,정규식체크
 
    name = $('#name').val();

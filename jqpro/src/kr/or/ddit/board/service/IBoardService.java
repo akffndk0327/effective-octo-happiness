@@ -23,6 +23,9 @@ public interface IBoardService {
 	//글 삭제
 	public int deleteBoard(int seq);
 	
+	//글수정
+	public int updateBoard(BoardVO vo);
+	
 	//댓글 작성
 	public int insertReply(ReplyVO vo) ; 
 	
@@ -33,5 +36,8 @@ public interface IBoardService {
 	public int updateReply(ReplyVO vo); //내용이랑 번호 가져감 
 	
 	public int deleteReply(int renum);
+	
+	//조회수 증가
+	public int updateHit(int seq);
 	
 }

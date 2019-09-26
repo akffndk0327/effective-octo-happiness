@@ -14,8 +14,9 @@
 	$(function() {
 		$('#idcheck').on('click', function() {
 			idvalue = $('#id').val();
+			console.log(idvalue)
 			//정규식 체크 
-			if (idcheck() == true) {
+			if (idcheck(idvalue) == true) {
 				$.ajax({
 					url : '/jqpro/CheckId',
 					type : 'post',
@@ -218,7 +219,7 @@
 			datas = $("#inputform").serializeArray();
 			console.log(datas);
 			// 정규식체크 
-			if (datacheck() == true) {
+			if (datacheck(data) == true) {
 				$.ajax({
 					url : '/jqpro/InsertMember',
 					type : 'post',

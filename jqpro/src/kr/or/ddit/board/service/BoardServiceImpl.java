@@ -126,4 +126,29 @@ public class BoardServiceImpl implements IBoardService {
 		return board;
 	}
 
+	//update hit, select hit 같이 실행함.
+	@Override
+	public int updateHit(int seq) {
+		int hit =0;
+		try {
+			dao.updateHit(seq); //이거 안되면 select도 안됨.
+			hit = dao.selectHit(seq);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return hit;
+	}
+
+	@Override
+	public int updateBoard(BoardVO vo) {
+		int hit = 0;
+		try {
+			hit= dao.updateBoard(vo);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return hit;
+	}
+
 }

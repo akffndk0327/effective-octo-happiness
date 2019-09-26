@@ -50,15 +50,31 @@
 	<select id="replyList" parameterClass="int" resultClass="replyVO">
 		select * from reply where bonum=#data# order by renum
 	</select>	
+	
 	<update id="updateReply" parameterClass="replyVO">
 		update reply set cont=#cont# where renum=#renum#
 	</update>
+	
 	<delete id="deleteReply" parameterClass="int">
 		delete from reply where renum = #data#
 	</delete>
 	<delete id ="deleteBoard" parameterClass="int">
 		delete from board1 where seq=#seq# 
 	</delete>
+	
+	<update id="updateHit" parameterClass="int">
+		update board1 set hit= hit+1 where seq=#data#
+	</update>
+	<select id="selectHit" parameterClass="int" resultClass="int">
+		select hit from board1 where seq=#data#
+	</select>
+	<update id="updateBoard" parameterClass="boardVO">
+		UPDATE board1 
+		SET  subject =#subject#, mail=#mail#, password=#password#, content=#content#
+		WHERE  seq=#seq#
+	</update>
+	
+	
 </sqlMap>
 
 
