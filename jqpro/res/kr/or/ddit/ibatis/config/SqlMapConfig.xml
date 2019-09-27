@@ -15,11 +15,6 @@
 		lazyLoadingEnabled="true" maxRequests="32" maxSessions="10"
 		maxTransactions="5" useStatementNamespaces="true" />
 
-	<!-- 
-	VO클래스등의 이름이 패키지명까지 기술하면 길어지는데 
-	이것을 간단히 표시하기 위해서 alias를 지정할 수 있다.
-	형식) <typeAlias alias="alias명" type="클래스의 풀네임"/>
-	 -->
 	<typeAlias alias="memVO" type="kr.or.ddit.member.vo.MemberVO"/>
 	<typeAlias alias="lpordVO" type="kr.or.ddit.lprod.vo.LprodVO"/>
 <!-- 	<typeAlias alias="buyerVO" type="kr.or.ddit.buyer.vo.BuyerVO"/> -->
