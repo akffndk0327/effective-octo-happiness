@@ -17,8 +17,12 @@ public interface IBuyerService {
 	
 	//조회
 	public List<BuyerVO> selectBuyerList();
+	
+	//상세보기 
+	public BuyerVO detailBuyer(String buyer_id);
+	
 	//수정
-	public int updateBuyer(String buyer_id);
+	public int updateBuyer(BuyerVO vo);
 	//삭제
 	public int deleteBuyer(String buyer_id);
 	

@@ -19,6 +19,7 @@
 	src="${pageContext.request.contextPath } /bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
 <title>신규 가입</title>
+
 <c:if test="${not empty sessionScope.message }">
 	<script type="text/javascript">
 		alert("${sessionScope.message}");

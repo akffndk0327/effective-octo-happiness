@@ -2,22 +2,27 @@ package kr.or.ddit.buyer.dao;
 
 import java.util.List;
 
+import kr.or.ddit.buyer.enums.ServiceResult;
 import kr.or.ddit.buyer.vo.BuyerVO;
 
-public interface IbuyerDao {
+public interface IbuyerDao{
 	
 	/**
 	 * 신규등록
 	 * @param buyer
-	 * @return 등록성공(>0), 실패(<=0)
+	 * @return
 	 */
-	public int insertBuyer(BuyerVO buyer);
+	public ServiceResult createBuyer(BuyerVO buyer);  
 	
-	/**
-	 * 거래처 목록 조회
-	 * @return 조건 맞는 거래처 없는 경우 size ==0
-	 */
+	//조회
 	public List<BuyerVO> selectBuyerList();
 	
+	//상세보기 
+	public BuyerVO detailBuyer(String buyer_id);
+	
+	//수정
+	public int updateBuyer(BuyerVO vo);
+	//삭제
+	public int deleteBuyer(String buyer_id);
 	
 }
