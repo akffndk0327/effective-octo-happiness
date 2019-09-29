@@ -1,5 +1,6 @@
 package kr.or.ddit.buyer.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import kr.or.ddit.buyer.dao.BuyerDaoImpl;
@@ -21,35 +22,20 @@ public class BuyerServiceImpl implements IBuyerService {
 	private BuyerServiceImpl() {
 		dao = BuyerDaoImpl.getInstance();
 	}
-	
-	@Override
-	public ServiceResult createBuyer(BuyerVO buyer) {
-		
-		return null;
-	}
 
 	@Override
 	public List<BuyerVO> selectBuyerList() {
-		// TODO Auto-generated method stub
-		return null;
+		List<BuyerVO> list = null;
+		try {
+			list = dao.selectBuyerList();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
-
-	@Override
-	public BuyerVO detailBuyer(String buyer_id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int updateBuyer(BuyerVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int deleteBuyer(String buyer_id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
+	
 
 }
