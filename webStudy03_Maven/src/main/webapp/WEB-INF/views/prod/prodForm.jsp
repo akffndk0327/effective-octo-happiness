@@ -134,15 +134,14 @@
 					class="error">${errors.prod_mileage}</span></td>
 			</tr>
 			<tr>
-				<td>
-				
+				<td colspan="2">
+					<input class="btn btn-primary" type="submit" value="저장" />
+					<input class="btn btn-warning" type="reset" value="취소" />
 				</td>
 			</tr>
-			
 		</table>
-		<input type="submit" value="확인"> </input>
 	</form>
-	<script type="text/javascript">
+<script type="text/javascript">
 	var prod_lguTag = $("[name='prod_lgu']");
 	var prod_buyerTag = $("[name='prod_buyer']");
 	

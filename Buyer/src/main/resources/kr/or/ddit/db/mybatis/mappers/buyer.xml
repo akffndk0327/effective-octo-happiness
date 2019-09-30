@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.or.ddit.buyer.dao.IBuyerDao">
+	<select id="selectNameList" resultType="BuyerVO">
+		SELECT BUYER_ID, BUYER_NAME  
+		FROM BUYER   
+	</select>
+	
+	<select id="buyerDetail" parameterType="String" resultType="BuyerVO">
+	SELECT buyer_id,
+		buyer_name,
+		buyer_lgu,
+		buyer_bank,
+		buyer_bankno,
+		buyer_zip,
+		buyer_add1,
+		buyer_add2,
+		buyer_comtel,
+		buyer_mail
+	FROM BUYER
+	WHERE BUYER_ID = #{buyer_id}
+	</select>
+</mapper>

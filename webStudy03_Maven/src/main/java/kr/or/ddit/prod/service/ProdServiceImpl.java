@@ -25,7 +25,6 @@ public class ProdServiceImpl implements IProdService {
 	
 	@Override
 	public ServiceResult createProd(ProdVO prod) {
-		retrieveProd(prod.getProd_id());
 		ServiceResult result = null;
 		int cnt = dao.insertProd(prod);
 		if(cnt > 0) result = ServiceResult.OK;

@@ -17,7 +17,7 @@
 		     #{mem_regno2},    #{mem_bir},    #{mem_zip},    #{mem_add1},    
 		     #{mem_add2},    #{mem_hometel},    #{mem_comtel},    #{mem_hp}, 
 		     #{mem_mail},    #{mem_job},    #{mem_like},    #{mem_memorial}, 
-		     #{mem_memorialday},    2000                             
+		     #{mem_memorialday},    2000 ,'N'                            
 		 )                                                       
 	</insert>
 	<select id="selectMemeberList" resultType="MemberVO">
@@ -40,18 +40,18 @@
 	
 	<update id="updateMember" parameterType="MemberVO">
 		 UPDATE MEMBER SET   
-	      MEM_NAME= #{mem_name}     
-	      MEM_ZIP= #{mem_zip}        
-	      MEM_ADD1= #{mem_add1}       
-	      MEM_ADD2= #{mem_add2}       
-	      MEM_HOMETEL=#{mem_hometel}    
-	      MEM_COMTEL= #{mem_comtel}     
-	      MEM_HP= #{mem_hp}         
-	      MEM_MAIL=#{mem_mail}       
-	      MEM_JOB= #{mem_job}        
-	      MEM_LIKE= #{mem_like}      
-	      MEM_MEMORIAL= #{MEM_MEMORIAL},   
-	      MEM_MEMORIALDAY=#{MEM_MEMORIALDAY} 
+	      MEM_NAME= #{mem_name}             ,
+	      MEM_ZIP= #{mem_zip}               ,
+	      MEM_ADD1= #{mem_add1}             ,
+	      MEM_ADD2= #{mem_add2}             ,
+	      MEM_HOMETEL=#{mem_hometel}        ,
+	      MEM_COMTEL= #{mem_comtel}         ,
+	      MEM_HP= #{mem_hp}                 ,
+	      MEM_MAIL=#{mem_mail}              ,
+	      MEM_JOB= #{mem_job}               ,
+	      MEM_LIKE= #{mem_like}             ,
+	      MEM_MEMORIAL= #{mem_memorial}     ,
+	      MEM_MEMORIALDAY=#{mem_memorialday} 
 	      WHERE MEM_ID=#{mem_id} 
 	</update>
 	<delete id="deleteMember" parameterType="MemberVO">

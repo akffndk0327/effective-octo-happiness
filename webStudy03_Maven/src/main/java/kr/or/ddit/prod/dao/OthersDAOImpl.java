@@ -11,7 +11,7 @@ import kr.or.ddit.vo.BuyerVO;
 
 public class OthersDAOImpl implements IOthersDAO {
 	private SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
-
+	//원래 다오임플의 crud기능 외에 부가적인 기능을 하는 메서드 모아둔거 
 	@Override
 	public List<Map<String, Object>> selectLprodList() {
 		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
