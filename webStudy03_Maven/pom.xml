@@ -55,7 +55,7 @@
 		<version>2.7.0</version>
 	</dependency>
 	
-	<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+	<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis 0930-->
 	<dependency>
 		<groupId>org.mybatis</groupId>
 		<artifactId>mybatis</artifactId>

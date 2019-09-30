@@ -20,6 +20,7 @@ import org.apache.commons.lang3.Validate;
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
 import kr.or.ddit.buyer.vo.BuyerVO;
+import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
@@ -28,43 +29,43 @@ import kr.or.ddit.utils.MarshallingUtils;
 @CommandHandler
 public class UpdateBuyer{
 	IBuyerService service = BuyerServiceImpl.getInstance();
+	
 
 	@URIMapping(value="/buyer/UpdateBuyer", method=HttpMethod.POST)
-	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		req.setCharacterEncoding("UTF-8");
-		String accept = req.getHeader("Accept");
-		IBuyerService service = BuyerServiceImpl.getInstance();
-		BuyerVO vo = new BuyerVO();
-
-		vo.setBuyer_id(req.getParameter("buyer_id"));
-		vo.setBuyer_name(req.getParameter("buyer_name"));
-		vo.setBuyer_lgu(req.getParameter("buyer_lgu"));
-		vo.setBuyer_bankno(req.getParameter("buyer_bankNo"));
-		vo.setBuyer_bankname(req.getParameter("buyer_bankname"));
-		vo.setBuyer_mail(req.getParameter("buyer_mail"));
-		vo.setBuyer_add1(req.getParameter("buyer_add1"));
-		
-		System.out.println(vo.getBuyer_id());
-		System.out.println(vo.getBuyer_name());
-		System.out.println(vo.getBuyer_lgu());
-		System.out.println(vo.getBuyer_bankno());
-		System.out.println(vo.getBuyer_bankname());
-		System.out.println(vo.getBuyer_mail());
-		System.out.println(vo.getBuyer_add1());
-		
-		int result = service.buyerUpdate(vo);
-		
-		String json = new MarshallingUtils().marshalling(vo);
-		try (PrintWriter out = resp.getWriter();) {
-			out.println(json);
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		BuyerVO buyer = new BuyerVO();
+		req.setAttribute("buyer", buyer);
+		try {
+			BeanUtils.populate(buyer, req.getParameterMap());
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException(e);
 		}
+		Map<String, String> errors = new HashMap<String, String>();
+		req.setAttribute("errors", errors);
+		boolean valid = validate(buyer, errors);
 		
 		String viewName = null;
-		if(result > 0) {
-			viewName = "buyer";
+		String message = null;
+		
+		if(valid) {
+			ServiceResult result = service.buyerUpdate(buyer);
+			switch (result) {
+			case OK:
+				message = "수정성공";
+				viewName = "redirect:/buyer/DetailBuyer?what="+buyer.getBuyer_id();
+				break;
+			default:
+				message ="서버오류";
+				viewName ="buyer/buyerForm"; // 수정화면 ?
+				break;
+			}
+		}else {
+			viewName = "buyer/buyerForm"; //수정화면 ?
+			
 		}
+		req.getSession().setAttribute("message", message);
 		return viewName;
+		
 	}
 
 	private boolean validate(BuyerVO vo, Map<String, String> errors) { // required가 필요한 부분은

@@ -39,5 +39,5 @@ public interface IBuyerService {
 	 * @param vo
 	 * @return
 	 */
-	public int buyerUpdate(BuyerVO vo);
+	public ServiceResult buyerUpdate(BuyerVO vo);
 }

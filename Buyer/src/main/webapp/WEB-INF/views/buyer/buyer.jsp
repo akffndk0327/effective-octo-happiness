@@ -18,7 +18,7 @@ td {
 }
 
 p:hover {
-	background: crimson;
+	background: lightblue;
 }
 
 #detail{

@@ -56,7 +56,7 @@ public class InsertBuyer{
 				out.print(json);
 			} 
 		} else {
-			viewName = "buyer";
+			viewName = "/buyer/buyer";
 			req.setAttribute("vo", vo);
 		}
 		return viewName;

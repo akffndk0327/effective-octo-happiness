@@ -32,20 +32,38 @@ public class BuyerDaoImpl implements IBuyerDao {
 
 	@Override
 	public int buyerInsert(BuyerVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		try (
+				SqlSession sqlSession = SqlSessionFactory.openSession();
+		) {
+			IBuyerDao mapper = sqlSession.getMapper(IBuyerDao.class);
+			int cnt = mapper.buyerInsert(vo);
+			sqlSession.commit();
+			return cnt;
+		}
 	}
 
 	@Override
 	public int buyerDelete(String buyer_id) {
-		// TODO Auto-generated method stub
-		return 0;
+		try (
+				SqlSession sqlSession = SqlSessionFactory.openSession();
+		) {
+			IBuyerDao mapper = sqlSession.getMapper(IBuyerDao.class);
+			int cnt = mapper.buyerDelete(buyer_id);
+			sqlSession.commit();
+			return cnt;
+		}
 	}
 
 	@Override
 	public int buyerUpdate(BuyerVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		try (
+				SqlSession sqlSession = SqlSessionFactory.openSession();
+		) {
+			IBuyerDao mapper = sqlSession.getMapper(IBuyerDao.class);
+			int cnt = mapper.buyerUpdate(vo);
+			sqlSession.commit();
+			return cnt;
+		}
 	}
 
 }
