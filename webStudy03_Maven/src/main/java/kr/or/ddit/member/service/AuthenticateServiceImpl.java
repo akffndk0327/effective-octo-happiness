@@ -1,7 +1,8 @@
 package kr.or.ddit.member.service;
 
 import kr.or.ddit.member.dao.IMemberDAO;
-import kr.or.ddit.member.dao.MemberDAOImpl;
+import kr.or.ddit.member.dao.MemberDAOImpl_JDBC;
+import kr.or.ddit.member.dao.MemberDaoImpl;
 import kr.or.ddit.member.exception.NotAuthenticatedException;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.vo.MemberVO;
@@ -9,7 +10,7 @@ import kr.or.ddit.vo.MemberVO;
 public class AuthenticateServiceImpl implements IAuthenticateService {
 	//서비스와 다오 의존상태만들기  
 //	private IMemberDAO dao = new MemberDAOImpl(); //daoImpl에서 구현하닌까 dao는 구현될걸 연결 
-	private IMemberDAO dao = MemberDAOImpl.getInstance(); //daoImpl에서 구현하닌까 dao는 구현될걸 연결 
+	IMemberDAO dao = new MemberDaoImpl(); //daoImpl에서 구현하닌까 dao는 구현될걸 연결 
 	
 	//인증로직 구현 => 아이디가 틀렷는지 비번이 틀렷는지 확인 
 	@Override

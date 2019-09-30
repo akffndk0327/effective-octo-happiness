@@ -12,12 +12,12 @@ import kr.or.ddit.db.ConnectionFactory;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.vo.MemberVO;
 
-public class MemberDAOImpl implements IMemberDAO {
-	private static MemberDAOImpl instance;
-	private MemberDAOImpl(){}
+public class MemberDAOImpl_JDBC implements IMemberDAO {
+	private static MemberDAOImpl_JDBC instance;
+	private MemberDAOImpl_JDBC(){}
 	
-	public static MemberDAOImpl getInstance() {// 다오임플 사용할 수있게 기본 생성자 메모리 공간 효율적으로 쓸려고...
-		if(instance ==null) instance = new MemberDAOImpl();
+	public static MemberDAOImpl_JDBC getInstance() {// 다오임플 사용할 수있게 기본 생성자 메모리 공간 효율적으로 쓸려고...
+		if(instance ==null) instance = new MemberDAOImpl_JDBC();
 		return instance; 
 	}
 	@Override
@@ -43,7 +43,7 @@ public class MemberDAOImpl implements IMemberDAO {
 		) {
 			pstmt.setString(1, member.getMem_id());
 //			pstmt.setString(2, member.getMem_pass());
-			ResultSet rs = pstmt.executeQuery();
+			ResultSet rs = pstmt.executeQuery(); //쿼리 실행 
 			if (rs.next()) {
 				savedMember = new MemberVO();
 				savedMember.setMem_id(rs.getString("MEM_ID"));
@@ -93,8 +93,10 @@ public class MemberDAOImpl implements IMemberDAO {
 		sql.append("     ?,    ?,    ?,    ?,                                  ");
 		sql.append("     ?,    2000		                                   ");
 		sql.append(" )                                                         ");
-		try (Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(sql.toString());) {
+		try (
+				Connection conn = ConnectionFactory.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			) {
 			// 쿼리 파라미터 설정
 			int idx = 1;
 			pstmt.setString(idx++, member.getMem_id());

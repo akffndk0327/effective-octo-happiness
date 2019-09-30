@@ -30,7 +30,7 @@ public class MemberInsertServlet {
 	@URIMapping("/member/memberInsert.do")
 	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 여기서는 jsp에 연결만 해주기.
-		String viewName = "/member/memberForm";
+		String viewName = "member/memberForm";
 //		RequestDispatcher disp = req.getRequestDispatcher(viewName);
 //		disp.forward(req, resp);
 
@@ -42,9 +42,6 @@ public class MemberInsertServlet {
 	// 보내주는 데이터 받아야해
 	@URIMapping(value = "/member/memberInsert.do", method=HttpMethod.POST)
 	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		// 입력한 데이터를
-		// memVO 만들고 안에 데이터 채우기
 		MemberVO member = new MemberVO(); // 가입하는 정보는 이거만 있느면 됨
 
 		req.setAttribute("member", member); // 여기가 공유하는 거 !!!! - 기존데이터 가지고잇음
@@ -64,7 +61,7 @@ public class MemberInsertServlet {
 
 		// scope 에는 기존데이터, 검증결과 데이터 2개 들어있음
 
-		boolean valid = validate(member, errors); // member: 검증대상 타겟
+		boolean valid = validate(member, errors); // member: 검증대상 타겟 callbye
 
 		String viewName = "member/memberForm";
 		String message = null;
@@ -89,7 +86,7 @@ public class MemberInsertServlet {
 			}
 
 		} else {
-			viewName = "member/memberForm";
+			viewName = "member/memberForm"; //검증통과못하면 여기로 가겟다. +기존 입력 데이터, 검증데이터 가지고잇음 
 		}
 		
 		req.setAttribute("message", message);

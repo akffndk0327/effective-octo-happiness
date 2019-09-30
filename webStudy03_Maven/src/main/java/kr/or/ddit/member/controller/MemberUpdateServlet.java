@@ -39,7 +39,6 @@ public class MemberUpdateServlet {
 			BeanUtils.populate(member, req.getParameterMap());
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException();
-
 		}
 
 		// 2. 분석(검증) => 아이디 비번, 빈칸 검증

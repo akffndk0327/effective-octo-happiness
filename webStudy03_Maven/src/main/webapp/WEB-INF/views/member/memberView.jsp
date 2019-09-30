@@ -81,7 +81,6 @@
 			<td>${member.mem_delete}</td>
 		</tr>
 	</table>
-
 </script>
 <script>
 member = $('#member');

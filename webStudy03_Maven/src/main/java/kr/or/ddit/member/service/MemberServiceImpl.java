@@ -4,7 +4,8 @@ import java.util.List;
 
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.member.dao.IMemberDAO;
-import kr.or.ddit.member.dao.MemberDAOImpl;
+import kr.or.ddit.member.dao.MemberDAOImpl_JDBC;
+import kr.or.ddit.member.dao.MemberDaoImpl;
 import kr.or.ddit.member.exception.NotAuthenticatedException;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.vo.MemberVO;
@@ -12,7 +13,8 @@ import kr.or.ddit.vo.MemberVO;
 public class MemberServiceImpl implements IMemberService {
 	//다오랑 연ㄹ결
 	//결합력 최상  =>HCLC 지향 -> 1.Factory Object pattern, Stategy pattern(DI) 
-	public IMemberDAO dao =MemberDAOImpl.getInstance();
+//	public IMemberDAO dao =MemberDAOImpl_JDBC.getInstance();
+	public IMemberDAO dao = new MemberDaoImpl();
 	private IAuthenticateService service = new AuthenticateServiceImpl();
 	
 	private static MemberServiceImpl instance;

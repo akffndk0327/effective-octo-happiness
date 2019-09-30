@@ -17,18 +17,18 @@ import kr.or.ddit.vo.ProdVO;
 //POJO
 @CommandHandler
 public class ProdListController {
-	IProdService service = ProdServiceImpl.getInstance();
+	IProdService service = new ProdServiceImpl();
 
 	@URIMapping("/prod/prodList.do")
 	public String prodList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String accept = req.getHeader("Accept");
 		// 처리
-		List<ProdVO> list = service.retrieveProdList();
+		List<ProdVO> prodlist = service.retrieveProdList();
 		// 검증
 		if(accept.toLowerCase().contains("json")) {
 	         resp.setContentType("application/json; charset=UTF-8");
 	         
-	         String json = new MarshallingUtils().marshalling(list);
+	         String json = new MarshallingUtils().marshalling(prodlist);
 	         
 	         try (PrintWriter out = resp.getWriter();) {
 	            out.println(json);
@@ -38,7 +38,7 @@ public class ProdListController {
 	      
 		} else {
 			String viewName = "prod/prodList";
-			req.setAttribute("prodList", list);
+			req.setAttribute("prodList", prodlist);
 			return viewName;
 		}
 	}

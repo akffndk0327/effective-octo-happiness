@@ -4,19 +4,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath } /bootstrap-4.3.1-dist/css/bootstrap.min.css">
+<link rel="stylesheet"	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
 <style type="text/css">
 .error {
 	color: red;
 }
 </style>
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath } /bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript"	src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript"	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script type="text/javascript"	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
 <title>신규 가입</title>
 
@@ -35,20 +31,20 @@
 				<th>회원아이디</th>
 				<td><input type="text" required class="form-control"
 					name="mem_id" id="mem_id" readonly value="${member.mem_id}" />
-					<button type="button" id="idCheck">중복확인</button> 
-					<span class="errors">${errors["mem_id"]}</span></td>
+					<button type="button" id="idCheck">중복확인</button> <span
+					class="errors">${errors["mem_id"]}</span></td>
 			</tr>
 			<tr>
 				<th>비밀번호</th>
 				<td><input type="text" required class="form-control"
-					name="mem_pass" value="${member.mem_pass}" />
+					name="mem_pass" value="${member.mem_pass}" /> 
 					<span class="errors">${errors["mem_pass"]}</span></td>
 			</tr>
 			<tr>
 				<th>이름</th>
 				<td><input type="text" required class="form-control"
-					name="mem_name" value="${member.mem_name }" />
-					<span class="errors">${errors["mem_name"]}%></span></td>
+					name="mem_name" value="${member.mem_name }" /> <span
+					class="errors">${errors["mem_name"]}</span></td>
 			</tr>
 			<tr>
 				<th>주민번호1</th>
@@ -68,7 +64,7 @@
 			<tr>
 				<th>우편번호</th>
 				<td><input type="text" required class="form-control"
-					name="mem_zip" value="${member.mem_zip}%>" /><span class="errors">${errors["mem_zip"]}</span></td>
+					name="mem_zip" value="${member.mem_zip}" /><span class="errors">${errors["mem_zip"]}</span></td>
 			</tr>
 			<tr>
 				<th>주소1</th>
@@ -78,8 +74,7 @@
 			<tr>
 				<th>주소2</th>
 				<td><input type="text" required class="form-control"
-					name="mem_add2" value="${member.mem_add2 }" /><span
-					class="errors">${errors["mem_add2"]}</span></td>
+					name="mem_add2" value="${member.mem_add2 }" /><span class="errors">${errors["mem_add2"]}</span></td>
 			</tr>
 			<tr>
 				<th>집전화</th>
@@ -153,10 +148,9 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form id="idCheckForm" method="post"
-						action="${pageContext.request.contextPath } /member/idCheck.do">
-						<input type="text" name="mem_id" id="checkMemId" /> <span
-							class="singid"></span>
+					<form id="idCheckForm" method="post" action="${pageContext.request.contextPath }/member/idCheck.do">
+						<input type="text" name="mem_id" id="checkMemId" /> 
+						<span class="singid"/>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
@@ -196,10 +190,12 @@
 				dataType : "json",
 				success : function(resp) {
 					if (resp.valid) { //중복안되서 쓸수있다,.
+// 						checkMemId.next(".singid").html("");
 						useId.show();
 					} else {
 						checkMemId.next(".singid").html("아이디중복");
 						checkMemId.focus();
+						useId.hide();
 					}
 				},
 				error : function(errorResp) {
@@ -224,6 +220,7 @@
 			let match = regex.exec(target);
 
 			if (!match) {
+				$(this).empty();
 				$(this).next(".singid").html("아이디 형식에 맞지 않습니다.");
 				$(this).focus();
 			} else {

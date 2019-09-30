@@ -55,6 +55,13 @@
 		<version>2.7.0</version>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+		<version>3.5.2</version>
+	</dependency>
+	
 <!-- 	commons 계열 -->
 	
 	<dependency>
@@ -77,8 +84,16 @@
 		<version>2.6</version>
 	</dependency>
 	
-<!-- 	test계열 -->
-
+	<!-- 	Domain Layer 지원 -->
+	<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+	<dependency>
+		<groupId>org.projectlombok</groupId>
+		<artifactId>lombok</artifactId>
+		<version>1.18.8</version>
+		<scope>provided</scope>
+	</dependency>
+	
+	<!-- 	test계열 -->
 	<!-- https://mvnrepository.com/artifact/junit/junit -->
 	<dependency>
 		<groupId>junit</groupId>
