@@ -29,13 +29,11 @@
    <resultMap type="ProdVO" id="prodMap" autoMapping="true">
       <!-- pk 설정 : 중복 제거를 위함 -->
       <id column="PROD_ID" property="prod_id"/>
-      
       <!-- 1:1 has a 관계일 때 -->
 <!--       <association property="buyer" javaType="BuyerVO" autoMapping="true"> -->
 <!--           buyer 바인딩 -->
 <!--          <id column="BUYER_ID" property="buyer_id"/> -->
 <!--       </association> -->
-      
       <!-- 1:n -->
       <collection property="memberList" javaType="java.util.List" ofType="MemberVO" autoMapping="true">
          <id column="MEM_ID" property="mem_id"/>
