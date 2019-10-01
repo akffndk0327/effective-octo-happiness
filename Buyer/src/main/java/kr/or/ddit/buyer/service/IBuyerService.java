@@ -3,14 +3,24 @@ package kr.or.ddit.buyer.service;
 import java.util.List;
 
 import kr.or.ddit.buyer.vo.BuyerVO;
+import kr.or.ddit.buyer.vo.PagingInfoVO;
 import kr.or.ddit.enums.ServiceResult;
 
 public interface IBuyerService {
+	
+	/**
+	 * 페이징 처리위한 메서드 
+	 * @param pagingVO
+	 * @return
+	 */
+	public int selectBuyerCount(PagingInfoVO<BuyerVO> pagingVO);
+	
 	/**
 	 * buyer list 호출 메서드
+	 * @param pagingVO TODO
 	 * @return db의 table 'buyer'의 모든 목록
 	 */
-	public List<BuyerVO> selectNameList();
+	public List<BuyerVO> selectNameList(PagingInfoVO pagingVO);
 	
 	
 	/**
@@ -40,4 +50,5 @@ public interface IBuyerService {
 	 * @return
 	 */
 	public ServiceResult buyerUpdate(BuyerVO vo);
+
 }

@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 public class MemberDaoImpl implements IMemberDAO {
 	
@@ -27,14 +28,24 @@ public class MemberDaoImpl implements IMemberDAO {
 			return cnt;
 		}
 	}
-
-	@Override
-	public List<MemberVO> selectMemeberList() {
+	
+	@Override //페이징을 위한 멤버수 조회
+	public int selectMemberCount(PagingInfoVO<MemberVO> pagingVO) {
 		try(
 				SqlSession sqlSession = SqlSessionFactory.openSession(); //close시켜야해서 try 안에 넣엇음.
 			){
 			IMemberDAO mapper = sqlSession.getMapper(IMemberDAO.class);
-				return mapper.selectMemeberList();
+				return mapper.selectMemberCount(pagingVO);
+			}
+	}
+	
+	@Override //조회
+	public List<MemberVO> selectMemeberList(PagingInfoVO pagingVO) {
+		try(
+				SqlSession sqlSession = SqlSessionFactory.openSession(); //close시켜야해서 try 안에 넣엇음.
+			){
+			IMemberDAO mapper = sqlSession.getMapper(IMemberDAO.class);
+				return mapper.selectMemeberList(pagingVO);
 			}
 	}
 

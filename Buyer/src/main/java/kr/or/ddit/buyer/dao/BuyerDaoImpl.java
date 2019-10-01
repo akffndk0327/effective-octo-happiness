@@ -6,17 +6,30 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import kr.or.ddit.buyer.vo.BuyerVO;
+import kr.or.ddit.buyer.vo.PagingInfoVO;
 import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 
 public class BuyerDaoImpl implements IBuyerDao {
 	private SqlSessionFactory SqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();// 싱글톤
+	
+	
 	@Override
-	public List<BuyerVO> selectNameList() {
+	public int selectBuyerCount(PagingInfoVO<BuyerVO> pagingVO) {
+	try(
+			SqlSession sqlSession = SqlSessionFactory.openSession();	
+		){
+			IBuyerDao mapper = sqlSession.getMapper(IBuyerDao.class);
+			return mapper.selectBuyerCount(pagingVO);
+		}
+	}
+	
+	@Override
+	public List<BuyerVO> selectNameList(PagingInfoVO pagingVO) {
 		try(
 			SqlSession sqlSession = SqlSessionFactory.openSession();	
 		){
 			IBuyerDao mapper = sqlSession.getMapper(IBuyerDao.class);
-			return mapper.selectNameList();
+			return mapper.selectNameList(pagingVO);
 		}
 	}
 
@@ -65,5 +78,7 @@ public class BuyerDaoImpl implements IBuyerDao {
 			return cnt;
 		}
 	}
+
+	
 
 }

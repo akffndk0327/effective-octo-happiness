@@ -9,6 +9,7 @@ import kr.or.ddit.member.dao.MemberDaoImpl;
 import kr.or.ddit.member.exception.NotAuthenticatedException;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 public class MemberServiceImpl implements IMemberService {
 	//다오랑 연ㄹ결
@@ -46,11 +47,16 @@ public class MemberServiceImpl implements IMemberService {
 		if(saved == null) throw new UserNotFoundException(member.getMem_id()+"가 없음"); //서비스임플에서 예외처리 !
 		return saved;
 	}
+	
+	@Override //db에서 받은 데이터 페이징 처리 
+	public int retrieveMemberCount(PagingInfoVO<MemberVO> pagingVO) {
+		return dao.selectMemberCount(pagingVO);
+	}
 
 	@Override
-	public List<MemberVO> retrieveMemberList() {
+	public List<MemberVO> retrieveMemberList(PagingInfoVO pagingVO) {
 		// TODO Auto-generated method stub
-		return dao.selectMemeberList();
+		return dao.selectMemeberList(pagingVO);
 	}
 
 	@Override

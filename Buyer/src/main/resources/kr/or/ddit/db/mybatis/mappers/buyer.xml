@@ -2,24 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.ddit.buyer.dao.IBuyerDao">
 	
-	<select id="selectNameList" resultType="BuyerVO">
-		SELECT BUYER_ID, BUYER_NAME  
-		FROM BUYER   
+	<select id="selectBuyerCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT (BUYER_ID)
+		FROM BUYER
 	</select>
-	
-	<select id="buyerDetail" parameterType="String" resultType="BuyerVO">
-	SELECT buyer_id,
-		buyer_name,
-		buyer_lgu,
-		buyer_bank,
-		buyer_bankno,
-		buyer_zip,
-		buyer_add1,
-		buyer_add2,
-		buyer_comtel,
-		buyer_mail
-	FROM BUYER
-	WHERE BUYER_ID = #{buyer_id}
+	<select id="selectNameList" resultType="BuyerVO">
+		SELECT BUYER_ID ,BUYER_NAME
+		FROM BUYER
+		WHERE BUYER_ID=#{buyer_id}
+	</select>
+	<resultMap type="BuyerVO" id="buyerMap" autoMapping="true">
+		<id column="BUYER_ID" property="buyer_id"/>	
+		<collection property="prodList" javaType="java.util.List" ofType="ProdVO" autoMapping="true">
+			<id column="PROD_ID" property="prod_id"/>
+		</collection>
+	</resultMap>
+	<select id="buyerDetail" parameterType="String" resultMap="buyerMap">
+	 select B.*
+	from(
+		select rownum rnum, A.*
+	from(
+		SELECT
+		PROD_ID, PROD_NAME, buyer_id,
+		buyer_name, buyer_lgu, buyer_bank,
+		buyer_bankno, buyer_zip, buyer_add1,
+		buyer_add2, buyer_comtel, buyer_mail
+		FROM BUYER INNER JOIN PROD ON(BUYER_ID =PROD_BUYER)
+		)A
+	)B
+	<![CDATA[
+		WHERE RNUM BETWEEN #{startRow} and #{endRow}
+	]]>
 	</select>
 	
 	<insert id="buyerInsert" parameterType="BuyerVO">

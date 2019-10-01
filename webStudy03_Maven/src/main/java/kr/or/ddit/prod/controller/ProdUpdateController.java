@@ -21,7 +21,7 @@ import kr.or.ddit.vo.ProdVO;
 
 @CommandHandler
 public class ProdUpdateController {
-	IProdService service = ProdServiceImpl.getInstance();
+	IProdService service = new ProdServiceImpl();
 
 	@URIMapping("/prod/prodUpdate.do")
 	public String updateForm(HttpServletRequest req, HttpServletResponse resp) throws IOException {

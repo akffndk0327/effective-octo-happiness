@@ -11,6 +11,7 @@ import java.util.List;
 import kr.or.ddit.db.ConnectionFactory;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 public class MemberDAOImpl_JDBC implements IMemberDAO {
 	private static MemberDAOImpl_JDBC instance;
@@ -122,7 +123,7 @@ public class MemberDAOImpl_JDBC implements IMemberDAO {
 		}
 	}
 	@Override
-	public List<MemberVO> selectMemeberList() {
+	public List<MemberVO> selectMemeberList(PagingInfoVO pagingVO) {
 		List<MemberVO> list = new ArrayList<MemberVO>();
 		StringBuffer sql = new StringBuffer();
 		sql.append(" SELECT MEM_ID, MEM_NAME, MEM_HP, MEM_MAIL, MEM_ADD1, MEM_MILEAGE ");
@@ -219,5 +220,11 @@ public class MemberDAOImpl_JDBC implements IMemberDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException(e); 
 		}
+	}
+
+	@Override
+	public int selectMemberCount(PagingInfoVO<MemberVO> pagingVO) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

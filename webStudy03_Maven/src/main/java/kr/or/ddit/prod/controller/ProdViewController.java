@@ -19,7 +19,7 @@ public class ProdViewController {
 	@URIMapping("/prod/prodView.do")
 	//view layer: prod/prodVies, model name 
 	public String prodList(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException {
-		IProdService service = ProdServiceImpl.getInstance();
+		IProdService service =new ProdServiceImpl();
 		String prod_id =req.getParameter("what");
 		if(StringUtils.isBlank(prod_id)) {
 			resp.sendError(400);

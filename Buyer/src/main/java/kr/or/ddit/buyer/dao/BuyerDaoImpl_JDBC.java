@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.or.ddit.buyer.vo.BuyerVO;
+import kr.or.ddit.buyer.vo.PagingInfoVO;
 import kr.or.ddit.db.ConnectionFactory;
 
 public class BuyerDaoImpl_JDBC implements IBuyerDao {
@@ -24,7 +25,7 @@ public class BuyerDaoImpl_JDBC implements IBuyerDao {
 	}
 
 	@Override
-	public List<BuyerVO> selectNameList() {
+	public List<BuyerVO> selectNameList(PagingInfoVO pagingVO) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT BUYER_ID, BUYER_NAME      ");
 		sql.append("FROM BUYER    ");
@@ -178,6 +179,12 @@ public class BuyerDaoImpl_JDBC implements IBuyerDao {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public int selectBuyerCount(PagingInfoVO<BuyerVO> pagingVO) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

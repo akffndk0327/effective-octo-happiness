@@ -7,10 +7,11 @@
 <meta charset="UTF-8" />
 <title>Insert title here</title>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<link rel="stylesheet"   href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-<!-- <script type="text/javascript"   src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+<link rel="stylesheet"  href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
 <script type="text/javascript"   src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script type="text/javascript"   src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src ="${pageContext.request.contextPath }/js/generataLprodBuye.js"></script>
+
 <c:if test="${not empty message }">
 	<script type="text/javascript">
 		alert("${message}");
@@ -141,59 +142,22 @@
 			</tr>
 		</table>
 	</form>
-<script type="text/javascript">
-	var prod_lguTag = $("[name='prod_lgu']");
-	var prod_buyerTag = $("[name='prod_buyer']");
-	
-	$(prod_lguTag).on('change',function(){
-		let lguCode = $(this).val();
-		if(!lguCode) return;
-		let options = $(prod_buyerTag).find("option:gt(0)");
-		$(options).hide();
-		let lguOptions = $(prod_buyerTag).find("option."+lguCode);
-		$(lguOptions).show();
-	})
-	
-	$.ajax({
-		url : "<c:url value ='/prod/getLprodList.do'/>",
-		dataType : "json",
-		success : function(resp) {
-			let options = [];
-			$(resp).each(function(index, lprod){
-				options.push(
-				$("<option>").text(lprod.lprod_nm)
-							 .attr({value :lprod.lprod_gu })
-				);
-			});
-			$(prod_lguTag).append(options);
-		},
-		error : function(errorResp) {
-			console.log(errorResp.status);
-			
-		}
+	<script type="text/javascript">
+		var prod_lguTag = $("[name='prod_lgu']");
+		prod_lguTag.generateLprod("${pageContext.request.contextPath}");
 
-	})
-	$.ajax({
-		url : "<c:url value ='/prod/getBuyerList.do'/>",
-		dataType : "json",
-		success : function(resp) {
-			let options = [];
-			$(resp).each(function(index, buyer){
-				options.push(
-				$("<option>").text(buyer.buyer_name)
-							 .attr({
-								 "value" :buyer.buyer_id,
-								 "class": buyer.buyer_lgu
-							})
-				);
-			});
-			$(prod_buyerTag).append(options);
-		},
-		error : function(errorResp) {
-			console.log(errorResp.status);
-		}
-
-	})
+		var prod_buyerTag = $("[name='prod_buyer']");
+		prod_buyerTag.generateBuyer("${pageContext.request.contextPath}");
+		
+		$(prod_lguTag).on('change', function() {
+			let lguCode = $(this).val();
+			if (!lguCode)
+				return;
+			let options = $(prod_buyerTag).find("option:gt(0)");
+			$(options).hide();
+			let lguOptions = $(prod_buyerTag).find("option." + lguCode);
+			$(lguOptions).show();
+		})
 	</script>
 </body>
 </html>

@@ -112,6 +112,14 @@ p:hover {
 				<td><input type="text" id="upid" name="buyer_id" readonly="readonly"></td>
 			</tr>
 			<tr>
+				<td>상품코드</td>
+				<td><input type="text" id="upname" name="buyer_name"></td>
+			</tr>
+			<tr>
+				<td>상품명</td>
+				<td><input type="text" id="upname" name="buyer_name"></td>
+			</tr>
+			<tr>
 				<td>거래처명</td>
 				<td><input type="text" id="upname" name="buyer_name"></td>
 			</tr>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 /**
  * 회원 관리를 위한 Business logic layer  
@@ -22,12 +23,20 @@ public interface IMemberService {
 	 * @return 조건에 맞는 회원이 없다면, 유저낫파운드exception 
 	 */
 	public MemberVO retrieveMember(MemberVO member);
+	
+	/**
+	 * 페이징 처리를 위한 생성 
+	 * @param pagingVO
+	 * @return
+	 */
+	public int retrieveMemberCount(PagingInfoVO<MemberVO> pagingVO);
 	/**
 	 * 목록조회
+	 * @param pagingVO TODO
 	 * @param member
 	 * @return 없으면 , size()== 0;
 	 */
-	public List<MemberVO> retrieveMemberList();
+	public List<MemberVO> retrieveMemberList(PagingInfoVO pagingVO);
 	/**
 	 * 정보 수정 
 	 * @param member

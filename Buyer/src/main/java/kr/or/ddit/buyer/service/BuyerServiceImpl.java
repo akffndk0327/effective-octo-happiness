@@ -6,6 +6,7 @@ import kr.or.ddit.buyer.dao.BuyerDaoImpl;
 import kr.or.ddit.buyer.dao.BuyerDaoImpl_JDBC;
 import kr.or.ddit.buyer.dao.IBuyerDao;
 import kr.or.ddit.buyer.vo.BuyerVO;
+import kr.or.ddit.buyer.vo.PagingInfoVO;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.exception.CommonException;
 
@@ -25,8 +26,13 @@ public class BuyerServiceImpl implements IBuyerService{
 	}
 	
 	@Override
-	public List<BuyerVO> selectNameList() {
-		return dao.selectNameList();
+	public int selectBuyerCount(PagingInfoVO<BuyerVO> pagingVO) {
+		return dao.selectBuyerCount(pagingVO);
+	}
+	
+	@Override
+	public List<BuyerVO> selectNameList(PagingInfoVO pagingVO) {
+		return dao.selectNameList(pagingVO);
 	}
 
 	@Override
@@ -69,5 +75,9 @@ public class BuyerServiceImpl implements IBuyerService{
 		return result;
 
 	}
+
+	
+
+	
 
 }

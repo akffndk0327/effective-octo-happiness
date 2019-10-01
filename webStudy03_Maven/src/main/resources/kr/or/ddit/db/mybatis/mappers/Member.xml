@@ -20,23 +20,50 @@
 		     #{mem_memorialday},    2000 ,'N'                            
 		 )                                                       
 	</insert>
+	<select id="selectMemberCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT (MEM_ID)
+		FROM MEMBER
+	</select>
+	
 	<select id="selectMemeberList" resultType="MemberVO">
-		 SELECT MEM_ID, MEM_NAME, MEM_HP, MEM_MAIL, MEM_ADD1, MEM_MILEAGE
-		 FROM MEMBER 
+		SELECT A.*
+		
+		
+		
+      	FROM(
+      	select ROWNUM RNUM, MEM_ID, MEM_NAME, MEM_ADD1, 
+               MEM_HP, MEM_MAIL, MEM_MILEAGE
+          from member) A                                             
+      where RNUM BETWEEN #{startRow} AND #{endRow}
 	</select>
-	<select id="selectMember" parameterType="MemberVO" resultType="MemberVO">
-		 SELECT                                                                        
-		    mem_id,    mem_pass,    mem_name,                                          
-		    mem_regno1,    mem_regno2,    to_char(mem_bir,'yyyy-MM-dd') mem_bir,       
-		    mem_zip,    mem_add1,    mem_add2,                                         
-		    mem_hometel,    mem_comtel,    mem_hp,                                     
-		    mem_mail,    mem_job,    mem_like,                                         
-		    mem_memorial,                                                              
-		    to_char(mem_memorialday,'yyyy-MM-dd') mem_memorialday,    mem_mileage,      
-		    mem_delete                                                                 
-		 FROM    MEMBER                                                                
-		 WHERE MEM_ID = #{mem_id}  and MEM_DELETE IS NULL         
-	</select>
+	
+<resultMap type="MemberVO" id="memberMap" autoMapping="true">
+	<id column="MEM_ID" property="mem_id" />
+	<collection property="prodList" ofType="ProdVO"	autoMapping="true">
+		<id column="PROD_ID" property="prod_id" />
+		 <association property="buyer" javaType="BuyerVO" autoMapping="true">
+			<id column="BUYER_ID" property="buyer_id" />
+		 </association>
+	</collection>
+</resultMap>
+      
+   <select id="selectMember" parameterType="MemberVO" resultMap="memberMap">
+      SELECT                                                                                          
+         MEM_ID,MEM_PASS,MEM_NAME,                                                                   
+         MEM_REGNO1,MEM_REGNO2, TO_CHAR(MEM_BIR,'YYYY-MM-DD') MEM_BIR,                               
+         MEM_ZIP, MEM_ADD1,MEM_ADD2,                                                                 
+         MEM_HOMETEL, MEM_COMTEL,MEM_HP,                                                             
+         MEM_MAIL, MEM_JOB,MEM_LIKE,                                                                 
+         MEM_MEMORIAL, TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') MEM_MEMORIALDAY, MEM_MILEAGE, MEM_DELETE
+         , PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE
+         , (SELECT LPROD_NM FROM LPROD WHERE LPROD_GU=PROD_LGU) LPROD_NM
+         , BUYER_ID, BUYER_NAME, BUYER_COMTEL
+         
+      FROM MEMBER LEFT OUTER JOIN CART ON(MEM_ID = CART_MEMBER)
+               LEFT OUTER JOIN PROD ON(CART_PROD = PROD_ID)
+                  LEFT OUTER JOIN BUYER ON(PROD_BUYER = BUYER_ID)                                            
+      where mem_id = #{mem_id}  and MEM_DELETE is null      
+   </select>
 	
 	<update id="updateMember" parameterType="MemberVO">
 		 UPDATE MEMBER SET   

@@ -25,6 +25,12 @@
 	</thead>
 	<tbody id ="listBody">
 	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="6" id="pagingArea">
+			</td>
+		</tr>
+	</tfoot>
 </table>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -50,7 +56,6 @@
 		});
 	$('#deleteBtn').on('click',function(){
 		$('#exampleModal').modal('show');
-		
 	})
 
 </script>
@@ -60,8 +65,15 @@
 <%-- ui는 동기방식, 실제 데이터는 비동기 방식으로  --%>
 <script type="text/javascript">
 	 var listBody = $("#listBody");
+	 var pagingArea = $("#pagingArea");
 	 var listForm = $("#listForm");
 	 var exampleModal = $("#exampleModal");
+	 
+	 pagingArea.on("click","a",function(){ //disabled 막기21
+		let page = $(this).data("page"); 
+		paging(page);
+	 })
+	 
 	 exampleModal.on("hidden.bs.modal",function(){
 		 $(this).find(".modal-body").html("");
 	 })
@@ -86,35 +98,46 @@
 		 return false;
 	 })
 	 
-	 
-	$.ajax({
-// 		data : "",
-		dataType : "json",
-		success : function(resp) { //응답데이터로 돌아온 json을 언마샬링하고 복원한거 
-			let trTags = [];
-			$(resp).each(function(index, member) {
-				let trTag=$("<tr>").append(
-					$('<td>').text(member.mem_id),	
-					$('<td>').text(member.mem_name),	
-					$('<td>').text(member.mem_hp),	
-					$('<td>').text(member.mem_mail),
-					$('<td>').text(member.mem_add1),
-					$('<td>').text(member.mem_mileage)
-				).prop("id", member.mem_id);
-				trTags.push(trTag);
-			})
-			listBody.html(trTags);
-		},
-		error : function(errorResp) {
-			console.log(errorResp.status);
-		}
+	function paging(page) { //페이지 파라미터바뀔때 여기로 옴.
+		 //disable 막기 2
+		 if(page<1) return false;
+		$.ajax({
+				data : "page="+page, //?page=내가 클릭한 페이지(+page : 인덱스번 형식으로 나올려고 이렇게 씀
+				dataType : "json",
+				success : function(resp) { //응답데이터로 돌아온 json을 언마샬링하고 복원한거 
+					let memberList = resp.dataList;
+					let trTags = [];
+					$(memberList).each(
+							function(index, member) {
+								let trTag = $("<tr>").append(
+										$('<td>').text(member.mem_id),
+										$('<td>').text(member.mem_name),
+										$('<td>').text(member.mem_hp),
+										$('<td>').text(member.mem_mail),
+										$('<td>').text(member.mem_add1),
+										$('<td>').text(member.mem_mileage)).prop(
+										"id", member.mem_id);
+								trTags.push(trTag);
+							})
+					listBody.html(trTags);
+					pagingArea.html(resp.pagingHTML);
+				},
+				error : function(errorResp) {
+				console.log(errorResp.status);
+			}
 
-	})
-	listBody.on("click","tr",function(){ //한명의 id 클릭하면 콘솔에 정보가 찍혀 
+		})
+
+	}
+
+	listBody.on("click", "tr", function() { //한명의 id 클릭하면 콘솔에 정보가 찍혀 
 		let who = $(this).prop("id");
 		listForm.find("[name=who]").val(who);
 		listForm.submit(); //테이터 넘어감 
 	})
+	
+	// 1페이지 요청하기
+	paging(1);
 </script>
 </body>
 </html>

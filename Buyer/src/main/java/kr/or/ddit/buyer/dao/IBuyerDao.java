@@ -3,14 +3,22 @@ package kr.or.ddit.buyer.dao;
 import java.util.List;
 
 import kr.or.ddit.buyer.vo.BuyerVO;
+import kr.or.ddit.buyer.vo.PagingInfoVO;
 
 public interface IBuyerDao {
 	
 	/**
+	 * 페이징 처리위한 메서드 
+	 * @param pagingVO
+	 * @return
+	 */
+	public int selectBuyerCount(PagingInfoVO<BuyerVO> pagingVO);
+	/**
 	 * buyer list 호출 메서드
+	 * @param pagingVO TODO
 	 * @return db의 table 'buyer'의 모든 목록
 	 */
-	public List<BuyerVO> selectNameList();
+	public List<BuyerVO> selectNameList(PagingInfoVO pagingVO);
 	
 	
 	/**

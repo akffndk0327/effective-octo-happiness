@@ -2,6 +2,7 @@ package kr.or.ddit.prod.dao;
 
 import java.util.List;
 
+import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ProdVO;
 
 /**
@@ -13,7 +14,8 @@ public interface IProdDAO {
 	//마이바티스....?
 	//call by reference...?
 	public int insertProd(ProdVO prod);
-	public List<ProdVO> selectProdList();
+	public int selectProdCount(PagingInfoVO pagingVO);
+	public List<ProdVO> selectProdList(PagingInfoVO pagingVO);
 	public ProdVO selectProd(String prod_id);
 	public int updateProd(ProdVO prod);
 

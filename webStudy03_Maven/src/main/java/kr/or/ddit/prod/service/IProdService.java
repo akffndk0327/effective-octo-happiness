@@ -3,6 +3,7 @@ package kr.or.ddit.prod.service;
 import java.util.List;
 
 import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ProdVO;
 
 /**
@@ -15,7 +16,8 @@ public interface IProdService {
 	 * @return ok,fail
 	 */
 	public ServiceResult createProd(ProdVO prod);
-	public List<ProdVO>retrieveProdList();
+	public int retreieveProdCount(PagingInfoVO pagingVO);
+	public List<ProdVO>retrieveProdList(PagingInfoVO PagingVo);
 	public ProdVO retrieveProd(String prod_id);
 	/**
 	 * @param prod

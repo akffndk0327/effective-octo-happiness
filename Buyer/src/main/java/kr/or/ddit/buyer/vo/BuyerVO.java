@@ -1,6 +1,7 @@
 package kr.or.ddit.buyer.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class BuyerVO implements Serializable {
 	private String buyer_id;
