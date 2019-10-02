@@ -3,7 +3,6 @@ package kr.or.ddit.buyer.service;
 import java.util.List;
 
 import kr.or.ddit.buyer.dao.BuyerDaoImpl;
-import kr.or.ddit.buyer.dao.BuyerDaoImpl_JDBC;
 import kr.or.ddit.buyer.dao.IBuyerDao;
 import kr.or.ddit.buyer.vo.BuyerVO;
 import kr.or.ddit.buyer.vo.PagingInfoVO;

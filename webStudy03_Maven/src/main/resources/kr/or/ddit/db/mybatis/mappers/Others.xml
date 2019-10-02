@@ -13,5 +13,4 @@
 			WHERE BUYER_LGU = #{prod_lgu} 
 		</if>
 	</select>
-
 </mapper>

@@ -20,7 +20,7 @@ public interface IBuyerService {
 	 * @param pagingVO TODO
 	 * @return db의 table 'buyer'의 모든 목록
 	 */
-	public List<BuyerVO> selectNameList(PagingInfoVO pagingVO);
+	public List<BuyerVO> selectNameList(PagingInfoVO<BuyerVO> pagingVO);
 	
 	
 	/**

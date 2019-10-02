@@ -86,8 +86,8 @@
 				<td>${prod.prod_detail }</td>
 			</tr>
 			<tr>
-				<th>이미지경로</th>
-				<td>${prod.prod_img }</td>
+				<th>이미지</th>
+				<td><img src="${pageContext.request.contextPath }/prodImages/${prod.prod_img }"/></td>
 			</tr>
 			<tr>
 				<th>상품재고</th>

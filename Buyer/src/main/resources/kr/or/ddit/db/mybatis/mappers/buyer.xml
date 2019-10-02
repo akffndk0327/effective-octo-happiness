@@ -6,11 +6,13 @@
 		SELECT COUNT (BUYER_ID)
 		FROM BUYER
 	</select>
-	<select id="selectNameList" resultType="BuyerVO">
-		SELECT BUYER_ID ,BUYER_NAME
-		FROM BUYER
-		WHERE BUYER_ID=#{buyer_id}
+	<select id="selectNameList" parameterType="PagingInfoVO" resultType="BuyerVO" >
+	SELECT A.*
+      FROM ( SELECT ROWNUM RNUM, BUYER_ID,BUYER_NAME
+               FROM BUYER) A
+      WHERE RNUM BETWEEN #{startRow} AND #{endRow}
 	</select>
+	
 	<resultMap type="BuyerVO" id="buyerMap" autoMapping="true">
 		<id column="BUYER_ID" property="buyer_id"/>	
 		<collection property="prodList" javaType="java.util.List" ofType="ProdVO" autoMapping="true">
@@ -18,21 +20,14 @@
 		</collection>
 	</resultMap>
 	<select id="buyerDetail" parameterType="String" resultMap="buyerMap">
-	 select B.*
-	from(
-		select rownum rnum, A.*
-	from(
-		SELECT
-		PROD_ID, PROD_NAME, buyer_id,
-		buyer_name, buyer_lgu, buyer_bank,
-		buyer_bankno, buyer_zip, buyer_add1,
-		buyer_add2, buyer_comtel, buyer_mail
-		FROM BUYER INNER JOIN PROD ON(BUYER_ID =PROD_BUYER)
-		)A
-	)B
-	<![CDATA[
-		WHERE RNUM BETWEEN #{startRow} and #{endRow}
-	]]>
+	SELECT
+			PROD_ID, PROD_NAME, BUYER_ID,
+			BUYER_NAME, BUYER_LGU, BUYER_BANK,
+			BUYER_BANKNO, BUYER_ZIP, BUYER_ADD1,
+			BUYER_ADD2, BUYER_COMTEL, BUYER_MAIL
+			FROM BUYER INNER JOIN PROD ON(BUYER_ID =PROD_BUYER)
+		WHERE BUYER_ID=#{buyer_id}
+	 
 	</select>
 	
 	<insert id="buyerInsert" parameterType="BuyerVO">

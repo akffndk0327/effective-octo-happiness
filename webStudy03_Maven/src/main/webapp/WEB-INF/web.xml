@@ -34,16 +34,16 @@
 			<param-value>.jsp</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<multipart-config></multipart-config>
 	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>ForntController</servlet-name>
-		<url-pattern>/member/*</url-pattern>
 		<url-pattern>/buyer/*</url-pattern>
 		<url-pattern>/mypage</url-pattern>
 		<url-pattern>/login</url-pattern>
 		<url-pattern>/logout</url-pattern>
-		<url-pattern>/prod/*</url-pattern>
+		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 
 	<servlet>

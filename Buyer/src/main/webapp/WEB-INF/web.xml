@@ -38,7 +38,6 @@
 	<servlet-mapping>
 		<servlet-name>ForntController</servlet-name>
 		<url-pattern>/buyer/buyerList</url-pattern>
-		<url-pattern>/buyer/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet>

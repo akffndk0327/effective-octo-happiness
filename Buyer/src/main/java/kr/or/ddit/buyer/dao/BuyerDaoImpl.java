@@ -25,6 +25,7 @@ public class BuyerDaoImpl implements IBuyerDao {
 	
 	@Override
 	public List<BuyerVO> selectNameList(PagingInfoVO pagingVO) {
+
 		try(
 			SqlSession sqlSession = SqlSessionFactory.openSession();	
 		){
