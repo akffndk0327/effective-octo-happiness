@@ -24,6 +24,8 @@ import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.prod.service.IProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
 import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.wrapper.MultipartRequestWrapper;
+import kr.or.ddit.wrapper.PartWrapper;
 
 @CommandHandler
 public class ProdUpdateController {
@@ -51,26 +53,27 @@ public class ProdUpdateController {
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
-		//1002
-		//실제파일이 업로드 되있는지 확인 필요해
-		Part part= req.getPart("prod_image");
-		long size = part.getSize(); //파일이 선택됬으면 0보단 큼
-		if (size > 0) { // 파일이 업로드 되었다
-
-			// 1. 저장위치
-			String saveFolderURL = "/prodImages"; // 여기에 이미지 하나 저장됨 .!
-			String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL);
-			File saveFolder = new File(saveFolderPath);
-			// 존재여부 확인 !
-			if (!saveFolder.exists())
-				saveFolder.mkdirs();
-			// 2.저장명 원본파일명 쓰지마
-			String savename = UUID.randomUUID().toString();
-			try (InputStream is = part.getInputStream();) {
-				FileUtils.copyInputStreamToFile(is, new File(saveFolder, savename)); // 여기서 복사 떠짐
-			} // 저장명이라는 메타데이터 생김
-			prod.setProd_img(savename); // 입력받지 않은 이미지 경로가 생김 그ㅓ나 이미지는 웹서버상에 images에 저장됨.
-		}
+		
+		//1002 -> 1004 
+		if(req instanceof MultipartRequestWrapper) {
+			PartWrapper partWrapper = ((MultipartRequestWrapper) req).getPartWrappper("prod_image");
+			if(partWrapper != null) {
+				// 1. 저장위치
+				String saveFolderURL = "/prodImages"; // 여기에 이미지 하나 저장됨 .!
+				String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL);
+				File saveFolder = new File(saveFolderPath);
+				// 존재여부 확인 !
+				if (!saveFolder.exists())
+					saveFolder.mkdirs();
+				// 2.저장명 원본파일명 쓰지마
+				String savename = UUID.randomUUID().toString();
+				try (InputStream is = partWrapper.getInputStream();) {
+					FileUtils.copyInputStreamToFile(is, new File(saveFolder, savename)); // 여기서 복사 떠짐
+				} // 저장명이라는 메타데이터 생김
+				prod.setProd_img(savename); // 입력받지 않은 이미지 경로가 생김 그ㅓ나 이미지는 웹서버상에 images에 저장됨.
+			} //if 1 end 
+			
+		}//if 2 end 
 		
 		
 		// 분석 검증

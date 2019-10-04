@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.or.ddit.alba.dao.IAlbaDao">
+
+<select id="selectAlbaList" resultType="AlbaVO">
+	SELECT
+	    AL_ID,    AL_NAME,    AL_AGE,    AL_ADDRESS,
+	    AL_HP,    AL_SPEC,   AL_CAREER,
+	    AL_GEN
+	FROM   ALBA
+</select>
+
+
+
+</mapper>

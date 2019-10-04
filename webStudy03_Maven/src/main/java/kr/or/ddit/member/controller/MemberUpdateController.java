@@ -1,18 +1,19 @@
 package kr.or.ddit.member.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.enums.ServiceResult;
@@ -22,10 +23,12 @@ import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.wrapper.MultipartRequestWrapper;
+import kr.or.ddit.wrapper.PartWrapper;
 
 //@WebServlet("/member/memberUpdate.do")
 @CommandHandler
-public class MemberUpdateServlet {
+public class MemberUpdateController {
 	IMemberService service = new MemberServiceImpl();
 
 	@URIMapping(value = "/member/memberUpdate.do", method=HttpMethod.POST)
@@ -40,6 +43,27 @@ public class MemberUpdateServlet {
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException();
 		}
+		
+		if(req instanceof MultipartRequestWrapper) { //이거 있으면 밑에 Parㅅ 없어도 되
+			PartWrapper partWrapper = ((MultipartRequestWrapper) req).getPartWrappper("mem_image");
+			if(partWrapper!=null) {
+				member.setMem_img(partWrapper.getBytes());
+			}
+		}
+		
+//		사진 넣기 1004
+//		Part part = req.getPart("mem_image");
+//		long size = part.getSize(); //3.1에는 원본파일명 가져올수잇고 그 파일명으로 존재여부 확인할수 있음 하지 만 우리는 3.0버전임 
+//		if(size>0) {
+//			try(
+//				InputStream is = part.getInputStream();
+//				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//			){
+//			 IOUtils.copy(is,bos);
+//			 member.setMem_img(bos.toByteArray()) ; //이걸로 바이트 배열로 만들고 이걸 멤버가 가지고 잇는 프로퍼티로 준다
+//			}
+//			
+//		}
 
 		// 2. 분석(검증) => 아이디 비번, 빈칸 검증
 		Map<String, String> errors = new HashMap<String, String>();

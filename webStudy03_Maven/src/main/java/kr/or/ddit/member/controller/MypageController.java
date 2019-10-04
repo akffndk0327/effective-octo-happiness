@@ -22,25 +22,25 @@ public class MypageController{
 	public String mypage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//2. 세션받기
 		HttpSession session = req.getSession();
-		if(session.isNew()) {
-			//비정상요청 발생 한거 상태코드로 전달 
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return null;
-		}
+//		if(session.isNew()) {
+//			//비정상요청 발생 한거 상태코드로 전달 
+//			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+//			return null;
+//		}
 		MemberVO authMember = (MemberVO)session.getAttribute("authMember");
 		String viewName = null;
 //		boolean redirect = false; //..왜? 
-		if(authMember==null) {
-			String message ="마이페이지는 로그인이 필요함.";
-			session.setAttribute("message", message); //로그인 폼 jsp에서 보여줘야헤 
-			viewName ="redirect:/login"; //경로 신경 ㅆ쓸피요없요 req.getContextPath() => 밑으로 빼서
-// 			redirect = true;
-		}else {
+//		if(authMember==null) {
+//			String message ="마이페이지는 로그인이 필요함.";
+//			session.setAttribute("message", message); //로그인 폼 jsp에서 보여줘야헤 
+//			viewName ="redirect:/login"; //경로 신경 ㅆ쓸피요없요 req.getContextPath() => 밑으로 빼서
+//// 			redirect = true;
+//		}else {
 			MemberVO savedMember = service.retrieveMember(authMember);
 			req.setAttribute("savedMember", savedMember);
 			viewName ="member/mypage";
 			
-		}
+//		}
 		//0925
 //		if(redirect) {//redirect 상태에 따라 달라져 . 공유영역 결정 
 //			resp.sendRedirect(req.getContextPath()+viewName); //나갓다가 다시들어옴. 
