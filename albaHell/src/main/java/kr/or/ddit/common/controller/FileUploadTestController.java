@@ -19,25 +19,23 @@ import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.wrapper.MultipartRequestWrapper;
 import kr.or.ddit.wrapper.PartWrapper;
-//여기가 서버사이드!!!!!!!! 망한 코드에요...흑흑
+
 @CommandHandler
 public class FileUploadTestController {
 	@URIMapping(value="/file/upload.do",method=HttpMethod.POST)
 	public String upload(HttpServletRequest req, HttpServletResponse reps) throws IOException, ServletException {		
 		String uploader = req.getParameter("uploader");
-//		Part req.getPart("uploader");
 		System.out.println(uploader);
 		
 		//1004 파일 업로드 여부 확인하기
 		if(req instanceof MultipartRequestWrapper) { //instanceof : 특정개체 확인 
 			//1004
 			MultipartRequestWrapper requestWrapper = (MultipartRequestWrapper) req;
-//			Part filePart = req.getPart("uploadFile");  //메타정보를 db에 넣야하
 			PartWrapper[] array = requestWrapper.getPartWrappers("uploadFile");
 			
 			//1.어디에? 웹리소스, ,파일시스템리소스 각경로의 형태, 웹을통해 접근할수잇냐 없냐
 			//(/prodImages) 서블릿컨뎃스트
-			String saveFolderURL="/prodImages"; //여기에 이미지 하나 저장됨 .! 
+			String saveFolderURL="/albaImages"; //여기에 이미지 하나 저장됨 .! 
 			String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL);
 			File saveFolder  = new File(saveFolderPath);
 			
@@ -47,11 +45,6 @@ public class FileUploadTestController {
 			
 			//2.어떤이름으로 저장? = MultipartRequestWrapper 로 뺌.
 			//Content-Disposition: form-data; name="uploadFile"; filename=""
-//		String header = filePart.getHeader("Content-Disposition");
-//		int firstIdx = header.indexOf("filename");
-//		int secondIdx = header.indexOf("=", firstIdx);
-//		String originalFilename = header.substring(secondIdx+1)
-//										.replace('"', ' ').trim(); //""사이의 파일명 들어옴
 			List<String> saveFiles = new ArrayList<String>();
 			for(PartWrapper partWrapper : array) {
 				String originalFilename = partWrapper.getFileName(); //원본파일명 뽑기
@@ -66,7 +59,6 @@ public class FileUploadTestController {
 					reps.sendError(400);
 					return null;
 				}
-//		long filesize = filePart.getSize();
 				
 				//저장하기 위한 파일이 필ㅎ요ㅕ해
 				try(
@@ -84,7 +76,7 @@ public class FileUploadTestController {
 			req.getSession().setAttribute("uploader",uploader);
 		}
 		
-		return "redirect:/13/fileUploadForm.jsp";
+		return "redirect:/1/fileUploadForm.jsp";
 		
 	}
 }

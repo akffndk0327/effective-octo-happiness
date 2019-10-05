@@ -1,16 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8" />
 <title>Insert title here</title>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<link rel="stylesheet"  href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-<script type="text/javascript"   src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script type="text/javascript"   src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src ="${pageContext.request.contextPath }/js/generataLprodBuye.js"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/js/generataLprodBuye.js"></script>
 
 <c:if test="${not empty message }">
 	<script type="text/javascript">
@@ -33,20 +38,15 @@
 			</tr>
 			<tr>
 				<th>분류코드</th>
-				<td>
-					<select name="prod_lgu">
+				<td><select name="prod_lgu">
 						<option value>분류선택</option>
-					</select>
-				
-				<span class="error">${errors.prod_lgu}</span></td>
+				</select> <span class="error">${errors.prod_lgu}</span></td>
 			</tr>
 			<tr>
 				<th>거래처코드</th>
-				<td>
-					<select name="prod_buyer">
+				<td><select name="prod_buyer">
 						<option value>거래처선택</option>
-					</select>
-				<span class="error">${errors.prod_buyer}</span></td>
+				</select> <span class="error">${errors.prod_buyer}</span></td>
 			</tr>
 			<tr>
 				<th>구매가</th>
@@ -76,9 +76,8 @@
 			</tr>
 			<tr>
 				<th>이미지</th>
-				<td>
-				<input type="file" name="prod_image" accept="image/*">
-				<span class="error">${errors.prod_img}</span></td>
+				<td><input type="file" name="prod_image" accept="image/*">
+					<span class="error">${errors.prod_img}</span></td>
 			</tr>
 			<tr>
 				<th>상품재고</th>
@@ -136,23 +135,23 @@
 					class="error">${errors.prod_mileage}</span></td>
 			</tr>
 			<tr>
-				<td colspan="2">
-					<input class="btn btn-primary" type="submit" value="저장" />
-					<input class="btn btn-warning" type="reset" value="취소" />
-				</td>
+				<td colspan="2"><input class="btn btn-primary" type="submit"
+					value="저장" /> <input class="btn btn-warning" type="reset"
+					value="취소" /></td>
 			</tr>
 		</table>
 	</form>
 	<script type="text/javascript">
 		var prod_lguTag = $("[name='prod_lgu']");
-		prod_lguTag.generateLprod("${pageContext.request.contextPath}","${prod.prod_lgu}");
+		prod_lguTag.generateLprod("${pageContext.request.contextPath}",
+				"${prod.prod_lgu}");
 
 		var prod_buyerTag = $("[name='prod_buyer']");
 		prod_buyerTag.generateBuyer({
-			cPath :"${pageContext.request.contextPath}", 
-			selectedBuyer :"${prod.prod_buyer}"	
+			cPath : "${pageContext.request.contextPath}",
+			selectedBuyer : "${prod.prod_buyer}"
 		});
-		
+
 		$(prod_lguTag).on('change', function() {
 			let lguCode = $(this).val();
 			if (!lguCode)
