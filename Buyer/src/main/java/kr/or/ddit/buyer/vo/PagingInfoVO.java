@@ -19,8 +19,7 @@ public class PagingInfoVO<T> {
 	private int endRow;
 	private int startPage;
 	private int endPage;
-	private 
-	
+
 	private String pagingHTML;
 	private List<T> dataList;
 	
