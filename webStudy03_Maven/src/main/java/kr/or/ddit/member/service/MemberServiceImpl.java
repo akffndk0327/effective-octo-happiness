@@ -16,9 +16,11 @@ public class MemberServiceImpl implements IMemberService {
 	//결합력 최상  =>HCLC 지향 -> 1.Factory Object pattern, Stategy pattern(DI) 
 //	public IMemberDAO dao =MemberDAOImpl_JDBC.getInstance();
 	public IMemberDAO dao = new MemberDaoImpl();
+	
 	private IAuthenticateService service = new AuthenticateServiceImpl();
 	
 	private static MemberServiceImpl instance;
+	
 	public static IMemberService getInstance() {
 		if(instance ==null) {
 			instance = new MemberServiceImpl();

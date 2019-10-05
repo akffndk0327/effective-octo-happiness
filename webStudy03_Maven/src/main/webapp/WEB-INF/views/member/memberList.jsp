@@ -77,12 +77,12 @@
 	 var searchForm =$("#searchForm");
 	 var pageTag = $("[name='page']");
 	 
-	 searchForm.on("submit",function(event){
+	 searchForm.on("submit",function(event){ //추가부분
 		event.preventDefault();
 		var action = $(this).attr("action");
 		var method = $(this).attr("method");
 		var querystring = $(this).serialize();
-		$.ajax({//url:은 현재주소 임
+		$.ajax({//url:은 현재주소 임 => 원래 prod 출력 부분 
 			url : action,
 			data : method, //?page=내가 클릭한 페이지(+page : 인덱스번 형식으로 나올려고 이렇게 씀
 			dataType : "json",
@@ -90,7 +90,7 @@
 				let memberList = resp.dataList;
 				let trTags = [];
 				$(memberList).each(	function(index, member) {
-						let trTag = $("<tr>").append(
+					let trTag = $("<tr>").append(
 							$('<td>').text(member.mem_id),
 							$('<td>').text(member.mem_name),
 							$('<td>').text(member.mem_hp),
