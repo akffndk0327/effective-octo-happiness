@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.Data;
 /**
+ * 10.01
  * 상품 한건에 대해 해당 거래처에 대한 상세정보까지 조회
  * Data mapper를 이용해서 여러개의 테이블로부터 데이터를 조회하는 방법
  * 1. 메인 테이블 선정 테이블간의 관계성 파악
@@ -12,7 +13,7 @@ import lombok.Data;
  * 2. 모델링 , 테이블간의 관계성을 Domain layer에 반영 
  *  1:1 => has a 
  *  1:N => has many
- * 3. 직접 조인 쿼리 작성 -> resultType 대신 resultMap 으로 수동 바인드
+ * 3. 직접 조인 쿼리 작성 -> resultType 대신 resultMap 으로 수동 바인드 => <id="">가 있어야해 
  *   has a => association
  *   has many => collection
  * 
@@ -42,7 +43,7 @@ public class ProdVO implements Serializable { // implements Serializable : 꼮�
 	private Integer prod_qtyin;
 	private Integer prod_qtysale;
 	private Integer prod_mileage;
-	private BuyerVO buyer; //상품하나가 거래처하나의 관계를 가지고잇다  ProdVO has a BuyerVO(1:1 관계)
+	private BuyerVO buyer; //상품하나가 거래처하나의 관계를 가지고잇다  ProdVO has a BuyerVO(1:1 관계) prod가buyer를 가지고 있다 
 	private List<MemberVO> memberList; // ProdVO has many MemberVO (1:n) - 컬렉션으로 바인딩 
 
 	@Override

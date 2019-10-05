@@ -1,6 +1,8 @@
 package kr.or.ddit.member.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +13,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.enums.ServiceResult;
@@ -22,10 +26,12 @@ import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.wrapper.MultipartRequestWrapper;
+import kr.or.ddit.wrapper.PartWrapper;
 
 //@WebServlet("/member/memberInsert.do")
 @CommandHandler
-public class MemberInsertServlet {
+public class MemberInsertController {
 	IMemberService service = MemberServiceImpl.getInstance();
 	@URIMapping("/member/memberInsert.do")
 	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -53,7 +59,26 @@ public class MemberInsertServlet {
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
-
+		
+		if(req instanceof MultipartRequestWrapper) { //이거 있으면 밑에 Parㅅ 없어도 되
+			PartWrapper partWrapper = ((MultipartRequestWrapper) req).getPartWrappper("mem_image");
+			if(partWrapper!=null) {
+				member.setMem_img(partWrapper.getBytes());
+			}
+		}
+		//사진 넣기1004 => mapper로 넣음 
+//		Part part = req.getPart("mem_image");
+//		long size = part.getSize(); //3.1에는 원본파일명 가져올수잇고 그 파일명으로 존재여부 확인할수 있음 하지 만 우리는 3.0버전임 
+//		if(size>0) {
+//			try(
+//				InputStream is = part.getInputStream();
+//				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//			){
+//			 IOUtils.copy(is,bos);
+//			 member.setMem_img(bos.toByteArray()) ; //이걸로 바이트 배열로 만들고 이걸 멤버가 가지고 잇는 프로퍼티로 준다
+//			}
+//		}
+		
 		// 검증하기 - 기준,룰은 db에 맞춰서 1/필수테이터는 뭐고 입력데이터는ㅁ ㅝ고 길이제한틍ㄴ어떻게 ?해야하는가
 		Map<String, String> errors = new HashMap<String, String>(); // 검증 결과 담기위해
 

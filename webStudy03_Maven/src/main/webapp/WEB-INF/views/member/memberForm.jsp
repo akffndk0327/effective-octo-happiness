@@ -25,7 +25,7 @@
 <body>
 	<%-- 	<jsp:useBean id="member" class="kr.or.ddit.vo.MemberVO" scope="request"></jsp:useBean> --%>
 	<%-- 	<jsp:useBean id="errors" class="java.util.HashMap" scope="request"></jsp:useBean> --%>
-	<form method="post">
+	<form method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>회원아이디</th>
@@ -45,6 +45,13 @@
 				<td><input type="text" required class="form-control"
 					name="mem_name" value="${member.mem_name }" /> <span
 					class="errors">${errors["mem_name"]}</span></td>
+			</tr>
+			<tr>
+				<th>이미지</th>
+				<td>
+					<input type="file" 	name="mem_image"/> 
+					
+					</td>
 			</tr>
 			<tr>
 				<th>주민번호1</th>

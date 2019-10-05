@@ -1,6 +1,7 @@
 package kr.or.ddit.vo;
 
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.List;
 
 import lombok.Data;
@@ -40,12 +41,16 @@ public class MemberVO implements Serializable{
 	private String mem_memorialday;
 	private Integer mem_mileage;
 	private String mem_delete;
+	private byte[] mem_img;
+	
+	public String getMem_imageBase64() {
+		if(mem_img ==null) return null;
+		return Base64.getEncoder().encodeToString(mem_img);
+	}
+	private String mem_role;
 	
 	private List<ProdVO> prodList;
 
-	
-	
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,6 +58,8 @@ public class MemberVO implements Serializable{
 		result = prime * result + ((mem_id == null) ? 0 : mem_id.hashCode());
 		return result;
 	}
+	//이거 없엇으면 주소로 판단하기 때문에  인증 어려워짐 
+	//상태비교 메소드equals() 꼭 잇어얗 ㅐ! 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

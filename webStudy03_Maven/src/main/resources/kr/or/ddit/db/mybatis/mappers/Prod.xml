@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.ddit.prod.dao.IProdDAO">
-	<select id="selectProdCount" resultType="int">
+<sql id="searchFrag">
+	<where>
+		<if test="searchVO != null">
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.prod_lgu)">
+				PROD_LGU = #{searchVO.prod_lgu}
+			</if>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.prod_buyer)">
+				and PROD_BUYER = #{searchVO.prod_buyer}
+			</if>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.prod_name)">
+<!-- 				and INSTR(PROD_NAME, like '%'||#{searchVO.prod_name}||'%' -->
+				and INSTR(PROD_NAME, #{searchVO.prod_name}) > 0 
+				
+			</if>
+		</if>
+	</where>
+</sql>
+	<select id="selectProdCount" parameterType="PagingInfoVO" resultType="int">
 		select count (prod_id)
 		from prod
+		<include refid="searchFrag"/>
+		
 	</select>
 	<select id="selectProdList" parameterType="PagingInfoVO" resultType="ProdVO">
 		SELECT B.*
@@ -17,6 +39,7 @@
 				       , LPROD_NM
 				FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU)
 						 INNER JOIN	BUYER ON (PROD_BUYER = BUYER_ID)
+				<include refid="searchFrag"/>
 				ORDER BY PROD_LGU DESC
 			)A
 		)B
@@ -25,7 +48,7 @@
 		]]>
 	</select>
 	
-<!-- 자동으로 바인딩되던 부분을 수동 설정 -->
+<!-- 자동으로 바인딩 (:DB의 정보 가져와서 연결) 되던 부분을 수동 설정 -->
    <resultMap type="ProdVO" id="prodMap" autoMapping="true">
       <!-- pk 설정 : 중복 제거를 위함 -->
       <id column="PROD_ID" property="prod_id"/>
@@ -73,7 +96,6 @@
           PROD_SALE      =   #{prod_sale},
           PROD_OUTLINE   =   #{prod_outline},
           PROD_DETAIL      =   #{prod_detail},
-          PROD_IMG      =   #{prod_img},
           PROD_TOTALSTOCK   =   #{prod_totalstock},
           PROD_PROPERSTOCK=   #{prod_properstock},
           PROD_SIZE      =   #{prod_size},
@@ -83,6 +105,9 @@
           PROD_QTYIN      =   #{prod_qtyin},
           PROD_QTYSALE   =   #{prod_qtysale},
           PROD_MILEAGE   =   #{prod_mileage}
+          <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(prod_img)">
+          	, PROD_IMG      =   #{prod_img}
+          </if>
       WHERE
           PROD_ID = #{prod_id}
    </update>

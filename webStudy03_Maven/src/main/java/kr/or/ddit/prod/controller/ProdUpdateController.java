@@ -1,14 +1,20 @@
 package kr.or.ddit.prod.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.enums.ServiceResult;
@@ -18,6 +24,8 @@ import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.prod.service.IProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
 import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.wrapper.MultipartRequestWrapper;
+import kr.or.ddit.wrapper.PartWrapper;
 
 @CommandHandler
 public class ProdUpdateController {
@@ -36,7 +44,7 @@ public class ProdUpdateController {
 	}
 
 	@URIMapping(value = "/prod/prodUpdate.do", method = HttpMethod.POST)
-	public String Update(HttpServletRequest req, HttpServletResponse reps)  {
+	public String Update(HttpServletRequest req, HttpServletResponse reps) throws IOException, ServletException  {
 		
 		ProdVO prod = new ProdVO();
 		req.setAttribute("prod", prod);
@@ -45,7 +53,29 @@ public class ProdUpdateController {
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
-
+		
+		//1002 -> 1004 
+		if(req instanceof MultipartRequestWrapper) {
+			PartWrapper partWrapper = ((MultipartRequestWrapper) req).getPartWrappper("prod_image");
+			if(partWrapper != null) {
+				// 1. 저장위치
+				String saveFolderURL = "/prodImages"; // 여기에 이미지 하나 저장됨 .!
+				String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL);
+				File saveFolder = new File(saveFolderPath);
+				// 존재여부 확인 !
+				if (!saveFolder.exists())
+					saveFolder.mkdirs();
+				// 2.저장명 원본파일명 쓰지마
+				String savename = UUID.randomUUID().toString();
+				try (InputStream is = partWrapper.getInputStream();) {
+					FileUtils.copyInputStreamToFile(is, new File(saveFolder, savename)); // 여기서 복사 떠짐
+				} // 저장명이라는 메타데이터 생김
+				prod.setProd_img(savename); // 입력받지 않은 이미지 경로가 생김 그ㅓ나 이미지는 웹서버상에 images에 저장됨.
+			} //if 1 end 
+			
+		}//if 2 end 
+		
+		
 		// 분석 검증
 		Map<String, String> errors = new HashMap<String, String>();
 		req.setAttribute("errors", errors);
@@ -109,10 +139,10 @@ public class ProdUpdateController {
 			valid = false;
 			errors.put("prod_outline", "PROD_OUTLINE 누락");
 		}
-		if (StringUtils.isBlank(prod.getProd_img())) {
-			valid = false;
-			errors.put("prod_img", "PROD_IMG 누락");
-		}
+//		if (StringUtils.isBlank(prod.getProd_img())) {
+//			valid = false;
+//			errors.put("prod_img", "PROD_IMG 누락");
+//		}
 		if (prod.getProd_totalstock()<0) {
 			valid = false;
 			errors.put("prod_totalstock", "PROD_TOTALSTOCK 누락");

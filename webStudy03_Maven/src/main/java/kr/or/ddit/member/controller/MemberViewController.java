@@ -15,7 +15,7 @@ import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 
 @CommandHandler //1. 주소지우고 커맨드핸들러 추가
-public class MemberViewServlet {
+public class MemberViewController {
 	IMemberService service = MemberServiceImpl.getInstance();
 	//오버라이드 지워 //2.
 	@URIMapping("/member/memberView.do")//3.

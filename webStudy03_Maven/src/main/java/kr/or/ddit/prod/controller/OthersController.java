@@ -20,6 +20,7 @@ public class OthersController {
 	IOthersDAO othersDAO = new OthersDAOImpl();
 	@URIMapping("/prod/getLprodList.do")
 	public String getLprodListForAjax(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		
 		List<Map<String, Object>> lprodList =othersDAO.selectLprodList();
 		resp.setContentType("application/json;charset=UTF-8");
 		String json = new MarshallingUtils().marshalling(lprodList);
@@ -35,7 +36,8 @@ public class OthersController {
 
 	@URIMapping("/prod/getBuyerList.do")
 	public String getBuyerListForAjax(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		List<BuyerVO>buyerList = othersDAO.selectBuyerList(null);
+		String lgu = req.getParameter("prod_lgu");
+		List<BuyerVO>buyerList = othersDAO.selectBuyerList(lgu);
 		resp.setContentType("application/json;charset=UTF-8");
 		String json = new MarshallingUtils().marshalling(buyerList);
 		try(

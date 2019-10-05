@@ -5,9 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <link rel="stylesheet"   href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-<!-- <script type="text/javascript"   src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script type="text/javascript"   src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script type="text/javascript"   src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 </head>
@@ -25,9 +24,24 @@
 	</thead>
 	<tbody id ="listBody">
 	</tbody>
+	<!-- 하단에 페이징처리  -->
 	<tfoot>
 		<tr>
-			<td colspan="6" id="pagingArea">
+			<td colspan="6" >
+				<form id ="searchForm">
+					<input type="hidden" name="page"/>
+					<select name = "searchType">
+						<option value>전체</option>
+						<option value="id">아이디</option>
+						<option value="name">이름</option>
+						<option value="address">지역</option>
+					</select>
+					<input type="text" name="searchWord"/>
+					<input type="submit" value ="검색"/>
+				</form>
+				<div id="pagingArea">
+				
+				</div>
 			</td>
 		</tr>
 	</tfoot>
@@ -50,15 +64,6 @@
     </div>
   </div>
 </div>
-<script type="text/javascript">
-	$('#exampleModal').on('hidden.bs.modal',function(){
-		$(this).find("form")[0].reset();
-		});
-	$('#deleteBtn').on('click',function(){
-		$('#exampleModal').modal('show');
-	})
-
-</script>
 <form id="listForm" action="${pageContext.request.contextPath }/member/memberView.do">
 	<input type="hidden" name="who"/> 
 </form>
@@ -68,15 +73,55 @@
 	 var pagingArea = $("#pagingArea");
 	 var listForm = $("#listForm");
 	 var exampleModal = $("#exampleModal");
+
+	 var searchForm =$("#searchForm");
+	 var pageTag = $("[name='page']");
 	 
-	 pagingArea.on("click","a",function(){ //disabled 막기21
+	 searchForm.on("submit",function(event){ //추가부분
+		event.preventDefault();
+		var action = $(this).attr("action");
+		var method = $(this).attr("method");
+		var querystring = $(this).serialize();
+		$.ajax({//url:은 현재주소 임 => 원래 prod 출력 부분 
+			url : action,
+			data : method, //?page=내가 클릭한 페이지(+page : 인덱스번 형식으로 나올려고 이렇게 씀
+			dataType : "json",
+			success : function(resp) { //응답데이터로 돌아온 json을 언마샬링하고 복원한거 
+				let memberList = resp.dataList;
+				let trTags = [];
+				$(memberList).each(	function(index, member) {
+					let trTag = $("<tr>").append(
+							$('<td>').text(member.mem_id),
+							$('<td>').text(member.mem_name),
+							$('<td>').text(member.mem_hp),
+							$('<td>').text(member.mem_mail),
+							$('<td>').text(member.mem_add1),
+							$('<td>').text(member.mem_mileage)
+						).prop("id", member.mem_id);
+					trTags.push(trTag);
+					})
+				listBody.html(trTags);
+				pagingArea.html(resp.pagingHTML);
+				pageTag.val("1");
+			},
+			error : function(errorResp) {
+				console.log(errorResp.status);
+			}
+
+		})
+
+		return false;
+		 
+	 })
+	 pagingArea.on("click","a",function(){ //disabled 막기1
 		let page = $(this).data("page"); 
-		paging(page);
+	 	paging(page)
 	 })
 	 
 	 exampleModal.on("hidden.bs.modal",function(){
 		 $(this).find(".modal-body").html("");
 	 })
+	 //멤버 상세조회 모달 창 띄우기.
 	 listForm.on("submit",function(){
 		 let action =$(this).attr("action");
 		 let method =$(this).attr("method");
@@ -98,36 +143,13 @@
 		 return false;
 	 })
 	 
-	function paging(page) { //페이지 파라미터바뀔때 여기로 옴.
-		 //disable 막기 2
-		 if(page<1) return false;
-		$.ajax({
-				data : "page="+page, //?page=내가 클릭한 페이지(+page : 인덱스번 형식으로 나올려고 이렇게 씀
-				dataType : "json",
-				success : function(resp) { //응답데이터로 돌아온 json을 언마샬링하고 복원한거 
-					let memberList = resp.dataList;
-					let trTags = [];
-					$(memberList).each(
-							function(index, member) {
-								let trTag = $("<tr>").append(
-										$('<td>').text(member.mem_id),
-										$('<td>').text(member.mem_name),
-										$('<td>').text(member.mem_hp),
-										$('<td>').text(member.mem_mail),
-										$('<td>').text(member.mem_add1),
-										$('<td>').text(member.mem_mileage)).prop(
-										"id", member.mem_id);
-								trTags.push(trTag);
-							})
-					listBody.html(trTags);
-					pagingArea.html(resp.pagingHTML);
-				},
-				error : function(errorResp) {
-				console.log(errorResp.status);
-			}
 
-		})
 
+	function paging(page) { //페이지 파라미터바뀔때 여기로 옴. 비동기 요청 !!
+		//disable 막기 2
+		if (page < 1)			return false;
+		pageTag.val(page);
+		searchForm.submit();
 	}
 
 	listBody.on("click", "tr", function() { //한명의 id 클릭하면 콘솔에 정보가 찍혀 
@@ -135,13 +157,15 @@
 		listForm.find("[name=who]").val(who);
 		listForm.submit(); //테이터 넘어감 
 	})
-	
+
 	// 1페이지 요청하기
 	paging(1);
+
 </script>
 </body>
 </html>
 
+<!-- 검색기능 추가 : 아이디 , 이름 , 지역, 전체검색  -->
 
 
 

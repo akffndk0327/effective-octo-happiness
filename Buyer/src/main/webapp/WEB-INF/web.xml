@@ -9,4 +9,66 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+<<<<<<< HEAD
 </web-app>
+=======
+  	<context-param>
+		<param-name>service</param-name>
+		<param-value>/kr/or/ddit/servlet05/service.xml</param-value>
+	</context-param>
+	
+	<servlet>
+		<servlet-name>ForntController</servlet-name>
+		<servlet-class>kr.or.ddit.mvc.ForntController</servlet-class>
+		<init-param>
+			<param-name>basePackages</param-name>
+			<param-value>
+				kr.or.ddit.buyer.controller
+				
+	  		</param-value>
+		</init-param>
+		<init-param>
+			<param-name>prefix</param-name>
+			<param-value>/WEB-INF/views/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>suffix</param-name>
+			<param-value>.jsp</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ForntController</servlet-name>
+		<url-pattern>/buyer/buyerList</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>DescriptionServlet</servlet-name>
+		<servlet-class>kr.or.ddit.servlet01.DescriptionServlet</servlet-class>
+		<init-param>
+			<param-name>param</param-name>
+			<param-value>value</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DescriptionServlet</servlet-name>
+		<url-pattern>/desc</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ImageServlet</servlet-name>
+		<servlet-class>kr.or.ddit.servlet01.ImageServlet</servlet-class>
+		<init-param>
+			<param-name>imgFolderPath</param-name>
+			<param-value>d:/contents</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>/image.do</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>2</session-timeout>
+	</session-config>
+	</web-app>
+>>>>>>> branch 'master' of https://github.com/akffndk0327/effective-octo-happiness.git

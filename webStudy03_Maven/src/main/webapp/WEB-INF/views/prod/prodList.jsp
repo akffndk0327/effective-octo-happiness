@@ -19,13 +19,24 @@
 	}
 </style>
 <body>
-<select name="prod_lgu">
-	<option value>분류선택</option>
-</select>
-<select name="prod_buyer">
-	<option value>거래처선택</option>
-</select>
 
+<form id="searchForm">
+	<input type="hidden" name="page"/>
+	<input type="hidden" name="prod_lgu" value="${pagingVO.searchVO.prod_lgu }"/>
+	<input type="hidden" name="prod_buyer" value="${pagingVO.searchVO.prod_buyer }"/>
+	<input type="hidden" name="prod_name" value="${pagingVO.searchVO.prod_name }"/>
+</form>
+
+<div id = "searchUI" >
+	<select id="prod_lgu">
+		<option value>분류선택</option>
+	</select>
+	<select id="prod_buyer">
+		<option value>거래처선택</option>
+	</select>
+	<input type="text" name="prod_name" id="prod_name" value="${pagingVO.searchVO.prod_name }">
+	<input type="button" value="검색" id="searchBtn" />
+</div>
 <c:url value="/prod/prodInsert.do" var="insertURL"/>
 <button class="btn btn-info" type="button" onclick="location.href='${insertURL}';">신규상품 등록</button>
 <table class="table table-bordered table-striped">
@@ -40,6 +51,7 @@
 			<th>마일리지</th>
 		</tr>
 	</thead>
+<!-- 	10.01 -->
 	<tbody>
 		<c:set var="prodList" value="${pagingVO.dataList }" />
 		<c:forEach var="prod" items="${prodList }">
@@ -57,25 +69,65 @@
 			</tr>
 		</c:forEach>
 	</tbody>
+<!-- 	10.01 -->
 	<tfoot>
 		<tr>
 			<td colspan="7">
 				<div id="pagingArea">
-				${pagingVO.pagingHTML }
+					${pagingVO.pagingHTML } 
 				</div>
 			</td>
 		</tr>
 	</tfoot>
 </table>
 <script type="text/javascript">
-	$("[name='prod_lgu']").generateLprod("${pageContext.request.contextPath}");
-	$("[name='prod_buyer']").generateBuyer("${pageContext.request.contextPath}");
+	//1002
+	var prod_lguTag = $("#prod_lgu");
+	var prod_buyerTag=$("#prod_buyer");
+	var searchUI =$("#searchUI");
+	var searchBtn = $("#searchBtn"); //서치ui 입력데이터 ui만 갖고 있음 
+	var searchForm =$("#searchForm");
+// 	var searchTxt = $("#searchTxt");  //단어 검색 
+	var pageTag = $("[name='page']");
+	
+	//1001
+	$(prod_lguTag).generateLprod("${pageContext.request.contextPath}","${pagingVO.searchVO.prod_lgu}");
+	
+	//1002
+	$(prod_lguTag).on("change",function(){
+		let lgu = $(this).val();
+		$(prod_buyerTag).generateBuyer({
+			cPath:"${pageContext.request.contextPath}",
+			lgu : lgu,
+			selectedBuyer : "${pagingVO.searchVO.prod_buyer}"
+			
+		}); //동적 구성 간으 
+	})
+	
+	$(prod_lguTag).trigger("change");
 	
 	$("#pagingArea").on("click", "a", function(){
-		let page = $(this).data("page");
-		if(page>0)
-			location.href="?page="+page;
+		let page = $(this).data("page"); //this.dataset.page : 안에있는 데이터를 다가져온다 
+		if(page<=0)return;
+		pageTag.val(page);
+		searchForm.submit();
 	});
+	
+	$(searchBtn).on("click",function(){
+// 		let child = searchUI.find("select");
+		let child = searchUI.find(":input"); //select input 2개 찾을수 있어 
+		$(child).each(function(index, element){ //<select> 돌린느 반복문 
+			let id = $(this).prop("id"); //this : element => option
+			let value = $(this).val();
+			searchForm.find("[name='"+ id+"']").val(value); //id와 동일ㅇ한 name을 찾음
+		});
+		
+// 		let id = searchTxt.prop("id"); //text검색
+// 		let value = searchTxt.val();
+// 		searchForm.find("[name='"+id+"']").val(value);
+		searchForm.submit();
+	})
+	
 </script>
 </body>
 </html>

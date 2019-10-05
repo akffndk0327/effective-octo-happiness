@@ -19,7 +19,7 @@
 </c:if>
 </head>
 <body>
-	<form method="post">
+	<form method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>상품코드</th>
@@ -75,9 +75,10 @@
 					value="${prod.prod_detail}" /><span class="error">${errors.prod_detail}</span></td>
 			</tr>
 			<tr>
-				<th>이미지경로</th>
-				<td><input type="text" required class="form-control"
-					name="prod_img" value="${prod.prod_img}" /><span class="error">${errors.prod_img}</span></td>
+				<th>이미지</th>
+				<td>
+				<input type="file" name="prod_image" accept="image/*">
+				<span class="error">${errors.prod_img}</span></td>
 			</tr>
 			<tr>
 				<th>상품재고</th>
@@ -144,10 +145,13 @@
 	</form>
 	<script type="text/javascript">
 		var prod_lguTag = $("[name='prod_lgu']");
-		prod_lguTag.generateLprod("${pageContext.request.contextPath}");
+		prod_lguTag.generateLprod("${pageContext.request.contextPath}","${prod.prod_lgu}");
 
 		var prod_buyerTag = $("[name='prod_buyer']");
-		prod_buyerTag.generateBuyer("${pageContext.request.contextPath}");
+		prod_buyerTag.generateBuyer({
+			cPath :"${pageContext.request.contextPath}", 
+			selectedBuyer :"${prod.prod_buyer}"	
+		});
 		
 		$(prod_lguTag).on('change', function() {
 			let lguCode = $(this).val();

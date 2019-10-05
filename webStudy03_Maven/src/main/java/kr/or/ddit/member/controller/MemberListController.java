@@ -2,13 +2,19 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
@@ -21,15 +27,29 @@ import kr.or.ddit.vo.PagingInfoVO;
 
 @CommandHandler //마킹해놓은 => 핸들러맵퍼가 수집함.. Plain Old  Java Object (POJO) 오래된 클래스이다.
 public class MemberListController { // 0924 서블릿 삭제, alt, shift r
-
+//	private static Logger logger = LoggerFactory.getLogger(MemberListController.class);
 	IMemberService service = MemberServiceImpl.getInstance();
 
 //   @Override =>컴파일 대상
 	@URIMapping(value = "/member/memberList.do", method = HttpMethod.GET)
 	// doget -> memberList로 바꿔도 상관x
 	public String memberList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		//10.02 검색기능 
+//		MemberVO searchVO = new MemberVO();
+//		try {
+//			BeanUtils.populate(searchVO, req.getParameterMap());
+//		} catch (IllegalAccessException | InvocationTargetException e) {
+//			logger.error("검색중예외 발생!!",e);
+//		}
+				
 		//1001 페이징 처리
 		String pageParam = req.getParameter("page");
+		String searchType = req.getParameter("searchType");
+		String searchWord = req.getParameter("searchWord");
+		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap.put("searchType",searchType);
+		searchMap.put("searchWord",searchWord);
+		
 		int currentPage =1;
 		if(
 			StringUtils.isNumeric(pageParam)
@@ -41,6 +61,7 @@ public class MemberListController { // 0924 서블릿 삭제, alt, shift r
 
 		//1001 pagingVO 만들기
 		PagingInfoVO<MemberVO> pagingVO = new PagingInfoVO<MemberVO>(5,3); //5 : 게시물갯수, 3 : 하단의 페이지수
+		pagingVO.setSearchMap(searchMap); //1002 searchVO 를 pagingVO에 넣기 =>member.xml 로가
 		
 		//토탈 & 현재페이지 넣기
 		int totalRecord = service.retrieveMemberCount(pagingVO); //토탈레코드, 페이지 설정됨.

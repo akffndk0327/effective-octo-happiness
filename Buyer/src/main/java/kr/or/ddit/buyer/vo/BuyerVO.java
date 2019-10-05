@@ -3,12 +3,21 @@ package kr.or.ddit.buyer.vo;
 import java.io.Serializable;
 import java.util.List;
 
+<<<<<<< HEAD
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+=======
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Data
+>>>>>>> branch 'master' of https://github.com/akffndk0327/effective-octo-happiness.git
 public class BuyerVO implements Serializable {
 	private String buyer_id;
 	private String buyer_name;
