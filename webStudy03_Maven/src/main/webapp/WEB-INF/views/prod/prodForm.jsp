@@ -143,8 +143,7 @@
 	</form>
 	<script type="text/javascript">
 		var prod_lguTag = $("[name='prod_lgu']");
-		prod_lguTag.generateLprod("${pageContext.request.contextPath}",
-				"${prod.prod_lgu}");
+		
 
 		var prod_buyerTag = $("[name='prod_buyer']");
 		prod_buyerTag.generateBuyer({

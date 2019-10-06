@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import kr.or.ddit.alba.vo.AlbaVO;
+import kr.or.ddit.alba.vo.Lic_albaVO;
+import kr.or.ddit.alba.vo.LicenseVO;
 import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 
 public class AlbaDaoImpl implements IAlbaDao {
@@ -54,7 +56,7 @@ public class AlbaDaoImpl implements IAlbaDao {
 	}
 
 	@Override
-	public int deleteAlba(AlbaVO alba) {
+	public int deleteAlba(String alba) {
 		try (SqlSession sqlSession = SqlSessionFactory.openSession();) {
 
 			IAlbaDao mapper = sqlSession.getMapper(IAlbaDao.class);
@@ -63,5 +65,66 @@ public class AlbaDaoImpl implements IAlbaDao {
 			return cnt;
 		}
 	}
+	
+	@Override
+	public int deleteLicAlba(String al_id) {
+		try (SqlSession sqlSession = SqlSessionFactory.openSession();) {
+			IAlbaDao mapper = sqlSession.getMapper(IAlbaDao.class);
+			int cnt = mapper.deleteLicAlba(al_id);
+			sqlSession.commit();
+			return cnt;
+		}
+	}
+
+	@Override
+	public List<LicenseVO> selectLic() {
+		try (SqlSession sqlSession = SqlSessionFactory.openSession();) {
+			IAlbaDao mapper = sqlSession.getMapper(IAlbaDao.class);
+			List<LicenseVO> list = mapper.selectLic();
+			return list;
+		}
+	}
+
+	@Override
+	public int insertLicAlba(Lic_albaVO licAlba) {
+		try (SqlSession sqlSession = SqlSessionFactory.openSession();) {
+			IAlbaDao mapper = sqlSession.getMapper(IAlbaDao.class);
+			int cnt = mapper.insertLicAlba(licAlba);
+			sqlSession.commit();
+			return cnt;
+		}
+	}
+
+	@Override
+	public int deleteLic(Lic_albaVO licAlba) {
+		try (SqlSession sqlSession = SqlSessionFactory.openSession();) {
+			IAlbaDao mapper = sqlSession.getMapper(IAlbaDao.class);
+			int cnt = mapper.deleteLic(licAlba);
+			sqlSession.commit();
+			return cnt;
+		}
+	}
+
+	@Override
+	public Lic_albaVO selectLicAlba(Lic_albaVO licAlba) {
+		try (SqlSession sqlSession = SqlSessionFactory.openSession();) {
+			IAlbaDao mapper = sqlSession.getMapper(IAlbaDao.class);
+			Lic_albaVO vo = mapper.selectLicAlba(licAlba);
+			return vo;
+		}
+	}
+
+	@Override
+	public int updateLicAlba(Lic_albaVO licAlba) {
+		try (SqlSession sqlSession = SqlSessionFactory.openSession();) {
+			IAlbaDao mapper = sqlSession.getMapper(IAlbaDao.class);
+			int cnt = mapper.updateLicAlba(licAlba);
+			sqlSession.commit();
+			return cnt;
+		}
+	}
+
+
+	
 
 }

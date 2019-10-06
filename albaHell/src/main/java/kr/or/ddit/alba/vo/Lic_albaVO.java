@@ -8,7 +8,7 @@ import lombok.Data;
 public class Lic_albaVO{
 	private String al_id       ;
 	private String lic_code    ;
-	private Byte[] lic_image   ;
+	private byte[] lic_image   ;
 	
 	private List<LicenseVO> licenseList;
 
