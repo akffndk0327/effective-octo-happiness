@@ -1,9 +1,6 @@
 package kr.or.ddit.alba.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,12 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.alba.service.AlbaServiceImpl;
 import kr.or.ddit.alba.service.IAlbaService;
-import kr.or.ddit.alba.vo.Lic_albaVO;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
-import kr.or.ddit.utils.MarshallingUtils;
 
 @CommandHandler
 public class AlbaDeleteController {

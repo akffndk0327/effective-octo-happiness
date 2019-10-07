@@ -88,8 +88,8 @@
 	</update>
 	
 	<insert id="insertAlba" parameterType="AlbaVO">
-		<selectKey resultType="string" keyProperty="al_id" order="BEFORE">
-			SELECT 'ALBA_'||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(AL_ID), 2)), 0)+1, '7', '0')
+		<selectKey resultType="String" keyProperty="al_id" order="BEFORE">
+			SELECT 'ALBA_'||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(AL_ID), 2)),0)+1, 7, '0')
 			FROM ALBA
 		</selectKey>
 		INSERT INTO ALBA (
@@ -106,7 +106,7 @@
 	<insert id="insertLicenses" parameterType="AlbaVO">
 		INSERT ALL
 			<foreach collection="licenseList" item="licAlba">
-				INTO LIC_ALBA (AL_ID, LIC_CODE, LIC_IMAGE)	VALUES( #{al_id}, #{licAlba.lic_code}, #{licAlba.lic_image})
+				INTO LIC_ALBA (AL_ID, LIC_CODE, LIC_IMAGE)	VALUES( #{al_id}, #{licAlba.lic_code}, #{licAlba.lic_image,jdbcType=BLOB})
 			</foreach> 
 			SELECT * FROM DUAL
 	</insert>
@@ -117,8 +117,7 @@
 			<if test="deleteLic_codes!=null and deleteLic_codes.length gt 0">
 				AND LIC_CODE IN 
 				<foreach collection="deleteLic_codes" item="delCode"
-					open="(" close=")" separator=","
-				>
+					open="(" close=")" separator=",">
 					#{delCode}
 				</foreach>
 			</if>
