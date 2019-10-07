@@ -89,15 +89,17 @@
 	
 	<insert id="insertAlba" parameterType="AlbaVO">
 		<selectKey resultType="string" keyProperty="al_id" order="BEFORE">
-			SELECT 'A'||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(AL_ID), 2)), 0)+1, 7, '0')
+			SELECT 'ALBA_'||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(AL_ID), 2)), 0)+1, '7', '0')
 			FROM ALBA
 		</selectKey>
 		INSERT INTO ALBA (
 			    <include refid="albaColumns" />
 		) VALUES (
-		 	#{al_id,jdbcType=VARCHAR},		    #{al_name,jdbcType=VARCHAR},		    #{al_age,jdbcType=NUMERIC},		    #{al_address,jdbcType=VARCHAR},
-		    #{al_hp,jdbcType=VARCHAR},		    #{al_spec,jdbcType=VARCHAR},		    #{al_desc,jdbcType=VARCHAR},		    #{gr_code,jdbcType=VARCHAR},
-		    #{al_career,jdbcType=VARCHAR},		#{al_gen,jdbcType=CHAR},		    #{al_btype,jdbcType=VARCHAR},		    #{al_mail,jdbcType=VARCHAR}
+		 	#{al_id,jdbcType=VARCHAR},	
+		 	#{al_name,jdbcType=VARCHAR},		    #{al_age,jdbcType=NUMERIC},		    #{al_address,jdbcType=VARCHAR},
+		    #{al_hp,jdbcType=VARCHAR},		    #{al_spec,jdbcType=VARCHAR},		    #{al_desc,jdbcType=VARCHAR},		
+		    #{gr_code,jdbcType=VARCHAR},		    #{al_career,jdbcType=VARCHAR},		#{al_gen,jdbcType=CHAR},	
+		    #{al_btype,jdbcType=VARCHAR},		    #{al_mail,jdbcType=VARCHAR}
 		)
 	</insert>
 	

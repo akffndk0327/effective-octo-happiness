@@ -1,7 +1,6 @@
 package kr.or.ddit.alba.vo;
 
 import java.util.Base64;
-import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

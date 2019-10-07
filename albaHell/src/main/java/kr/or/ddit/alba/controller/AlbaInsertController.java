@@ -37,6 +37,7 @@ public class AlbaInsertController {
 		req.setAttribute("grades", codeDAO.selectGrades());
 	}
 	
+	//첫화면 
 	@URIMapping("/alba/albaInsert.do")
 	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		setCodeInScope(req);

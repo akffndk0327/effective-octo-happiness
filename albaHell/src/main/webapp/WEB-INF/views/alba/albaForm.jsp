@@ -81,7 +81,7 @@
 </script>
 </head>
 <body>
-<h4>알바천국 가입 및 수정 양식</h4>
+<h4> 가입 및 수정 </h4>
 <form method="post" id="albaForm" enctype="multipart/form-data">
 <input type="hidden" name="al_id" value="${alba.al_id }" />
 	<table class="table table-bordered">
