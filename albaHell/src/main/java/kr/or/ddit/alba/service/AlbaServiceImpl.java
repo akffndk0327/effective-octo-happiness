@@ -2,114 +2,103 @@ package kr.or.ddit.alba.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+
 import kr.or.ddit.alba.dao.AlbaDaoImpl;
 import kr.or.ddit.alba.dao.IAlbaDao;
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.Lic_albaVO;
-import kr.or.ddit.alba.vo.LicenseVO;
+import kr.or.ddit.alba.vo.PagingInfoVO;
 import kr.or.ddit.enums.ServiceResult;
-import kr.or.ddit.exception.CommonException;
-import kr.or.ddit.exception.UserNotFoundException;
 
 public class AlbaServiceImpl implements IAlbaService {
-	public IAlbaDao dao = new AlbaDaoImpl();
-	private static AlbaServiceImpl service;
+	IAlbaDao albaDAO = new AlbaDaoImpl();
 	
-	public static AlbaServiceImpl getInstance() {
-		if(service ==null) {
-			service =new AlbaServiceImpl();
+	SqlSessionFactory sessionFactory = 
+			kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
+
+	@Override
+	public ServiceResult createAlba(AlbaVO albaVO) {
+		try (SqlSession sqlSession = sessionFactory.openSession();) {
+			int rowCnt = albaDAO.insertAlba(albaVO, sqlSession);
+			List<Lic_albaVO> licAlbaList = albaVO.getLicenseList();
+			if(licAlbaList!=null && licAlbaList.size()>0){
+				albaDAO.insertLicenses(albaVO, sqlSession);
+			}
+			ServiceResult result = ServiceResult.FAILED;
+			if (rowCnt > 0) {
+				result = ServiceResult.OK;
+				sqlSession.commit();
+			}
+			return result;
 		}
-		return service;
+	}
+
+	@Override
+	public AlbaVO retrieveAlba(String al_id) {
+		AlbaVO albaVO = albaDAO.selectAlba(al_id);
+		if (albaVO == null)
+			throw new RuntimeException(al_id + " 알바생이 없음.");
+		return albaVO;
+	}
+
+	@Override
+	public int retrieveAlbaCount(PagingInfoVO<AlbaVO> pagingVO) {
+		return albaDAO.selectAlbaCount(pagingVO);
+	}
+
+	@Override
+	public List<AlbaVO> retrieveAlbaList(PagingInfoVO<AlbaVO> pagingVO) {
+		return albaDAO.selectAlbaList(pagingVO);
+	}
+
+	@Override
+	public ServiceResult modifyAlba(AlbaVO albaVO) {
+		try (SqlSession sqlSession = sessionFactory.openSession();) {
+			int rowCnt = albaDAO.updateAlba(albaVO, sqlSession);
+			List<Lic_albaVO> licAlbaList = albaVO.getLicenseList();
+			if(albaVO.getDeleteLic_codes()!=null) {
+				rowCnt += albaDAO.deleteLicenses(albaVO, sqlSession);
+			}
+			if(licAlbaList!=null && licAlbaList.size()>0){
+				rowCnt += albaDAO.insertLicenses(albaVO, sqlSession);
+			}
+			ServiceResult result = ServiceResult.FAILED;
+			if (rowCnt > 0) {
+				result = ServiceResult.OK;
+				sqlSession.commit();
+			}
+			return result;
+		}
+	}
+
+	@Override
+	public ServiceResult removeAlba(String al_id) {
+		try (SqlSession sqlSession = sessionFactory.openSession();) {
+			AlbaVO albaVO = new AlbaVO();
+			albaVO.setAl_id(al_id);
+			// ******** 보유 라이센스 제거 후 개인정보 삭제
+			int rowCnt = albaDAO.deleteLicenses(albaVO, sqlSession);
+			rowCnt += albaDAO.deleteAlba(al_id, sqlSession);
+			ServiceResult result = ServiceResult.FAILED;
+			if (rowCnt > 0) {
+				result = ServiceResult.OK;
+				sqlSession.commit();
+			}
+			return result;
+		}
 	}
 	
 	@Override
-	public List<AlbaVO> selectAlbaList() {
-		List<AlbaVO> list = null;
-		list = dao.selectAlbaList();
-		return list;
-	}
-
-	@Override
-	public AlbaVO selctAlba(AlbaVO alba) {
-		AlbaVO al_id = dao.selctAlba(alba);
-		if(al_id ==null)
-			throw new UserNotFoundException(al_id+"알바 없음 ");
-		return al_id;
-	}
-
-	@Override
-	public ServiceResult updateAlba(AlbaVO alba) {
-		ServiceResult result = null;
-		int cnt = dao.updateAlba(alba);
-		if(cnt>0) result = ServiceResult.OK;
-		else result = ServiceResult.FAILED;
-		return result;
-	}
-
-	@Override
-	public ServiceResult insertAlba(AlbaVO alba) {
-		ServiceResult result = null;
-		int cnt = dao.intsertAlba(alba);
-		if(cnt>0)result = ServiceResult.OK;
-		else result = ServiceResult.FAILED;
-		return result;
-	}
-
-	@Override
-	public String deleteAlba(String alba) {
-		int cnt = dao.deleteAlba(alba);
-
-		if(cnt>0) 
-			return "OK";
-		else
-			return "FAILED";
-	}
-
-	@Override
-	public Lic_albaVO selectLicAlba(Lic_albaVO licAlba) {
-		return dao.selectLicAlba(licAlba);
-	}
-
-	@Override
-	public String updateLicAlba(Lic_albaVO licAlba) {
-		int cnt = dao.updateLicAlba(licAlba);
-
-		if(cnt>0) 
-			return "OK";
-		else
-			return "FAILED";
+	public Lic_albaVO retrieveLicense(Lic_albaVO licAlba) {
+		return albaDAO.selectLicense(licAlba);
 	}
 
 	
-	@Override
-	public void deleteLicAlba(String al_id) {
-		dao.deleteLicAlba(al_id);
+	
+	
 
-	}
-
-	@Override
-	public List<LicenseVO> selectLic() {
-		return dao.selectLic();
-	}
-
-	@Override
-	public String insertLicAlba(Lic_albaVO licAlba) {
-		int cnt = dao.insertLicAlba(licAlba);
-
-		if(cnt>0) 
-			return "OK";
-		else
-			return "FAILED";
-	}
-
-	@Override
-	public String deleteLic(Lic_albaVO licAlba) {
-		int cnt = dao.deleteLic(licAlba);
-
-		if(cnt>0) 
-			return "OK";
-		else
-			return "FAILED";
-	}
+	
 
 }

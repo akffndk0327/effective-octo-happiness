@@ -1,15 +1,25 @@
 package kr.or.ddit.alba.vo;
 
+import java.util.Base64;
 import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-public class Lic_albaVO{
-	private String al_id       ;
-	private String lic_code    ;
-	private byte[] lic_image   ;
-	
-	private List<LicenseVO> licenseList;
+@EqualsAndHashCode(of={"al_id", "lic_code"})
+@ToString(exclude="lic_image")
 
+public class Lic_albaVO{
+	private String al_id;
+	private String lic_code;
+	
+	private String lic_name;
+	private byte[] lic_image;	
+	
+	public String getLic_imageBase64(){
+		if(lic_image==null) return null;
+		return Base64.getEncoder().encodeToString(lic_image);
+	}
 }

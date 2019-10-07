@@ -2,70 +2,29 @@ package kr.or.ddit.alba.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.Lic_albaVO;
-import kr.or.ddit.alba.vo.LicenseVO;
+import kr.or.ddit.alba.vo.PagingInfoVO;
 
 public interface IAlbaDao {
+	
+	public int insertAlba(AlbaVO albaVO, SqlSession sqlSession);
+	 
+	public AlbaVO selectAlba(String al_id);
+	
+	public int selectAlbaCount(PagingInfoVO<AlbaVO> pagingVO);
 
-	// 목록 조회
-	public List<AlbaVO> selectAlbaList();
+	public List<AlbaVO> selectAlbaList(PagingInfoVO<AlbaVO> pagingVO);
 
-	// 상세조회
-	public AlbaVO selctAlba(AlbaVO alba);
+	public int updateAlba(AlbaVO albaVO, SqlSession sqlSession);
 
-	// 정보 수정
-	public int updateAlba(AlbaVO alba);
+	public int deleteAlba(String al_id, SqlSession sqlSession);
 
-	// 신규 등록
-	public int intsertAlba(AlbaVO alba);
-
-	// 정보 삭제
-	public int deleteAlba(String alba);
-
-	/**
-	 * 자격 사진 조회
-	 * 
-	 * @param licAlba
-	 * @return
-	 */
-	public Lic_albaVO selectLicAlba(Lic_albaVO licAlba);
-
-	/**
-	 * 자격 사진 정보 수정
-	 * 
-	 * @param licAlba
-	 * @return
-	 */
-	public int updateLicAlba(Lic_albaVO licAlba);
-
-	/**
-	 * 알바 자격증 정보 모두 삭제
-	 * 
-	 * @param al_id
-	 * @return
-	 */
-	public int deleteLicAlba(String al_id);
-
-	/**
-	 * 선택된 알바 자격증 정보 삭제
-	 * 
-	 * @param licAlba
-	 * @return
-	 */
-	public int deleteLic(Lic_albaVO licAlba);
-
-	/**
-	 * 자격증 목록 조회
-	 * 
-	 * @return
-	 */
-	public List<LicenseVO> selectLic();
-
-	/**
-	 * 자격증 추가
-	 * 
-	 * @return
-	 */
-	public int insertLicAlba(Lic_albaVO licAlba);
+	public int insertLicenses(AlbaVO albaVO, SqlSession sqlSession);
+	
+	public int deleteLicenses(AlbaVO albaVO, SqlSession sqlSession);
+	
+	public Lic_albaVO selectLicense(Lic_albaVO licAlba);
 }

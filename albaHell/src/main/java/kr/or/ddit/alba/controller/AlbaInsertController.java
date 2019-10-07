@@ -1,16 +1,26 @@
 package kr.or.ddit.alba.controller;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import kr.or.ddit.alba.dao.CodeDaoImpl;
+import kr.or.ddit.alba.dao.ICodeDao;
 import kr.or.ddit.alba.service.AlbaServiceImpl;
 import kr.or.ddit.alba.service.IAlbaService;
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.Lic_albaVO;
-import kr.or.ddit.alba.vo.LicenseVO;
+import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
@@ -19,79 +29,117 @@ import kr.or.ddit.wrapper.PartWrapper;
 
 @CommandHandler
 public class AlbaInsertController {
+	ICodeDao codeDAO = new CodeDaoImpl();
 	IAlbaService service = new AlbaServiceImpl();
-
-	@URIMapping(value = "/alba/albaInsert.do", method = HttpMethod.GET)
-	public String InsertForm(HttpServletRequest req, HttpServletResponse resp) {
-		try {
-            req.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
-        List<LicenseVO> license = service.selectLic();
-        req.setAttribute("license", license);
-        String viewName = "albaInsertForm";
-        return viewName;
-
+	
+	private void setCodeInScope(HttpServletRequest req){
+		req.setAttribute("licenses", codeDAO.selectLicense());
+		req.setAttribute("grades", codeDAO.selectGrades());
 	}
-
-	@URIMapping(value = "/alba/albaInsert.do", method = HttpMethod.POST)
-	public String AlbaInsert(HttpServletRequest req, HttpServletResponse resp) {
-		AlbaVO alba = new AlbaVO();
-		service.insertAlba(alba);
-		req.setAttribute("alba", alba);
-
-		String [] licCodeArr = req.getParameterValues("lic_code");
-        for(String licCode : licCodeArr) {
-            Lic_albaVO licAlba = new Lic_albaVO();
-            licAlba.setAl_id(alba.getAl_id());
-            licAlba.setLic_code(licCode);
-            
-            service.insertLicAlba(licAlba);
-        }
-
-//		  //알바 자격증명 사진 정보 등록
-        try {
-            if(req instanceof MultipartRequestWrapper) {
-                PartWrapper[] array = ((MultipartRequestWrapper) req).getPartWrappers("lic_image");
-
-                if(array.length > 0) {
-                    for(int i=0; i<array.length; i++) {
-                        Lic_albaVO licAlba = new Lic_albaVO();
-                        licAlba.setAl_id(alba.getAl_id());
-                        licAlba.setLic_code(licCodeArr[i]);
-                        licAlba.setLic_image(array[i].getBytes());
-
-                        service.updateLicAlba(licAlba);
-                    }
-                }
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        return "redirect:/alba/albaList.do";
-    }
+	
+	@URIMapping("/alba/albaInsert.do")
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		setCodeInScope(req);
+		String view = "alba/albaForm";
+		return view;
+	}
+	
+	
+	@URIMapping(value="/alba/albaInsert.do", method=HttpMethod.POST)
+	public String doPost(HttpServletRequest req, 
+							HttpServletResponse resp) throws ServletException, IOException {
+		setCodeInScope(req);
 		
-	private AlbaVO setAlbaVO(HttpServletRequest request) {
-        String paramAge = request.getParameter("al_age");
-        
-        AlbaVO vo = new AlbaVO();
-        vo.setAl_id(request.getParameter("al_id"));
-        vo.setAl_name(request.getParameter("al_name"));
-        vo.setAl_age(paramAge.isEmpty() ? 0 : Integer.parseInt(paramAge));
-        vo.setAl_age(Integer.parseInt(paramAge));
-        vo.setAl_address(request.getParameter("al_address"));
-        vo.setAl_hp(request.getParameter("al_hp"));
-        vo.setAl_spec(request.getParameter("al_spec"));
-        vo.setAl_desc(request.getParameter("al_desc"));
-        vo.setGr_code(request.getParameter("gr_code"));
-        vo.setAl_career(request.getParameter("al_career"));
-        vo.setAl_gen(request.getParameter("al_gen"));
-        vo.setAl_btype(request.getParameter("al_btype"));
-        vo.setAl_mail(request.getParameter("al_mail"));
-        
-        return vo;
-    }
+		Map<String, String[]> parameterMap = req.getParameterMap();
+		AlbaVO alba = new AlbaVO();
+		req.setAttribute("alba", alba);
+		
+		try {
+			BeanUtils.populate(alba, parameterMap);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+		
+		// 검증
+		Map<String, String> errors = new HashMap<String, String>();
+		req.setAttribute("errors", errors);
+		boolean valid = validate(alba, errors);
+		
+		String[] lic_codes = alba.getLic_codes();
+		// 자격증 코드와 자격증 사본에 대한 처리
+		if(req instanceof MultipartRequestWrapper && lic_codes!=null && lic_codes.length > 0){
+			MultipartRequestWrapper wrapper = (MultipartRequestWrapper)req;
+			PartWrapper[] images = wrapper.getPartWrappers("lic_images");
+			if(images==null || lic_codes.length!=images.length){
+				valid = false;
+				errors.put("lic_codes", "자격증 이미지 누락");
+			}else{
+				List<Lic_albaVO> licenseList = new ArrayList<>();
+				alba.setLicenseList(licenseList);
+				for(int idx=0; idx<lic_codes.length; idx++){
+					Lic_albaVO licAlba = new Lic_albaVO();
+					licAlba.setLic_code(lic_codes[idx]);
+					licAlba.setLic_image(images[idx].getBytes());
+					licenseList.add(licAlba);
+				}
+			}
+		}
+		
+		String view = null;
+		
+		if(valid) {
+			ServiceResult result = service.createAlba(alba);
+			if (ServiceResult.OK.equals(result)) {
+				view = "redirect:/alba/albaList.do";
+			} else {
+				req.setAttribute("message", "등록 실패, 다시 시도");
+				view = "alba/albaForm";
+			}
+		}else {
+			view = "alba/albaForm";
+		}
+		return view;
+	}
+	
+	private boolean validate(AlbaVO alba, Map<String, String> errors) {
+		boolean valid = true;
+		// 검증
+//		if (StringUtils.isBlank(alba.getAl_id())) {
+//			valid = false;
+//			errors.put("al_id", "아이디 누락");
+//		}
+		if (StringUtils.isBlank(alba.getAl_name())) {
+			valid = false;
+			errors.put("al_name", "이름 누락");
+		}
+		if (StringUtils.isBlank(Integer.toString(alba.getAl_age()))) {
+			valid = false;
+			errors.put("al_age", "나이 누락");
+		}
+		if (StringUtils.isBlank(alba.getAl_address())) {
+			valid = false;
+			errors.put("al_address", "주소 누락");
+		}
+		if (StringUtils.isBlank(alba.getAl_hp())) {
+			valid = false;
+			errors.put("al_hp", "휴대폰 누락");
+		}
+		if (StringUtils.isBlank(alba.getGr_code())) {
+			valid = false;
+			errors.put("gr_code", "최종학력 누락");
+		}
+		if (StringUtils.isBlank(alba.getAl_gen())) {
+			valid = false;
+			errors.put("al_gen", "성별 누락");
+		}
+		if (StringUtils.isBlank(alba.getAl_btype())) {
+			valid = false;
+			errors.put("al_btype", "혈액형 누락");
+		}
+		if (StringUtils.isBlank(alba.getAl_mail())) {
+			valid = false;
+			errors.put("al_mail", "이메일 누락");
+		}
+		return valid;
+	}
 }

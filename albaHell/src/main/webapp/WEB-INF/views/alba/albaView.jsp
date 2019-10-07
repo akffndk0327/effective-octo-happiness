@@ -16,88 +16,133 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 </head>
+<script type="text/javascript">
+	<c:if test="${not empty message }">
+	alert("${message }");
+	</c:if>
+	$(function() {
+		var modalTag = $("#imageViewModal");
+		modalTag.on("hide.bs.modal", function() {
+			$(this).find(".modal-body").empty();
+		});
+		$(".viewImage")	.on("click",function() {
+			var lic_code = $(this).data("code");
+			var lic_name = $(this).data("name");
+			modalTag.find("#imageViewModalTitle").text(lic_name + " 자격증 사본");
+			modalTag.find(".modal-body").html($("<img>")
+					.attr({src : "<c:url value='/alba/licenseImage.do?al_id=${alba.al_id}&lic_code='/>"
+						+ lic_code, style : "width:50%;height:50%;"	}));
+			modalTag.modal();
+			});
+	});
+</script>
 <body>
-	<table>
-		<thead>
-			<h4>
-				<p>${alba.al_name }</p>
-			</h4>
-		</thead>
-		<tbody>
-			<tr>
-				<th>아이디</th>
-				<td>${alba.al_id }</td>
-			</tr>
-			<tr>
-				<th>이름</th>
-				<td>${alba.al_name }</td>
-			</tr>
-			<tr>
-				<th>나이</th>
-				<td>${alba.al_age }</td>
-			</tr>
-			<tr>
-				<th>주소</th>
-				<td>${alba.al_address }</td>
-			</tr>
-			<tr>
-				<th>핸드폰</th>
-				<td>${alba.al_hp }</td>
-			</tr>
-			<tr>
-				<th>특기사항</th>
-				<td>${alba.al_spec }</td>
-			</tr>
-			<tr>
-				<th>비고</th>
-				<td>${alba.al_desc }</td>
-			</tr>
-			<tr>
-				<th>학력</th>
-				<td>${alba.gr_code }</td>
-			</tr>
-			<tr>
-				<th>경력사항</th>
-				<td>${alba.al_career }</td>
-			</tr>
-			<tr>
-				<th>성별</th>
-				<td>${alba.al_gen }</td>
-			</tr>
-			<tr>
-				<th>혈액형</th>
-				<td>${alba.al_btype }</td>
-			</tr>
-			<tr>
-				<th>메일</th>
-				<td>${alba.al_mail }</td>
-			</tr>
-		<c:forEach items="${alba.licAlbaLists}" var="list">
-         <c:url value="/alba/licenseImage.do" var="viewURL">
-            <c:param name="id" value="${alba.al_id}"/>
-         </c:url>
-         <c:choose>
-         <c:when test="${not empty list.licenseList }">
-               <c:forEach items="${list.licenseList}" var="list2">
-               <tr>
-               <th>자격증코드</th>
-               <td>${list2.lic_code }</td>
-               </tr>
-               <tr>
-                  <th>자격증이름</th>
-                  <td><a href="${viewURL }">${list2.lic_name}</a></td>
-                  
-               </tr>
-               </c:forEach>
-         </c:when>
-         <c:otherwise>
-            <th>자격증코드</th>
-            <td>자격증 없음</td>
-         </c:otherwise>
-      </c:choose>
-   </c:forEach>
-		</tbody>
-</table>
-
+		<h4>
+			<p>${alba.al_name }</p>
+		</h4>
+	<table class="table table-bordered">
+		<tr>
+			<th>아이디</th>
+			<td>${alba.al_id }</td>
+		</tr>
+		<tr>
+			<th>이름</th>
+			<td>${alba.al_name }</td>
+		</tr>
+		<tr>
+			<th>나이</th>
+			<td>${alba.al_age }</td>
+		</tr>
+		<tr>
+			<th>주소</th>
+			<td>${alba.al_address }</td>
+		</tr>
+		<tr>
+			<th>휴대폰</th>
+			<td>${alba.al_hp }</td>
+		</tr>
+		<tr>
+			<th>이메일</th>
+			<td>${alba.al_mail }</td>
+		</tr>
+		<tr>
+			<th>성별</th>
+			<td>${"M" eq alba.al_gen ? "남":"여" }</td>
+		</tr>
+		<tr>
+			<th>혈액형</th>
+			<td>${alba.al_btype }형</td>
+		</tr>
+		<tr>
+			<th>최종학력</th>
+			<td>${alba.gr_name }</td>
+		</tr>
+		<tr>
+			<th>특기사항</th>
+			<td>${alba.al_spec }</td>
+		</tr>
+		<tr>
+			<th>자기소개</th>
+			<td>${alba.al_desc }</td>
+		</tr>
+		<tr>
+			<th>경력사항</th>
+			<td>${alba.al_career }</td>
+		</tr>
+		<tr>
+			<th>자격증</th>
+			<td>
+				<table>
+					<c:forEach items="${alba.licenseList }" var="licAlba"
+						varStatus="vs">
+						<c:if test="${not empty licAlba.lic_code }">
+							<tr>
+								<td class="col-wd-50">${licAlba.lic_name }</td>
+								<td class="col-wd-50">
+								<input type="button" class="btn btn-info viewImage" value="자격증사본보기"
+									data-code="${licAlba.lic_code }"
+									data-name="${licAlba.lic_name }" /></td>
+							</tr>
+						</c:if>
+					</c:forEach>
+				</table>
+			</td>
+		</tr>
+		<tr>
+		<td colspan="2">
+			<c:url value="/alba/albaUpdate.do" var="updateURL">
+				<c:param name="who" value="${alba.al_id }"/>
+			</c:url>
+			<c:url value="/alba/albaDelete.do" var="albaDeleteURL">
+					<c:param name="who" value="${alba.al_id }" />
+				</c:url>
+				<input type="button" value="수정" class="btn btn-primary"
+					onclick="location.href='${albaUpdateURL }';" />
+				<input type="button" value="삭제"  class="btn btn-primary"
+					onclick="location.href='${albaDeleteURL }';" />
+				<button type="button" onclick="history.back();"  class="btn btn-primary">뒤로가기</button>	
+			</td>
+		</tr>
+	</table>
+	
+	<div class="modal fade" id="imageViewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageViewModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
+
