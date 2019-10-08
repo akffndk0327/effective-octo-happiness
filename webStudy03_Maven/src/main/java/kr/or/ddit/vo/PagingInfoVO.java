@@ -14,7 +14,7 @@ import lombok.Setter;
 public class PagingInfoVO<T> {
    private int totalRecord;
    private int totalPage;
-   private int screenSize = 10;
+   private int screenSize = 5;
    private int blockSize = 5;
    private int currentPage = 1;
    private int startRow;

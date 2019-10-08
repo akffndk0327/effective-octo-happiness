@@ -121,6 +121,7 @@
 	 exampleModal.on("hidden.bs.modal",function(){
 		 $(this).find(".modal-body").html("");
 	 })
+	 
 	 //멤버 상세조회 모달 창 띄우기.
 	 listForm.on("submit",function(){
 		 let action =$(this).attr("action");
@@ -155,7 +156,7 @@
 	listBody.on("click", "tr", function() { //한명의 id 클릭하면 콘솔에 정보가 찍혀 
 		let who = $(this).prop("id");
 		listForm.find("[name=who]").val(who);
-		listForm.submit(); //테이터 넘어감 
+		listForm.submit(); //데이터 넘어감 
 	})
 
 	// 1페이지 요청하기

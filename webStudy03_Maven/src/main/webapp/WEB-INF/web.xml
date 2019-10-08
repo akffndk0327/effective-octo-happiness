@@ -66,6 +66,8 @@
     <init-param>
       <param-name>basePackages</param-name>
       <param-value>
+      			kr.or.ddit.board.controller
+      			
 		  		kr.or.ddit.member.controller
 		  		kr.or.ddit.common.controller
 		  		kr.or.ddit.prod.controller
@@ -84,6 +86,8 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>ForntController</servlet-name>
+    <url-pattern>/board/*</url-pattern>
+    
     <url-pattern>/buyer/*</url-pattern>
     <url-pattern>/mypage</url-pattern>
     <url-pattern>/login</url-pattern>

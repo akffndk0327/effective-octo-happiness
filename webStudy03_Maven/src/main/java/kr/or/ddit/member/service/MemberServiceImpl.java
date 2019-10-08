@@ -57,7 +57,6 @@ public class MemberServiceImpl implements IMemberService {
 
 	@Override
 	public List<MemberVO> retrieveMemberList(PagingInfoVO pagingVO) {
-		// TODO Auto-generated method stub
 		return dao.selectMemeberList(pagingVO);
 	}
 
