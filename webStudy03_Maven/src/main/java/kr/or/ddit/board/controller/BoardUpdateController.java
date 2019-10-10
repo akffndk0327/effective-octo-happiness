@@ -35,7 +35,7 @@ public class BoardUpdateController {
 		Board2VO board = 
 				service.retrieveBoard(new Board2VO(Integer.parseInt(what)));
 		req.setAttribute("board", board);
-		return "board/boardForm";
+		return "board/boardForm" ;
 	}
 	
 	
