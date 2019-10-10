@@ -28,9 +28,10 @@ public class BoardRetreiveController {
 	@URIMapping("/board/boardList.do") // UI 동기, data 비동기
 	public String list(HttpServletRequest req, HttpServletResponse resp)
 		throws IOException, ServletException{
-		String pageParam = req.getParameter("page");
-		String searchType = req.getParameter("searchType");
-		String searchWord = req.getParameter("searchWord");
+		String pageParam = req.getParameter("page"); //input 태그의 name
+		String searchType = req.getParameter("searchType"); //select 의 name
+		String searchWord = req.getParameter("searchWord"); //input태그의 name 값 
+		
 		Map<String, Object> searchMap = new HashMap<>();
 		searchMap.put("searchType", searchType);
 		searchMap.put("searchWord", searchWord);
@@ -39,8 +40,10 @@ public class BoardRetreiveController {
 		if(StringUtils.isNumeric(pageParam)) {
 			currentPage = Integer.parseInt(pageParam);
 		}
+		
 		PagingInfoVO<Board2VO> pagingVO = 
 					new PagingInfoVO<Board2VO>(7, 5);
+		
 		pagingVO.setSearchMap(searchMap);
 		int totalRecord = service.retrieveBoardCount(pagingVO);
 		pagingVO.setTotalRecord(totalRecord);
@@ -49,15 +52,16 @@ public class BoardRetreiveController {
 		pagingVO.setDataList(list);
 		
 		String accept = req.getHeader("Accept");
+		
 		//마샬링 & 직렬화
 		if(accept.toLowerCase().contains("json")) {
 			resp.setContentType("application/json;charset=UTF-8");
 			
-			ObjectMapper mapper = new ObjectMapper();
-			try(
+			ObjectMapper mapper = new ObjectMapper(); //java -> json 
+			try( // ?????????????????
 				PrintWriter out = resp.getWriter();	
 			){
-				mapper.writeValue(out, pagingVO);
+				mapper.writeValue(out, pagingVO); //자바객체를 json으로 변환 <->json을 java객체로 변화 :readValue();
 			}
 			return null;
 		}else {
@@ -69,7 +73,7 @@ public class BoardRetreiveController {
 	
 	@URIMapping("/board/boardView.do")
 	public String boardView(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		String what = req.getParameter("what");
+		String what = req.getParameter("what"); //boardList에서 location.href="${cPath}/board/boardView.do?what="+bono; 로 what넘김 
 		if(StringUtils.isBlank(what)) {
 			resp.sendError(400);
 			return null;

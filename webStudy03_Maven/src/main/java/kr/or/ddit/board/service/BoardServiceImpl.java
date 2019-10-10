@@ -151,7 +151,7 @@ public class BoardServiceImpl implements IBoardService {
 					if(attatchList!=null) { 
 						// binary delete
 						for(Attatch2VO attatch : attatchList) {
-							FileUtils.deleteQuietly(
+							FileUtils.deleteQuietly( //첨부파일 갯수만큼 for문 돌아
 									new File(saveFolder, 
 									attatch.getAtt_savename()));
 						}

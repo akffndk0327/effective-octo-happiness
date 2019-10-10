@@ -13,7 +13,8 @@
   					INSTR(BO_WRITER, #{searchMap.searchWord}) > 0
   				</when>
   				<when test="'content'.equals(searchMap.searchType)">
-  					BO_CONTENT LIKE '%'||#{searchMap.searchWord}||'%'
+  					BO_CONTENT LIKE '%'||#{searc
+  					hMap.searchWord}||'%'
   				</when>
   				<otherwise>
   					INSTR(BO_TITLE, #{searchMap.searchWord}) > 0

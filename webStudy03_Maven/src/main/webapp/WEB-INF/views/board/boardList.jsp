@@ -36,7 +36,8 @@
 					<tr>
 						<td>${board.rnum }</td>
 <%-- 						<td>${fn:replace(board.bo_title,"^\\s","&nbsp;") }</td> --%>
-						<td><a data-bono="${board.bo_no }" data-toggle="tooltip" data-placement="top" title="글번호 : ${board.bo_no }">${board.bo_title }</a></td>
+						<td><a data-bono="${board.bo_no }" data-toggle="tooltip" data-placement="top" 
+									title="글번호 : ${board.bo_no }">${board.bo_title }</a></td>
 						<td>${board.bo_writer }</td>
 						<td>${board.bo_date }</td>
 						<td>${board.bo_hit }</td>
@@ -68,7 +69,7 @@
 					<input type="text" class="form-control mr-2" name="searchWord" />
 					<input type="submit" class="btn btn-info mr-2" value="검색" />
 					<input type="button" class="btn btn-info" value="새글쓰기"
-					onclick="location.href='<c:url value="/board/boardInsert.do" />';"/>
+							onclick="location.href='<c:url value="/board/boardInsert.do" />';"/>
 				</form>
 				<div id="pagingArea">
 					${pagingVO.pagingHTML }
