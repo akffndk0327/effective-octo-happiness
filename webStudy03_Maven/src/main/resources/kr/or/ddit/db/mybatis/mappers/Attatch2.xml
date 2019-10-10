@@ -1,5 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.ddit.board.dao.IAttatch2DAO">
-
+<!-- 	1. 프로퍼티 넣을곳이 없어  -->
+<!-- 한번만 실행됨. -> 하나넣어놓고 증가시키기 -->
+	<insert id="insertAttatches" parameterType="Board2VO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="attNoStart">
+			SELECT NVL(MAX(ATT_NO),0)+1 FROM ATTATCH2 
+		</selectKey>
+		INSERT ALL
+		<foreach collection="attatchList" item="attatch" index="idx">
+			INTO attatch2 (
+			    ATT_NO,    BO_NO,    ATT_FILENAME,
+			    ATT_SAVENAME,    ATT_MIME,    ATT_FILESIZE,
+			    ATT_FANCYSIZE
+			) VALUES (
+				#{attNoStart}+#{idx},
+				#{bo_no},    #{attatch.att_filename},
+			    #{attatch.att_savename},    #{attatch.att_mime},    #{attatch.att_filesize},
+			    #{attatch.att_fancysize}
+			)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	<!-- INSERT위해선  더미쿼리 필요 해  -->
+	<!-- if로 다양하게 활용하기  -->
+	
+	<delete id="deleteAttatches" parameterType="Board2VO">
+		DELETE FROM ATTATCH2
+		WHERE BO_NO = #{bo_no}
+			  <if test="delAttatches!=null and delAttatches.length gt 0">	
+				  AND ATT_NO IN 
+				  <foreach collection="delAttatches" 
+				  		item="delNo" open="(" close=")" separator=",">
+				  	#{delNo}
+				  </foreach>	
+			  </if>
+	</delete>
+	
+	<update id="updateDowncount" parameterType="int"> 
+		UPDATE ATTATCH2
+		SET
+		ATT_DOWNCOUNT = ATT_DOWNCOUNT + 1
+		WHERE ATT_NO = #{att_no}
+	</update>
+	
+	<select id="selectAttatch" parameterType="int" resultType="Attatch2VO">
+		SELECT ATT_NO,    BO_NO,    ATT_FILENAME,
+			    ATT_SAVENAME,    ATT_MIME,    ATT_FILESIZE,
+			    ATT_FANCYSIZE,    ATT_DOWNCOUNT
+		FROM ATTATCH2
+		WHERE ATT_NO = #{att_no}
+	</select>
+	
 </mapper>

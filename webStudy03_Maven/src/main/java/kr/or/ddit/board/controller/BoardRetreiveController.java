@@ -49,6 +49,7 @@ public class BoardRetreiveController {
 		pagingVO.setDataList(list);
 		
 		String accept = req.getHeader("Accept");
+		//마샬링 & 직렬화
 		if(accept.toLowerCase().contains("json")) {
 			resp.setContentType("application/json;charset=UTF-8");
 			

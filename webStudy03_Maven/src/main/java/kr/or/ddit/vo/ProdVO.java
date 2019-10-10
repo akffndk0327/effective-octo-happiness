@@ -81,5 +81,9 @@ public class ProdVO implements Serializable { // implements Serializable : ê¼®í•
 				+ prod_delivery + ", prod_unit=" + prod_unit + ", prod_qtyin=" + prod_qtyin + ", prod_qtysale="
 				+ prod_qtysale + ", prod_mileage=" + prod_mileage + "]";
 	}
+	
+	
+	
+	
 
 }

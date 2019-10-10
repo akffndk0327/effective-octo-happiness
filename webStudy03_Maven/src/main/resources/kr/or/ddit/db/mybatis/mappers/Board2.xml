@@ -68,8 +68,8 @@
 		    , (SELECT BOARD_NAME FROM BOARDTYPE2 C 
 		    	WHERE C.BOARD_TYPE = A.BOARD_TYPE)  BOARD_NAME		       
 		    , 	ATT_NO, ATT_FILENAME,
-				ATT_MIME, ATT_FANCYSIZE
-				ATT_DOWNCOUNT
+				ATT_MIME, ATT_FANCYSIZE,
+				ATT_DOWNCOUNT, ATT_SAVENAME
 		FROM BOARD2 A  LEFT OUTER JOIN ATTATCH2 B ON (A.BO_NO = B.BO_NO)
 		WHERE A.BO_NO = #{bo_no}  
 	</select>
@@ -98,6 +98,19 @@
 		    </if>
 		)
 	</insert>
+	<update id="updateBoard" parameterType="Board2VO">
+		UPDATE BOARD2
+		SET
+		    bo_title = #{bo_title},
+		    bo_content = #{bo_content}
+		WHERE
+		    bo_no = #{bo_no}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="Board2VO">
+		DELETE FROM BOARD2 
+		WHERE BO_NO =#{bo_no}
+	</delete>
 </mapper>
 
 

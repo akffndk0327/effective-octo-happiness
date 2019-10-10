@@ -35,10 +35,10 @@ public class FileUploadTestController {
 //			Part filePart = req.getPart("uploadFile");  //메타정보를 db에 넣야하
 			PartWrapper[] array = requestWrapper.getPartWrappers("uploadFile");
 			
-			//1.어디에? 웹리소스, ,파일시스템리소스 각경로의 형태, 웹을통해 접근할수잇냐 없냐
+			//1.어디에? 웹리소스(URl생성됨.), ,파일시스템리소스 각경로의 형태, 웹을통해 접근할수잇냐 없냐
 			//(/prodImages) 서블릿컨뎃스트
 			String saveFolderURL="/prodImages"; //여기에 이미지 하나 저장됨 .! 
-			String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL);
+			String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL); // 서블릿컨텍스트 작븡ㅁ
 			File saveFolder  = new File(saveFolderPath);
 			
 			//존재여부 확인 ! 
@@ -46,6 +46,7 @@ public class FileUploadTestController {
 			
 			
 			//2.어떤이름으로 저장? = MultipartRequestWrapper 로 뺌.
+			//1 저장명 필요
 			//Content-Disposition: form-data; name="uploadFile"; filename=""
 //		String header = filePart.getHeader("Content-Disposition");
 //		int firstIdx = header.indexOf("filename");
@@ -70,8 +71,8 @@ public class FileUploadTestController {
 				
 				//저장하기 위한 파일이 필ㅎ요ㅕ해
 				try(
-						InputStream is = partWrapper.getInputStream();	
-						){
+					InputStream is = partWrapper.getInputStream();	
+				){
 					FileUtils.copyInputStreamToFile(is, saveFile);
 				}//업로드 & 저장  끝
 				//이미지 저장하기

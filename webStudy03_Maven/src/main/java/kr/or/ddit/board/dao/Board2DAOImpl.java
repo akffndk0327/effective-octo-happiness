@@ -81,20 +81,20 @@ public class Board2DAOImpl implements IBoard2DAO {
 
 	@Override
 	public int updateBoard(Board2VO board, SqlSession sqlSession) {
+		IBoard2DAO mapper = sqlSession.getMapper(IBoard2DAO.class);
+		return mapper.updateBoard(board);
+	}
+
+	@Override
+	public int deleteBoard(Board2VO board) { //이건 필요없어 
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int deleteBoard(Board2VO board) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int deleteBoard(Board2VO board, SqlSession sqlSession) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteBoard(Board2VO board, SqlSession sqlSession) { //세션 받을 거만 필요해
+		IBoard2DAO mapper = sqlSession.getMapper(IBoard2DAO.class);
+		return mapper.deleteBoard(board);
 	}
 
 	@Override

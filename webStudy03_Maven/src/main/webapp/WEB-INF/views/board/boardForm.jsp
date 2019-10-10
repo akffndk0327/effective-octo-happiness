@@ -21,10 +21,10 @@
 	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="${cPath }/toastmessage/css/jquery.toastmessage.css" />	
 <script type="text/javascript" src="${cPath }/toastmessage/jquery.toastmessage.js"></script>
-<script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>	
+<script src="${cPath }/ckeditor/ckeditor.js"></script>	
 </head>
 <body>
-	<form method="post">
+	<form id="boardForm" method="post" enctype="multipart/form-data">
 		<table class="table table-bordered">
 			<tr>
 				<th>글번호</th>
@@ -68,6 +68,31 @@
 					value="${param.bo_parent }" />
 				<span class="error">${errors.bo_parent }</span></td>
 			</tr>
+			
+			<c:if test="${not empty board.attatchList }">
+				<tr>
+					<th>기존 첨부 파일</th>
+					<td>
+						<c:forEach items="${board.attatchList }" var="attatch" varStatus="vs">
+							<span>	
+							${attatch.att_filename }
+							<a class="btn btn-info attDelBtn" data-attno="${attatch.att_no }">삭제</a>
+							${not vs.last?",":"" }
+							</span>
+						</c:forEach>
+					</td>
+				</tr>
+			</c:if>
+			<tr>
+				<th>첨부파일</th>
+				<td>
+					<input type="file" name="bo_file" />
+					<input type="file" name="bo_file" />
+					<input type="file" name="bo_file" />
+					<input type="file" name="bo_file" />
+					<input type="file" name="bo_file" />
+				</td>
+			</tr>
 			<tr>
 				<th>내용</th>
 				<td>
@@ -86,9 +111,23 @@
 		</table>
 	</form>
 	<script type="text/javascript">
-	 	CKEDITOR.replace( 'bo_content' );
+	 	CKEDITOR.replace( 'bo_content', {
+	 		filebrowserImageUploadUrl:"${cPath}/board/imageUpload.do?command=QuickUpload&type=Images"
+	 	});
+	 	let boardForm = $("#boardForm");
+		$(".attDelBtn").on("click", function(){
+			let att_no = $(this).data("attno");
+			boardForm.append(
+				$("<input>")
+						.attr({
+							type:"text"
+							, name:"delAttaches"
+						}).val(att_no)
+			);			
+			$(this).parent("span").remove();
+		});
 		<c:if test="${not empty message }">
-			$(document).toastmessage('showNoticeToast', 'some message here');
+			$(document).toastmessage('showWarningToast', '${message }');
 		</c:if>
 	</script>
 </body>

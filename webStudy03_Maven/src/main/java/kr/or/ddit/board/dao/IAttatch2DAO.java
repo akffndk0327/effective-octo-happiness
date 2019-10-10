@@ -12,5 +12,8 @@ public interface IAttatch2DAO {
 //	selectAttatchList 마이바티스에서 조인으로 
 //	updateAttatch
 	public int deleteAttatches(Board2VO board);
+	
 	public int deleteAttatches(Board2VO board,SqlSession sqlSession);
+	
+	int updateDowncount(int att_no);
 }
