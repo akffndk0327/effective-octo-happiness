@@ -99,8 +99,14 @@ public class Board2DAOImpl implements IBoard2DAO {
 
 	@Override
 	public int updateBoLike(Board2VO board) {
-		// TODO Auto-generated method stub
-		return 0;
+		try(
+				SqlSession sqlSession = sqlSessionFactory.openSession();	
+			){
+				IBoard2DAO mapper = sqlSession.getMapper(IBoard2DAO.class);
+				int cnt= mapper.updateBoLike(board);
+				sqlSession.commit(); // 트랜젝션 관리할 필요없어서 다오에서 세션오픈
+				return cnt;
+			}
 	}
 
 }

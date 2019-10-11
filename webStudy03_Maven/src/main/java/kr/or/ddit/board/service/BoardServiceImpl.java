@@ -138,15 +138,15 @@ public class BoardServiceImpl implements IBoardService {
 				SqlSession sqlSession = sqlSessionFactory.openSession();	
 			){
 				int cnt = 0;
-				//1.메타데이터 지우고 --?
+				//1.메타데이터 지우고 --?첨부파일
 				//2.게시글 지우고
 				//3. 바이너리데이터(2진데이터) 지우기 (메타데이터 받아놔서 바이너리데이터 접근 가능함.)
-				if(attatchList!=null && attatchList.size()>0) {
-					// meta delete
-					cnt += attatchDAO.deleteAttatches(board, sqlSession);
+				if(attatchList!=null && attatchList.size()>0) { //메타데이터 지움 
+					
+					cnt += attatchDAO.deleteAttatches(board, sqlSession); //xml에서 삭제할려햇는데 이미 삭제되있어서 아래에서 null뜸
 				}
 				// board delete
-				cnt += dao.deleteBoard(board, sqlSession);
+				cnt += dao.deleteBoard(board, sqlSession); //2진데이터 삭제 
 				if(cnt>0) {
 					if(attatchList!=null) { 
 						// binary delete
@@ -178,7 +178,12 @@ public class BoardServiceImpl implements IBoardService {
 
 	@Override
 	public ServiceResult incrememtLike(int bo_no) {
-		// TODO Auto-generated method stub
-		return null;
+		int cnt = dao.updateBoLike(new Board2VO(bo_no));
+		ServiceResult result = null;
+		if(cnt>0) result = ServiceResult.OK;
+		else result = ServiceResult.FAILED;
+		return result;
+			
+		
 	}
 }

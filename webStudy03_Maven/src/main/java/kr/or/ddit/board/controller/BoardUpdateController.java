@@ -1,15 +1,20 @@
 package kr.or.ddit.board.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
@@ -17,6 +22,8 @@ import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.utils.CookieUtil;
+import kr.or.ddit.utils.CookieUtil.TextType;
 import kr.or.ddit.vo.Board2VO;
 import kr.or.ddit.wrapper.MultipartRequestWrapper;
 import kr.or.ddit.wrapper.PartWrapper;
@@ -37,12 +44,6 @@ public class BoardUpdateController {
 		req.setAttribute("board", board);
 		return "board/boardForm" ;
 	}
-	
-	
-	
-	
-	
-	
 	
 	@URIMapping(value="/board/boardUpdate.do", method=HttpMethod.POST)
 	public String insert(HttpServletRequest req, HttpServletResponse resp) {
@@ -123,5 +124,8 @@ public class BoardUpdateController {
 		}
 		return valid;
 	}
+	
+	
+	
 }
 

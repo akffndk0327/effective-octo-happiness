@@ -21,6 +21,7 @@ public interface IBoard2DAO {
 	
 	public int deleteBoard(Board2VO board); //attactch 지우고 baord 지워야함  
 	public int deleteBoard(Board2VO board,SqlSession sqlSession); //마이바티스는 이 구조 허용ㅎ안해서 위에 같은 거 씀 
+	
 	public int updateBoLike(Board2VO board); // 추천수 
 	
 }

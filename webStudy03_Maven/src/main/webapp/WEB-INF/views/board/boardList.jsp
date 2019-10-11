@@ -26,6 +26,7 @@
 			<th>작성일</th>
 			<th>조회수</th>
 			<th>추천수</th>
+			<th>댓글목록</th>
 		</tr>
 	</thead>
 	<tbody id="listBody">

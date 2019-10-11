@@ -47,7 +47,13 @@
 		</tr>
 		<tr>
 			<th>추천수</th>
-			<td>${board.bo_like }</td>
+			<td>
+				<span id="likeArea">${board.bo_like }</span>
+<%-- 				<c:if test="${cookie.likeCookie.value.contains(board.bo_no) }"> --%>
+				<c:if test="${likable }">
+				<button  type="button" value="추천" id="like"> 추천하기</button>
+				</c:if>
+			</td>
 		</tr>
 		<tr>
 			<th>원글번호</th>
@@ -200,6 +206,8 @@
 <script type="text/javascript">
 
 	let deleteBoardModal = $("#deleteBoardModal");
+	let like =$('#like');
+	let likeArea = $('#likeArea');
 	deleteBoardModal.on("hidden.bs.modal", function(){
 		$(this).find("form").get(0).reset();
 	});
@@ -211,6 +219,31 @@
 		$(document).toastmessage('showWarningToast', '${message }');
 		<c:remove var="message" scope="session"/>
 	</c:if>	
+	
+	like.on('click',function(){
+		$.ajax({
+			url : "${cPath}/board/boardLike.do",
+			data : {
+				"what" : ${board.bo_no}
+			},
+// 			dataType : "json", //돌아오는 결과값 
+			dataType : "text",  
+			success : function(resp) { //resp: 언마샬링된 값.
+// 				let tag = $("<p>").text(resp.bo_like);
+// 				$('#likeCount').html(tag);
+// 				$('#like').css('display','none'); //언마샬링 된 값이 나옴 
+				if(resp =="OK"){
+					likeArea.text(parseInt(likeArea.text().trim())+1);
+					like.remove();
+				}
+			},
+			error : function(errorResp) {
+				console.log(errorResp.status);
+			}
+// 	$(this).hide();
+		})
+	
+	})
 </script>
 </body>
 </html>

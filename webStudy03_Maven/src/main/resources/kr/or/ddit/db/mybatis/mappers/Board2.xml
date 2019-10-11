@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.board.dao.IBoard2DAO">
+	<cache eviction="LRU"
+		flushInterval="60000"
+		size="512"
+	/>
 		<sql id="searchFrag">
 		<where>
 			<if test="searchMap!=null">
@@ -31,6 +35,9 @@
 		FROM BOARD2
 		<include refid="searchFrag" />
 	</select>
+<!-- 	<resultMap type="Board2VO" id="boardListMap" autoMapping="true"> -->
+<!-- 		<collection property="replyList" select="selectReplyList" column="BO_NO"></collection> -->
+<!-- 	</resultMap> -->
 	<select id="selectBoardList" parameterType="PagingInfoVO" resultType="Board2VO">
 		SELECT B.*
 		FROM(
@@ -58,7 +65,13 @@
 					ofType="Attatch2VO" autoMapping="true">
 			<id property="att_no" column="ATT_NO"/>
 		</collection>
+		
 	</resultMap>
+	<select id="selectReplyList" resultType="Reply2VO">
+		select REP_NO, BO_NO, REP_WRITER 
+		from reply2
+		WHERE BO_NO =#{bo_no}
+	</select>
 	<select id="selectBoard" parameterType="Board2VO" 
 			resultMap="boardMap">
 		SELECT
@@ -72,9 +85,10 @@
 				ATT_MIME, ATT_FANCYSIZE,
 				ATT_DOWNCOUNT, ATT_SAVENAME
 		FROM BOARD2 A  LEFT OUTER JOIN ATTATCH2 B ON (A.BO_NO = B.BO_NO)
+			
 		WHERE A.BO_NO = #{bo_no}  
 	</select>
-	<update id="updateBoardHit" parameterType="Board2VO">
+	<update id="updateBoardHit" parameterType="Board2VO" flushCache="false">
 		UPDATE BOARD2
 		SET BO_HIT = BO_HIT + 1
 		WHERE BO_NO = #{bo_no}
@@ -112,6 +126,12 @@
 		DELETE FROM BOARD2 
 		WHERE BO_NO =#{bo_no}
 	</delete>
+	
+	<update id="updateBoLike" parameterType="Board2VO" >
+		UPDATE BOARD2
+		SET BO_LIKE = BO_LIKE + 1
+		WHERE BO_NO = #{bo_no}
+	</update>
 </mapper>
 
 

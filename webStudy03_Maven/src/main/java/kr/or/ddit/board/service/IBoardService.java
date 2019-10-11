@@ -24,6 +24,7 @@ public interface IBoardService {
 	public ServiceResult removeBoard(Board2VO board); //글잇나없나 인증, 삭제 성공,실패
 	//다운로드
 	public Attatch2VO downloadAttatch(int att_no); //해당파일 잇거나 없거나(없을땐?)
+	
 	//추천
 	public ServiceResult incrememtLike(int bo_no);
 	

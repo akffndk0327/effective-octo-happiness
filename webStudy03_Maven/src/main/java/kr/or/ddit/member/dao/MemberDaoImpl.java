@@ -10,7 +10,7 @@ import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
 public class MemberDaoImpl implements IMemberDAO {
-	
+	//1010 : jdbc에 비해 코드의 결합력 낮춤 
 	private SqlSessionFactory SqlSessionFactory 
 				= CustomSqlSessionFactoryBuilder.getSqlSessionFactory(); //여기가 싱글톤 ! 
 

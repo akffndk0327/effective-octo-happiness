@@ -37,7 +37,7 @@ public class Board2VO implements Serializable{
 	private String bo_pass;
 	private String bo_ip;
 	private Integer bo_hit;
-	private Integer bo_like;
+	private Integer bo_like; //추천수 
 	private Integer bo_parent; //답글 쓸때 원글 찾아가는 변수 
 	
 	//댓글 
