@@ -35,14 +35,14 @@
 	
 <!-- 	컨테이너의 빈 관리 특성 -->
 <!-- 	1.특별한 설정이 없느 ㄴ한 singleton : scope  하나의빈은 하나으 ㅣ객체만 만들어진다  -->
-<!-- 			1) singleton : 빈을 대상으로 객체를 하나만 운영 -->
-<!-- 			2)prototype : 주입시점에 주입될때마다 새로운 객체 생성 	 -->
-<!-- 			3)session/request : only web, 리쿼스트스코프에 빈을 넣어. 하나의 세션안에서만 유효한 빈 만들어 ex) 로그인 햇을때 ㅣ: session -->
+<!-- 			1) singleton : "빈"을 대상으로 객체를 하나만 운영. class 아님 !  -->
+<!-- 			2) prototype : 1.주입시점에 주입될때마다 2.새로운 객체 생성  =lazy-init	 -->
+<!-- 			3) session/request : only web, 리쿼스트스코프에 빈을 넣어. 하나의 세션안에서만 유효한 빈 만들어 ex) 로그인 햇을때 ㅣ: session -->
 <!-- 	2. 특별한 설정이 없느 ㄴ한 모든 빈의 객체를 일시에 생성 --> 
-<!-- 메모리낭비, 부하 를 위해서 lazy-init -->
+<!-- 			메모리낭비, 부하 를 위해서 "lazy-init" 설정해 : 필요할때 실행하게 한다/ or 상위에 default로 true 설정해  -->
 <!-- 		3. 빈의 객체 생성 순서 : depends-on="선행생성객체만듬" -->
 <!-- 		** 빈객체의 생성순서 : scope(prototype : 주입될때 생성지점 밀림,), lazy-init, depends-on : 누구다음에 누구로 생성됨.  -->
-
+<!-- ==> 1)lazy-init, depends-on, scope로 생성 순서 제어 가능함 . -->
 
 	<bean init-method="init" lazy-init="false" id ="mySqlDAO" class="kr.or.ddit.idol.dao.IdolSearchDAO_Mysql"></bean>
 	

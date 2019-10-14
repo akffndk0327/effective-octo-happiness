@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- 	<context:annotation-config /> -->
+<!-- context:annotation-config 있어야 	post processer 등록되있음  -->
+<!-- 	component-scan 에 의해 자동 등록되는 빈 어노테이션 -->
+<!-- 	1) @Component -->
+<!-- 	2) @Service -->
+<!-- 	3) @Repository -->
+<!-- 	4) @Controller -->
+	
+<!-- 	5) Configration : java config에서 사용  -->
+<!-- 	6) Controlelr Advice : AOP 방법론에 다라 advice에 사용 -->
+<!-- 	7) RestController : Rest 방식(ui끼리, 데이터 끼리 )의 처리 핸들러에 사용. 제이슨과 xx이 왜 필요한가 -->
+<!-- 	이중에 뭘 써도 bean으로 등록 됨.   -->
+<!--  	의존관계 설정을 자동으로 할때 사용되는 어노테이션 -->
+<!--  	1) AutoWired(종속성) : type기준 injection -->
+<!--  	2) Resource : injection 기준을 명시적으로 설정 가능. 생성자 주입 불 가 -->
+<!--  	3) Inject(JSF-330) pom.xml에 jar 파일 추가하면  @service, @repository 사용할수 있어   -->
+<!-- 	4) @Value = slEL을 사용하기 위한 어노테이션  -->
+<!-- use-default-filters="false" 로 해놓고 내가 원하는 거 만 필터 설정 -->
+	<context:component-scan base-package="kr.or.ddit.idol" use-default-filters="false">
+<!-- 	로딩할거. 이 어노테이션에 잇는거 컨트롤러까지 다 가져옴   -->
+		<context:include-filter type="annotation" 
+			expression="org.springframework.stereotype.Component"/>
+<!-- 	제외할거 이 컨트롤러만 뺀다.  -->
+		<context:exclude-filter type="annotation" 
+			expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+</beans>

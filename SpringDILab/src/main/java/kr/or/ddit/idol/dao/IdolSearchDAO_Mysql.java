@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Repository;
+
+@Repository("mysqlDAO") //id는 클래스 이름으로 자동 생성되지만 싫으면 ""안에 쓰기
+@Lazy
 public class IdolSearchDAO_Mysql implements IIdolSearchDAO {
 	
 	public IdolSearchDAO_Mysql() {

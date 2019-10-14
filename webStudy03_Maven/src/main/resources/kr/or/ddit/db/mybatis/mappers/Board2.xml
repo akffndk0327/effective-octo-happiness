@@ -88,7 +88,7 @@
 			
 		WHERE A.BO_NO = #{bo_no}  
 	</select>
-	<update id="updateBoardHit" parameterType="Board2VO" flushCache="false">
+	<update id="updateBoardHit" parameterType="Board2VO" >
 		UPDATE BOARD2
 		SET BO_HIT = BO_HIT + 1
 		WHERE BO_NO = #{bo_no}

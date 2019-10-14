@@ -5,11 +5,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import kr.or.ddit.idol.dao.IIdolSearchDAO;
 import kr.or.ddit.idol.dao.IdolDAOFactory;
 import kr.or.ddit.idol.dao.IdolSearchDAO_Mysql;
 import kr.or.ddit.idol.dao.IdolSearchDAO_Oracle;
-
+@Service("idolService")
+@Scope("prototype") //javaConfigContext랑 같아짐. 아무것도 객체 생성안됨.
 // 인터페이스로 결합력 1 낮춤 
 public class IdolSearchServiceImpl implements IIdolSearchService {
 //	 1. 전통적인 의존관계 형성 :  new 인스턴스직접 생성 -> 결합력 최상.
@@ -24,19 +32,23 @@ public class IdolSearchServiceImpl implements IIdolSearchService {
 //	어떻게 어떤 컨테이너 쓸거야? 정해야함 
 	
 	private IIdolSearchDAO dao ;  //내가 안만들고 받아올수있게 만든단면... ?  
+	
 	public IdolSearchServiceImpl(){
 			super();
 			System.out.printf("%s 객체생성, 기본생성자 사용 \n", getClass().getSimpleName());
 		
 	}
-	
+	@Inject //pom.xml에 추가함.
+//	@Autowired //1014 자동 의존관계형성  주입방법1 뭘 주입하겟는지 몰라 -타입에 맞는 bean 주입한다.but 같은타입 2개있으면 에러남
+	//반드시 프레임웍잇어야해 POJO에 위반  
 	public IdolSearchServiceImpl(IIdolSearchDAO dao) { //이거만 잇으닌까 공장도 없고 결합력도 안생김 ~~ ^_^ 
-														//기본생성자 없으면 주입밖에 못함
 		super();
 		this.dao = dao;
 		System.out.printf("%s 객체생성, dao 주입받아 사용 \n", getClass().getSimpleName());
 	}
-
+	
+//	@Resource(type=IIdolSearchDAO.class, name="mysqlDAO") //1014주입방법2  선별조건 해야함 .역시나 타입없으면 오류나는데 .name주면 에러 안남
+	//JDK => 다른곳에 쓸수 있어  배고파!!!!! 생성자에도 쓰고 프레임웍... 에 =>
 	public void setDao(IIdolSearchDAO dao) {
 		this.dao = dao;
 	} //setter만들어놓고 안쓰면 터짐... 
