@@ -1,76 +1,80 @@
 package kr.or.ddit.alba.controller;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import kr.or.ddit.alba.dao.CodeDaoImpl;
 import kr.or.ddit.alba.dao.ICodeDao;
-import kr.or.ddit.alba.service.AlbaServiceImpl;
 import kr.or.ddit.alba.service.IAlbaService;
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.Lic_albaVO;
 import kr.or.ddit.enums.ServiceResult;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.HttpMethod;
-import kr.or.ddit.mvc.annotation.URIMapping;
-import kr.or.ddit.wrapper.MultipartRequestWrapper;
-import kr.or.ddit.wrapper.PartWrapper;
 
-@CommandHandler
+@Controller
+@RequestMapping("/alba/albaInsert.do")
 public class AlbaInsertController {
-	ICodeDao codeDAO = new CodeDaoImpl();
-	IAlbaService service = new AlbaServiceImpl();
+	@Inject
+	ICodeDao codeDAO ;
+	@Inject
+	IAlbaService service;
 	
-	private void setCodeInScope(HttpServletRequest req){
-		req.setAttribute("licenses", codeDAO.selectLicense());
-		req.setAttribute("grades", codeDAO.selectGrades());
+	private void setCodeInScope(Model model){
+		model.addAttribute("licenses", codeDAO.selectLicense());
+		model.addAttribute("grades", codeDAO.selectGrades());
 	}
 	
 	//첫화면 
-	@URIMapping("/alba/albaInsert.do")
-	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		setCodeInScope(req);
+	@RequestMapping(method=RequestMethod.GET)
+	public String doGet(Model model) {
+		setCodeInScope(model);
 		String view = "alba/albaForm";
 		return view;
 	}
 	
 	
-	@URIMapping(value="/alba/albaInsert.do", method=HttpMethod.POST)
-	public String doPost(HttpServletRequest req, 
-							HttpServletResponse resp) throws ServletException, IOException {
-		setCodeInScope(req);
+	@RequestMapping(method = RequestMethod.POST)
+	public String doPost(
+			Map<String,String[]> parameterMap,
+			@Valid @ModelAttribute(name = "alba") AlbaVO alba,
+			Errors errors, Model model)
+			throws ServletException, IOException {
+		setCodeInScope(model);
 		
-		Map<String, String[]> parameterMap = req.getParameterMap();
-		AlbaVO alba = new AlbaVO();
-		req.setAttribute("alba", alba);
+//		Map<String, String[]> parameterMap = req.getParameterMap();
+//		AlbaVO alba = new AlbaVO();
+		model.addAttribute("alba", alba);
 		
-		try {
-			BeanUtils.populate(alba, parameterMap);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
+//		try {
+//			BeanUtils.populate(alba, parameterMap);
+//		} catch (IllegalAccessException | InvocationTargetException e) {
+//			throw new RuntimeException(e);
+//		}
 		
 		// 검증
-		Map<String, String> errors = new HashMap<String, String>();
-		req.setAttribute("errors", errors);
-		boolean valid = validate(alba, errors);
-		
+//		Map<String, String> errors = new HashMap<String, String>();
+//		req.setAttribute("errors", errors);
+		boolean valid = !errors.hasErrors();
 		String[] lic_codes = alba.getLic_codes();
 		// 자격증 코드와 자격증 사본에 대한 처리
-		if(req instanceof MultipartRequestWrapper && lic_codes!=null && lic_codes.length > 0){
-			MultipartRequestWrapper wrapper = (MultipartRequestWrapper)req;
-			PartWrapper[] images = wrapper.getPartWrappers("lic_images");
+//		if(req instanceof MultipartRequestWrapper && lic_codes!=null && lic_codes.length > 0){
+//			MultipartRequestWrapper wrapper = (MultipartRequestWrapper)req;
+//			PartWrapper[] images = wrapper.getPartWrappers("lic_images");
 			if(images==null || lic_codes.length!=images.length){
 				valid = false;
 				errors.put("lic_codes", "자격증 이미지 누락");
@@ -84,7 +88,7 @@ public class AlbaInsertController {
 					licenseList.add(licAlba);
 				}
 			}
-		}
+	
 		
 		String view = null;
 		
@@ -93,7 +97,7 @@ public class AlbaInsertController {
 			if (ServiceResult.OK.equals(result)) {
 				view = "redirect:/alba/albaList.do";
 			} else {
-				req.setAttribute("message", "등록 실패, 다시 시도");
+				model.addAttribute("message", "등록 실패, 다시 시도");
 				view = "alba/albaForm";
 			}
 		}else {
@@ -102,45 +106,4 @@ public class AlbaInsertController {
 		return view;
 	}
 	
-	private boolean validate(AlbaVO alba, Map<String, String> errors) {
-		boolean valid = true;
-		// 검증
-//		if (StringUtils.isBlank(alba.getAl_id())) {
-//			valid = false;
-//			errors.put("al_id", "아이디 누락");
-//		}
-		if (StringUtils.isBlank(alba.getAl_name())) {
-			valid = false;
-			errors.put("al_name", "이름 누락");
-		}
-		if (StringUtils.isBlank(Integer.toString(alba.getAl_age()))) {
-			valid = false;
-			errors.put("al_age", "나이 누락");
-		}
-		if (StringUtils.isBlank(alba.getAl_address())) {
-			valid = false;
-			errors.put("al_address", "주소 누락");
-		}
-		if (StringUtils.isBlank(alba.getAl_hp())) {
-			valid = false;
-			errors.put("al_hp", "휴대폰 누락");
-		}
-		if (StringUtils.isBlank(alba.getGr_code())) {
-			valid = false;
-			errors.put("gr_code", "최종학력 누락");
-		}
-		if (StringUtils.isBlank(alba.getAl_gen())) {
-			valid = false;
-			errors.put("al_gen", "성별 누락");
-		}
-		if (StringUtils.isBlank(alba.getAl_btype())) {
-			valid = false;
-			errors.put("al_btype", "혈액형 누락");
-		}
-		if (StringUtils.isBlank(alba.getAl_mail())) {
-			valid = false;
-			errors.put("al_mail", "이메일 누락");
-		}
-		return valid;
-	}
 }

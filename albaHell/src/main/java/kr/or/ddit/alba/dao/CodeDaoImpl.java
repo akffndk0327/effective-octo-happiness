@@ -5,9 +5,10 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.stereotype.Repository;
 
 import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
-
+@Repository
 public class CodeDaoImpl implements ICodeDao {
 	SqlSessionFactory sessionFactory = 
 			CustomSqlSessionFactoryBuilder.getSqlSessionFactory();

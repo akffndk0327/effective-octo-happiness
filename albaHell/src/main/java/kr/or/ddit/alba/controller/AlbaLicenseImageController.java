@@ -5,23 +5,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import kr.or.ddit.alba.service.AlbaServiceImpl;
 import kr.or.ddit.alba.service.IAlbaService;
 import kr.or.ddit.alba.vo.Lic_albaVO;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.URIMapping;
 
-@CommandHandler
+@Controller
 public class AlbaLicenseImageController {
-	IAlbaService service = new AlbaServiceImpl();
-	@URIMapping("/alba/licenseImage.do")
+	@Inject
+	IAlbaService service ;
+	@RequestMapping(value="/alba/licenseImage.do")
 	public String licenseImage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String al_id = req.getParameter("al_id");
 		String lic_code = req.getParameter("lic_code");

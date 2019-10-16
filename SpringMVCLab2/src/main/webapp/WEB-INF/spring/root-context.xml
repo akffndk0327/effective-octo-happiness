@@ -4,9 +4,22 @@
 	xmlns:c="http://www.springframework.org/schema/c"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-	
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+<!-- 	상위 컨테이너용 설정파일로, 하위 컨테이너들에서 공통 사용할 빈, -->
+<!-- 	lagacy(한번만들어도 버전많이 안바껴) bean 들을 등록 -->
+<!-- 상위컨테이너용 어노테이션 활성화  + 하위 컨테이너도 같이 쓸수이음  -->
 	<context:annotation-config />
 	
+<!-- 	공통빈의 porperties 등록해야되 -->
+	<context:property-placeholder location="classpath:kr/or/ddit/appInfo.xml" />
+	<util:properties id="appInfo" location="classpath:kr/or/ddit/appInfo.xml"></util:properties>
+<!-- 	컨트롤러는 ex -->
+<!-- 	서비스 다오는 include => component 상속받는 복합언어임 -->
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
 </beans>

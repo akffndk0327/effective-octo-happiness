@@ -5,16 +5,34 @@
    version="3.0">
    <display-name>SpringMVCLab2</display-name>
    
-   <!-- 상위 컨테이너용 설정 파일의 위치 등록-->
-   <context-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/spring/root-context.xml</param-value>
-   </context-param>
+   <!-- 상위 컨테이너용 "설정 파일"의 위치 등록-->
+   <!-- needed for ContextLoaderListener -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/*-context.xml</param-value>
+	</context-param>
+	
 
+	<!-- Bootstraps the root web application context before servlet initialization -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
    <!-- 상위 컨테이너 생성을 위한 리스터 등록 -->
    <listener>
       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
    </listener>
+   <filter>
+   	 	<filter-name>CharacterEncodingFilter</filter-name>
+   	 	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+   	 	<init-param>
+   	 		<param-name>encoding</param-name>
+   	 		<param-value>UTF-8</param-value>
+   	 	</init-param>
+   </filter>
+   <filter-mapping>
+   		<filter-name>CharacterEncodingFilter</filter-name>
+   		<url-pattern>/*</url-pattern>
+   </filter-mapping>
    
    
    <!-- FrontController(DispatcherServlet)을 등록하고, 하위 컨테이너 객체 생성될 수 있는 설정 -->
@@ -23,14 +41,16 @@
       <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
       <init-param>
          <param-name>contextConfigLocation</param-name>
-         <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+         <param-value>/WEB-INF/spring/appServlet/*-context.xml</param-value>
       </init-param>
       <load-on-startup>1</load-on-startup>
+      <multipart-config></multipart-config>
    </servlet>
+   
 
    <!-- Map all requests to the DispatcherServlet for handling -->
    <servlet-mapping>
       <servlet-name>springDispatcherServlet</servlet-name>
-      <url-pattern>*.do</url-pattern>
+      <url-pattern>/</url-pattern>
    </servlet-mapping>
 </web-app>

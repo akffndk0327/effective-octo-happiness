@@ -1,26 +1,24 @@
 package kr.or.ddit.alba.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import kr.or.ddit.alba.service.AlbaServiceImpl;
 import kr.or.ddit.alba.service.IAlbaService;
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.PagingInfoVO;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.URIMapping;
 
-@CommandHandler
+@Controller
 public class AlbaRetrieveControlleralba {
-	IAlbaService service = new AlbaServiceImpl();
-
+	@Inject
+	IAlbaService service ;
 //	@URIMapping("/alba/licenseImage.do")
 //	public String licenseImage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //		String al_id = req.getParameter("al_id");
@@ -54,15 +52,19 @@ public class AlbaRetrieveControlleralba {
 //	}
 	
 	//알바 리스트 출력 
-	@URIMapping("/alba/albaList.do")
-	public String AlbaList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		String pageParam = req.getParameter("page");
-		String searchType = req.getParameter("searchType");
-		String searchWord = req.getParameter("searchWord");
-		int currentPage = 1;
-		if (StringUtils.isNotBlank(pageParam) && StringUtils.isNumeric(pageParam)) {
-			currentPage = Integer.parseInt(pageParam);
-		}
+	@RequestMapping("/alba/albaList.do")
+	public String AlbaList(
+			@RequestParam(required=false) String searchType,
+			@RequestParam(required=false) String searchWord,
+			@RequestParam(name="page", required=false, defaultValue="1") int currentPage
+			,Model model){
+//		String pageParam = req.getParameter("page");
+//		String searchType = req.getParameter("searchType");
+//		String searchWord = req.getParameter("searchWord");
+//		int currentPage = 1;
+//		if (StringUtils.isNotBlank(pageParam) && StringUtils.isNumeric(pageParam)) {
+//			currentPage = Integer.parseInt(pageParam);
+//		}
 
 		PagingInfoVO<AlbaVO> pagingVO = new PagingInfoVO<AlbaVO>(7, 3);
 		Map<String, Object> searchMap = new HashMap<>();
@@ -70,13 +72,14 @@ public class AlbaRetrieveControlleralba {
 		searchMap.put("searchWord", searchWord);
 		pagingVO.setSearchMap(searchMap);
 		pagingVO.setCurrentPage(currentPage);
+		
 		int totalRecord = service.retrieveAlbaCount(pagingVO);
 		pagingVO.setTotalRecord(totalRecord);
 
 		List<AlbaVO> albaList = service.retrieveAlbaList(pagingVO);
 		pagingVO.setDataList(albaList);
 
-		req.setAttribute("pagingVO", pagingVO);
+		model.addAttribute("pagingVO", pagingVO);
 
 		String view = "alba/albaList";
 		return view;

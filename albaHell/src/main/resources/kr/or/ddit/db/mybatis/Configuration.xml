@@ -19,6 +19,7 @@
 	<mappers>
 		<mapper resource="kr/or/ddit/db/mybatis/mappers/alba.xml"/>
 		<mapper resource="kr/or/ddit/db/mybatis/mappers/code.xml"/>
+		<mapper resource="kr/or/ddit/db/mybatis/mappers/buyer.xml"/>
 	</mappers>
 
 

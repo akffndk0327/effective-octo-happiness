@@ -11,6 +11,10 @@
     </Console>
   </Appenders>
   <Loggers>
+  <Logger name="org.springframework.web" level="debug" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+  
     <Logger name="jdbc.sqltiming" level="debug" additivity="false">
       <AppenderRef ref="Console"/>
     </Logger>

@@ -4,8 +4,37 @@
 	xmlns:c="http://www.springframework.org/schema/c"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+<!-- 	상위는 lagacy bean 사용 ,  -->
+<!-- 	하위는 컨트롤러 단 등록함. -->
+<!-- 핸들러 맵퍼, 핸들러 인보크, 뷰 프로세서 설정 -->
+	<mvc:annotation-driven/>
+	
+	<!-- 새로운 뷰 프로세서 등록 -->
+	<bean id="IRVR" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/views/"
+		p:suffix=".jsp"
+	/>
+	
+<!--  등록된 전략 사용은 @controller, @requestMapping에서 사용 @service, component 등 도 여기서만 슴  -->
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
+		<context:include-filter type="annotation" 
+		expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+<!-- 	<mvc:default-servlet-handler/> -->
+	<mvc:resources location="/resources/" mapping="/res/**" cache-period="0"></mvc:resources>
+<!-- 	cache-period="0" :캐시기간 일괄적 관맆 -->
 
-
+<!-- 	MultipartResolver (MultipartRequestCheckFilter) -->
+<!-- 	request -> MultipartHttpServletRequest(MultipartRequestWrapper)로  변경하는 역할  -->
+<!-- 	파트 하나를 partWrapper로 처리함. -->
+<!-- 	part -> MultipartFile(PartWrapper) -->
+<!-- 	예제3 파일업로드 -->
+<!-- id="multipartResolver" 핸ㄷ를러 어댑터가 이걸로 씀 꼭 이걸ㄹ ㅗ!!!!!!!!!!!!!!!!!!!!! -->
+<!-- 이제 컨드롤러 단에서 받아 써먹자!! 고고 컨드롤러 ~~ -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"></bean>
 </beans>

@@ -2,18 +2,22 @@ package kr.or.ddit.alba.service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.stereotype.Service;
 
-import kr.or.ddit.alba.dao.AlbaDaoImpl;
 import kr.or.ddit.alba.dao.IAlbaDao;
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.Lic_albaVO;
 import kr.or.ddit.alba.vo.PagingInfoVO;
 import kr.or.ddit.enums.ServiceResult;
 
+@Service
 public class AlbaServiceImpl implements IAlbaService {
-	IAlbaDao albaDAO = new AlbaDaoImpl();
+	@Inject
+	IAlbaDao albaDAO ;
 	
 	SqlSessionFactory sessionFactory = 
 			kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder.getSqlSessionFactory();

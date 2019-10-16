@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.stereotype.Repository;
 
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.Lic_albaVO;
 import kr.or.ddit.alba.vo.PagingInfoVO;
 import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
 
+@Repository
 public class AlbaDaoImpl implements IAlbaDao {
 //	private SqlSessionFactory SqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory(); // 여기가 싱글톤 !
 	

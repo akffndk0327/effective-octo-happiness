@@ -3,11 +3,12 @@ package kr.or.ddit.alba.dao;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
 
 import kr.or.ddit.alba.vo.AlbaVO;
 import kr.or.ddit.alba.vo.Lic_albaVO;
 import kr.or.ddit.alba.vo.PagingInfoVO;
-
+@Repository
 public interface IAlbaDao {
 	
 	public int insertAlba(AlbaVO albaVO, SqlSession sqlSession);
