@@ -14,12 +14,12 @@ import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
 @Service("memberService")
-
 public class MemberServiceImpl implements IMemberService {
 	//다오랑 연ㄹ결
 	//결합력 최상  =>HCLC 지향 -> 1.Factory Object pattern, Stategy pattern(DI) 
 	@Inject
 	public IMemberDAO dao;
+//	자동주입된 프록시가 들어와야함 
 	
 	@Inject
 	private IAuthenticateService service ;

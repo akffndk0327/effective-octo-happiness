@@ -5,8 +5,6 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import kr.or.ddit.member.dao.IMemberDAO;
-import kr.or.ddit.member.dao.MemberDAOImpl_JDBC;
-import kr.or.ddit.member.dao.MemberDaoImpl;
 import kr.or.ddit.member.exception.NotAuthenticatedException;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.vo.MemberVO;

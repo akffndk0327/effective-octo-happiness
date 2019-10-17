@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import kr.or.ddit.wrapper.PartWrapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Attatch2VO implements Serializable {
 	//생성자만들기 
-	public Attatch2VO(PartWrapper partWrapper) {
+	public Attatch2VO(MultipartFile partWrapper) {
 		this.partWrapper = partWrapper; //이걸 이용해서 저장학 ㅣ
-		att_filename = partWrapper.getFileName();
+		att_filename = partWrapper.getOriginalFilename();
 		att_mime = partWrapper.getContentType();
 		att_filesize = partWrapper.getSize();
 		att_fancysize = FileUtils.byteCountToDisplaySize(att_filesize); //바이트로 받아러 팬시사이즈로 돌려줌
@@ -34,14 +34,9 @@ public class Attatch2VO implements Serializable {
 	private String att_fancysize;
 	private Integer att_downcount;
 	
-	private PartWrapper partWrapper;
-	
+	private MultipartFile partWrapper;
 	public void saveFile(File saveFolder) throws IOException {
-		try(
-			InputStream is = partWrapper.getInputStream();
-		){
-			FileUtils.copyInputStreamToFile(is, new File(saveFolder, att_savename));
-		}
+		partWrapper.transferTo(new File(saveFolder, att_savename));
 	}
 	
 	//2진데이터는 없어

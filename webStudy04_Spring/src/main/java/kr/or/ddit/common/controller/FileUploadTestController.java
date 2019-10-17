@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
@@ -20,9 +23,9 @@ import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.wrapper.MultipartRequestWrapper;
 import kr.or.ddit.wrapper.PartWrapper;
 //여기가 서버사이드!!!!!!!! 망한 코드에요...흑흑
-@CommandHandler
+@Controller
 public class FileUploadTestController {
-	@URIMapping(value="/file/upload.do",method=HttpMethod.POST)
+	@RequestMapping(value="/file/upload.do",method=RequestMethod.POST)
 	public String upload(HttpServletRequest req, HttpServletResponse reps) throws IOException, ServletException {		
 		String uploader = req.getParameter("uploader");
 //		Part req.getPart("uploader");

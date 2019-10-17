@@ -1,33 +1,32 @@
 package kr.or.ddit.common.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 
-@CommandHandler
+@Controller
 public class GetUserListController {
-	@URIMapping("/getUserList.do")
-	public String userList(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	@RequestMapping(value="/getUserList.do", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public Set<MemberVO> userList(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		Set<MemberVO> userList = (Set<MemberVO>) req.getServletContext().getAttribute("userList");
-		resp.setContentType("application/json;charset=UTF-8");
+//		resp.setContentType("application/json;charset=UTF-8");
 		//마샬링 타켓은 usrtlist
-		ObjectMapper mapper = new ObjectMapper();
-		try(
-			PrintWriter out = resp.getWriter();	
-			){
-			
-			mapper.writeValue(out, userList);
-		}
-		return null;
+//		ObjectMapper mapper = new ObjectMapper();
+//		try(
+//			PrintWriter out = resp.getWriter();	
+//			){
+//			
+//			mapper.writeValue(out, userList);
+//		}
+		return userList;
 	}
 }

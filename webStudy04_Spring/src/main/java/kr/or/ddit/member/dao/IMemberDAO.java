@@ -4,6 +4,8 @@ package kr.or.ddit.member.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingInfoVO;
 /**
@@ -11,6 +13,7 @@ import kr.or.ddit.vo.PagingInfoVO;
  *CRUD 
  *
  */
+@Repository
 public interface IMemberDAO {
 	/**
 	 * 신규등록

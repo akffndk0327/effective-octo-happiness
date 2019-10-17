@@ -2,29 +2,29 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>Insert title here</title>
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath }/js/generataLprodBuye.js"></script>
+<!-- <!DOCTYPE html> -->
+<!-- <html> -->
+<!-- <head> -->
+<!-- <meta charset="UTF-8" /> -->
+<!-- <title>Insert title here</title> -->
+<!-- <script type="text/javascript" -->
+<!-- 	src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+<!-- <link rel="stylesheet" -->
+<%-- 	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css"> --%>
+<!-- <script type="text/javascript" -->
+<!-- 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+<!-- <script type="text/javascript" -->
+<%-- 	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script> --%>
+<!-- <script type="text/javascript" -->
+<%-- 	src="${pageContext.request.contextPath }/js/generataLprodBuye.js"></script> --%>
 
-<c:if test="${not empty message }">
-	<script type="text/javascript">
- 		alert("${message}");
- 	</script> 
-</c:if>
-</head>
-<body>
+<%-- <c:if test="${not empty message }"> --%>
+<!-- 	<script type="text/javascript"> -->
+<%-- //  		alert("${message}"); --%>
+<!--  	</script>  -->
+<%-- </c:if> --%>
+<!-- </head> -->
+<!-- <body> -->
 	<form:form commandName="prod" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
@@ -186,5 +186,5 @@
 			$(lguOptions).show();
 		})
 	</script>
-</body>
-</html>
+<!-- </body> -->
+<!-- </html> -->

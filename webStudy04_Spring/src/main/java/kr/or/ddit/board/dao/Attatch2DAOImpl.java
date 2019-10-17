@@ -1,15 +1,17 @@
 package kr.or.ddit.board.dao;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
+import javax.inject.Inject;
 
-import kr.or.ddit.db.mybatis.CustomSqlSessionFactoryBuilder;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
 import kr.or.ddit.vo.Attatch2VO;
 import kr.or.ddit.vo.Board2VO;
-
+@Repository
 public class Attatch2DAOImpl implements IAttatch2DAO {
-	SqlSessionFactory sqlSessionFactory =
-			CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
+	@Inject
+	SqlSessionTemplate sqlSession;
 	
 	@Override
 	public int insertAttatches(Board2VO board) {
@@ -25,12 +27,12 @@ public class Attatch2DAOImpl implements IAttatch2DAO {
 
 	@Override
 	public Attatch2VO selectAttatch(int att_no) {
-		try(
-			SqlSession sqlSession = sqlSessionFactory.openSession();	
-		){
+//		try(
+//			SqlSession sqlSession = sqlSessionFactory.openSession();	
+//		){
 			IAttatch2DAO mapper = sqlSession.getMapper(IAttatch2DAO.class);
 			return mapper.selectAttatch(att_no);
-		}
+//		}
 	}
 
 	@Override
@@ -47,13 +49,13 @@ public class Attatch2DAOImpl implements IAttatch2DAO {
 
 	@Override
 	public int updateDowncount(int att_no) {
-		try(
-			SqlSession sqlSession = sqlSessionFactory.openSession();	
-		){
+//		try(
+//			SqlSession sqlSession = sqlSessionFactory.openSession();	
+//		){
 			IAttatch2DAO mapper = sqlSession.getMapper(IAttatch2DAO.class);
 			int cnt = mapper.updateDowncount(att_no);
-			sqlSession.commit();
+//			sqlSession.commit();
 			return cnt;
-		}
+//		}
 	}
 }

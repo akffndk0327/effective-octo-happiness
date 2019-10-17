@@ -76,7 +76,8 @@ public class MemberRetriveController { // 0924 서블릿 삭제, alt, shift r
 	      MemberVO saved = service.retrieveMember(new MemberVO(who,null)); //데이터 조회
 //	      req.setAttribute("member", saved);
 	      model.addAttribute("member", saved);
-         String viewName = "member/memberView"; //서버사이드 경로 ! -> 디스패치장식 7. 
+//         String viewName = "member/memberView"; //서버사이드 경로 ! -> 디스패치장식 7. 
+         String viewName = "/member/memberView"; //tiles 속이기 위해 /member로  IRVR로 넘어감 
          return viewName; //6.
 	      }
 	

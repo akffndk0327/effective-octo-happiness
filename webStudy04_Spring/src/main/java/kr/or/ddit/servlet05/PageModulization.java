@@ -21,7 +21,8 @@ public class PageModulization extends HttpServlet{
    public void init(ServletConfig config) throws ServletException {
       super.init(config);
       //"service" : web.xml에 초기 설정
-      String serviceFile = getServletContext().getInitParameter("service");
+//      String serviceFile = getServletContext().getInitParameter("service");
+      String serviceFile= "kr/or/ddit/servlet05/service.xml";
       service = new Properties();
       InputStream in = getClass().getResourceAsStream(serviceFile); 
       try {
@@ -31,6 +32,7 @@ public class PageModulization extends HttpServlet{
       }
    }
    
+   //1017 tiles 프레임웍-View Layer
    @Override
    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //      1. command 파라미터

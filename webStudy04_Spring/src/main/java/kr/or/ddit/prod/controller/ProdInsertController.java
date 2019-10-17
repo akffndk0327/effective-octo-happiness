@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kr.or.ddit.board.controller.ReplyController.InsertHint;
+import kr.or.ddit.common.hints.InsertHint;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.prod.service.IProdService;
 import kr.or.ddit.vo.ProdVO;

@@ -18,6 +18,13 @@
 		p:prefix="/WEB-INF/views/"
 		p:suffix=".jsp"
 	/>
+	<beans:bean id="TVR" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"
+		p:order="1"	
+	/> 
+	<beans:bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer"
+		p:definitions="classpath:/kr/or/ddit/tiles/sample-definitions.xml"
+		p:preparerFactoryClass="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"
+	/>
 	<!-- 일괄관리 어려울때 default로 사용  -->
 	<default-servlet-handler/>
 	
@@ -30,6 +37,8 @@
 			expression="org.springframework.stereotype.Controller"/>
 		<context:include-filter type="annotation" 
 			expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+		<context:include-filter type="annotation" 
+			expression="kr.or.ddit.common.annotations.Preparer"/>
 	</context:component-scan>
 	
 	<beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" 

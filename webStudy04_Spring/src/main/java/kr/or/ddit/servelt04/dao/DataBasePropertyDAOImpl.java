@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import kr.or.ddit.db.ConnectionFactory;
+import org.apache.commons.dbcp2.ConnectionFactory;
+
 import kr.or.ddit.vo.DataBasePropertyVO;
 
 public class DataBasePropertyDAOImpl implements IDatabasePropertyDAO {

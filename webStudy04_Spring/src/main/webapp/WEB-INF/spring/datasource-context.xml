@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd">
+<!-- 마이바티스 커넥션생성 기능 뺏어야해 -->
+<!-- 그래야 여기서 뭘 할수있음  configuration 가기 -->
+<context:property-placeholder 
+	location="classpath:kr/or/ddit/db/dbInfo.properties"/>
+<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" 
+	p:driverClassName="${main.driverClassName}"
+	p:url="${main.url}"
+	p:username="${main.user}"
+	p:password="${main.password}"
+	p:initialSize="${main.initialSize}"
+	p:maxWaitMillis="${main.maxWait}"
+	p:maxTotal="${main.maxTotal}"
+/>
+<!-- 		p:configLocation="classpath:kr/or/ddit/db/mybatis/Configuration.xml" -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:mapperLocations="classpath:kr/or/ddit/db/mybatis/mappers/*.xml"
+		p:typeAliasesPackage="kr.or.ddit.vo"
+		p:dataSource-ref="dataSource"
+	>
+		<property name="configuration">
+			<bean class="org.apache.ibatis.session.Configuration"
+				p:lazyLoadingEnabled="true" 
+			/>
+		</property>
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" 
+		c:sqlSessionFactory-ref="sqlSessionFactory"
+	/>
+	<mybatis-spring:scan base-package="kr.or.ddit.*.dao" 
+		annotation="org.springframework.stereotype.Repository"/>
+</beans>
+<!-- annotation="" :  모든게 아닌 특정 어노테이션 갖고있는 dao로만 한정 & repository ㅈ ㅜ소가져오고 프록시매퍼까지 자동생성 
+ 서비스에 dao 지우기 우ㅠㅣ해 인터페이스 기반이 필요함
+	-->

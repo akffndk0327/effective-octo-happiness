@@ -26,7 +26,7 @@ public class ProdListController {
 	@Inject
 	IProdService service;
 
-	@RequestMapping("prodList.do")
+	@RequestMapping
 	public String prodList(
 				@RequestParam(required=false)String pageParam,
 				@ModelAttribute("searchVO")ProdVO searchVO,

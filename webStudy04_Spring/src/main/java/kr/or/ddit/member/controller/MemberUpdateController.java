@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
@@ -21,8 +22,7 @@ public class MemberUpdateController {
 
 	@RequestMapping(value = "/member/memberUpdate.do", method = RequestMethod.POST)
 	public String doPost(@Valid MemberVO member,
-						Errors errors,
-						HttpSession session) {
+						Errors errors, RedirectAttributes redirectAttributes) {
 
 		boolean valid = !errors.hasErrors();
 		String viewName = "redirect:/mypage";
@@ -55,8 +55,8 @@ public class MemberUpdateController {
 
 		}
 //		req.getSession().setAtt~
-		session.setAttribute("message", message);
-		session.setAttribute("errors", errors);
+		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("errors", errors);
 		// resp.sendRedirect(req.getContextPath() + "/mypage");
 		return viewName;
 

@@ -9,6 +9,61 @@
 
 </head>
 <body>
+<%
+	Calendar cal = getInstance();
+	int month = cal.get(Calendar.MONTH);
+	Locale currentLocale = request.getLocale();
+	DateFormatSymbols dfs = new DateFormatSymbols(currentLocale);
+	String[] months = dfs.getMonths();
+%>
+</head>
+<body>
+<table class="table">
+	<form id="searchForm">
+	<thead>
+		<tr>
+			<th>
+				<span>법정코드 검색(주소입력)</span>
+				<input type="hidden" name="page"/>
+				<input type="hidden" name="searchType" value="name" />
+				<input type="text" name="searchWord"/>
+				<button type="submit" id="btnSearch">검색</button>
+			</th>
+		</tr>
+	</thead>
+	</form>
+	<tbody id="resultBody">
+	</tbody>
+	<table>
+		<div id="pagingArea"></div>
+	<table>
+</table>
+<table>
+	<tr>
+		<td>
+			<select id="year">
+				<option selected value="2019">2019년</option>
+				<option value="2018">2018년</option>
+				<option value="2017">2017년</option>
+			</select>
+		
+		</td>
+		<td>
+			<select id="month">
+				<%
+					for(int idx=0; idx<months.length-1; idx++){
+				%>
+					<option <%=idx==month?"selected":"" %> value="<%=idx<10?"0"+idx:idx%>"><%=months[idx] %></option>
+				<%
+					}
+				%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3"><button id="btn">Data 가져오기</button></td>
+	</tr>
+</table>
 <!-- 서울지역의 2019년9월의 아파트 거래가 정보 출력  -->
 <button id="btn">갸져오기</button>
 <div id="resultArea">

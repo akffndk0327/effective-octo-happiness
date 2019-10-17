@@ -2,36 +2,41 @@ package kr.or.ddit.board.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.board.service.IReplyService;
-import kr.or.ddit.board.service.ReplyServiceImpl;
+import kr.or.ddit.common.hints.InsertHint;
 import kr.or.ddit.enums.ServiceResult;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.HttpMethod;
-import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.Reply2VO;
 
-@CommandHandler
+@Controller
+@RequestMapping(value = "/board")
 public class ReplyController {
-IReplyService service = new ReplyServiceImpl();
+	@Inject
+IReplyService service ;
 	
-	@URIMapping("/board/replyList.do")
-	public String list(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		String pageParam = req.getParameter("page");
+	@RequestMapping(value="replyList.do",produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public PagingInfoVO<Reply2VO> list(
+			@RequestParam(name="page", required=false, defaultValue="1") int currentPage
+			, @RequestParam(required=true) int bo_no						
+			) {
+		/*String pageParam = req.getParameter("page");
 		String bo_noParam = req.getParameter("bo_no");
 		if(StringUtils.isBlank(bo_noParam)) {
 			resp.sendError(400);
@@ -41,28 +46,29 @@ IReplyService service = new ReplyServiceImpl();
 		if(StringUtils.isNumeric(pageParam)) {
 			currentPage = Integer.parseInt(pageParam);
 		}
+		*/
 		PagingInfoVO<Reply2VO> pagingVO = 
 					new PagingInfoVO<Reply2VO>(4, 5);
-		pagingVO.setSearchVO(new Reply2VO(Integer.parseInt(bo_noParam)));
+		pagingVO.setSearchVO(new Reply2VO((bo_no)));
 		int totalRecord = service.retriveReplyCount(pagingVO);
 		pagingVO.setTotalRecord(totalRecord);
 		pagingVO.setCurrentPage(currentPage);
 		List<Reply2VO> list = service.retriveReplyList(pagingVO);
 		pagingVO.setDataList(list);
-		
+		/*
 		resp.setContentType("application/json;charset=UTF-8");
 		ObjectMapper mapper = new ObjectMapper();
 		try(
 			PrintWriter out = resp.getWriter();	
 		){
 			mapper.writeValue(out, pagingVO);
-		}
-		return null;
+		}*/
+		return pagingVO;
 	}
 	
 	//domain layer에 검증 코드 만듬.
 //	아래 힌트 파라미터에서 넘어온게 알맞는거에 적요오딤 
-	public static interface DefaultHint{}
+	/*public static interface DefaultHint{}
 	public static interface InsertHint extends DefaultHint{}
 	public static interface UpdateHint extends DefaultHint{}
 	public static interface DeleteHint extends DefaultHint{}
@@ -115,26 +121,32 @@ IReplyService service = new ReplyServiceImpl();
 		}
 		return valid;
 	}
-	
+	*/
 	private String redirectPtrn = "redirect:/board/replyList.do?bo_no=%s&page=%s";	
 	
-	@URIMapping(value = "/board/replyInsert.do", method = HttpMethod.POST)
-	public String insert(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String pageParam = req.getParameter("page");
-		Reply2VO reply = new Reply2VO();
-		try {
-			BeanUtils.populate(reply, req.getParameterMap());
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new ServletException(e);
-		}
+	@RequestMapping(value = "replyInsert.do", method = RequestMethod.POST)
+	public String insert(
+			@RequestParam(required=false, defaultValue="1") int page
+			, @Validated(InsertHint.class) Reply2VO reply
+			, Errors errors, HttpServletResponse resp
+			) throws IOException{
+//		String pageParam = req.getParameter("page");
+//		Reply2VO reply = new Reply2VO();
+//		try {
+//			BeanUtils.populate(reply, req.getParameterMap());
+//		} catch (IllegalAccessException | InvocationTargetException e) {
+//			throw new ServletException(e);
+//		}
+		
 		Map<String, Object> messageMap = new HashMap<>();
 		messageMap.put("reply", reply);
-		boolean valid = validate(reply, messageMap, InsertHint.class);
+//		boolean valid = validate(reply, messageMap, InsertHint.class);
+		boolean valid = !errors.hasErrors();
 		String viewName = null;
 		if(valid) {
 			ServiceResult result = service.createReply(reply);
 			if(ServiceResult.OK.equals(result)) {
-				viewName = String.format(redirectPtrn, reply.getBo_no(), pageParam);
+				viewName = String.format(redirectPtrn, reply.getBo_no(), page);
 			}else {
 				messageMap.put("failed", true);
 				messageMap.put("message", "저장 실패");
@@ -156,23 +168,29 @@ IReplyService service = new ReplyServiceImpl();
 		return viewName;
 	}
 	
-	@URIMapping(value="/board/replyUpdate.do", method = HttpMethod.POST)
-	public String update(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String pageParam = req.getParameter("page");
+	@RequestMapping(value="replyUpdate.do", method = RequestMethod.POST)
+	public String update(
+			@RequestParam(required=false, defaultValue="1") int page
+			, @Validated(InsertHint.class) Reply2VO reply
+			, Errors errors, HttpServletResponse resp
+			) throws IOException{
+		/*String pageParam = req.getParameter("page");
 		Reply2VO reply = new Reply2VO();
 		try {
 			BeanUtils.populate(reply, req.getParameterMap());
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ServletException(e);
 		}
+		*/
 		Map<String, Object> messageMap = new HashMap<>();
 		messageMap.put("reply", reply);
-		boolean valid = validate(reply, messageMap, UpdateHint.class);
+//		boolean valid = validate(reply, messageMap, UpdateHint.class);
+		boolean valid = !errors.hasErrors();
 		String viewName = null;
 		if(valid) {
 			ServiceResult result = service.modifyReply(reply);
 			if(ServiceResult.OK.equals(result)) {
-				viewName = String.format(redirectPtrn, reply.getBo_no(), pageParam);
+				viewName = String.format(redirectPtrn, reply.getBo_no(), page);
 			}else {
 				messageMap.put("failed", true);
 				messageMap.put("message", "비번 오류");
@@ -194,23 +212,28 @@ IReplyService service = new ReplyServiceImpl();
 		return viewName;
 	}
 	
-	@URIMapping(value="/board/replyDelete.do", method = HttpMethod.POST)
-	public String delete(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String pageParam = req.getParameter("page");
+	@RequestMapping(value="replyDelete.do", method = RequestMethod.POST)
+	public String delete(
+			@RequestParam(required=false, defaultValue="1") int page
+			, @Validated(InsertHint.class) Reply2VO reply
+			, Errors errors, HttpServletResponse resp
+			) throws IOException{
+		/*String pageParam = req.getParameter("page");
 		Reply2VO reply = new Reply2VO();
 		try {
 			BeanUtils.populate(reply, req.getParameterMap());
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new ServletException(e);
-		}
+		}*/
 		Map<String, Object> messageMap = new HashMap<>();
 		messageMap.put("reply", reply);
-		boolean valid = validate(reply, messageMap, DeleteHint.class);
+//		boolean valid = validate(reply, messageMap, DeleteHint.class);
+		boolean valid = !errors.hasErrors();
 		String viewName = null;
 		if(valid) {
 			ServiceResult result = service.removeReply(reply);
 			if(ServiceResult.OK.equals(result)) {
-				viewName = String.format(redirectPtrn, reply.getBo_no(), pageParam);
+				viewName = String.format(redirectPtrn, reply.getBo_no(), page);
 			}else {
 				messageMap.put("failed", true);
 				messageMap.put("message", "비번 오류");

@@ -21,6 +21,7 @@ import kr.or.ddit.vo.ProdVO;
 public class ProdServiceImpl implements IProdService {
 	@Inject
 	IProdDAO dao;
+	
 	@Inject //자기꺼 주이 ㅂ가능함
 	WebApplicationContext container;
 	ServletContext application;

@@ -3,13 +3,14 @@
   <display-name>webStudy04_Spring</display-name>
   
   
-  <!-- needed for ContextLoaderListener -->
+  <!--  상위 needed for ContextLoaderListener 
+  			1017여기에 다오 넣기  -->
    <context-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>/WEB-INF/spring/*-context.xml</param-value>
    </context-param>
 
-   <!-- Bootstraps the root web application context before servlet initialization -->
+   <!-- 하위 Bootstraps the root web application context before servlet initialization -->
    <listener>
       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
    </listener>

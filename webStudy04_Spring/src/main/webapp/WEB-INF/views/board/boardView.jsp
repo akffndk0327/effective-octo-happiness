@@ -1,28 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>	
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>Insert title here</title>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-<style type="text/css">
-	a{
-		cursor: pointer;
-	}
-</style>	
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="${cPath }/toastmessage/css/jquery.toastmessage.css" />	
-<script type="text/javascript" src="${cPath }/toastmessage/jquery.toastmessage.js"></script>	
-</head>
-<body>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>	
+<!-- <!DOCTYPE html> -->
+<!-- <html> -->
+<!-- <head> -->
+<!-- <meta charset="UTF-8" /> -->
+<!-- <title>Insert title here</title> -->
+<!-- <link rel="stylesheet" -->
+<%-- 	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css"> --%>
+<!-- <style type="text/css"> -->
+<!--  	a{  -->
+<!-- 		cursor: pointer;  -->
+<!--	}  -->
+<!-- </style>	 -->
+<!-- <script type="text/javascript" -->
+<!-- 	src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+<!-- <script type="text/javascript" -->
+<!-- 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+<!-- <script type="text/javascript" -->
+<%-- 	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script> --%>
+<%-- <link rel="stylesheet" href="${cPath }/toastmessage/css/jquery.toastmessage.css" />	 --%>
+<%-- <script type="text/javascript" src="${cPath }/toastmessage/jquery.toastmessage.js"></script>	 --%>
+<!-- </head> -->
+<!-- <body> -->
 	<h4>${board.board_name }</h4>
 	<table class="table table-bordered">
 		<tr>
@@ -215,10 +216,7 @@
 		$(this).find("#bo_pass").focus();
 	});
 	
-	<c:if test="${not empty message }">
-		$(document).toastmessage('showWarningToast', '${message }');
-		<c:remove var="message" scope="session"/>
-	</c:if>	
+
 	
 	like.on('click',function(){
 		$.ajax({
@@ -226,7 +224,7 @@
 			data : {
 				"what" : ${board.bo_no}
 			},
-// 			dataType : "json", //돌아오는 결과값 
+ 			dataType : "json", //돌아오는 결과값 
 			dataType : "text",  
 			success : function(resp) { //resp: 언마샬링된 값.
 // 				let tag = $("<p>").text(resp.bo_like);
@@ -245,7 +243,11 @@
 	
 	})
 </script>
-</body>
-</html>
+	<c:if test="${not empty message }">
+		$(document).toastmessage('showWarningToast', '${message }');
+		<c:remove var="message" scope="session"/>
+	</c:if>	
+<!-- </body> -->
+<!-- </html> -->
 
 

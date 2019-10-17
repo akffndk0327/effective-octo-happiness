@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.bupjungdong.dao.IBupjungdongDAO">
+	<sql id="searchFrag">
+		<where>
+			<if test="searchMap!=null">
+				<if	test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+					<choose>
+						<when test="'name'.equals(searchMap.searchType)">
+							NAME Like '%'|| #{searchMap.searchWord} ||'%'
+						</when>
+					</choose>
+				</if>
+			</if>
+		</where>
+	</sql>
+	<select id="selectBjdCount"  parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*)
+		FROM BUPJUNGDONG
+	</select>
+	
+	<select id="selectBjd" resultType="BupjungdongVO">
+		SELECT A.*
+		FROM(
+			SELECT
+				ROWNUM RNUM,
+				CODE,NAME,FLAG
+			FROM BUPJUNGDONG
+			<include refid="searchFrag" />
+		) A
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+</mapper>
+
+
+

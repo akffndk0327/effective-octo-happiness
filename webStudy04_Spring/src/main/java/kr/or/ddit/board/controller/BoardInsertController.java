@@ -1,64 +1,66 @@
 package kr.or.ddit.board.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import javax.inject.Inject;
+import javax.validation.Valid;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.enums.ServiceResult;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.HttpMethod;
-import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.Board2VO;
-import kr.or.ddit.wrapper.MultipartRequestWrapper;
-import kr.or.ddit.wrapper.PartWrapper;
 
-@CommandHandler
+@Controller
+@RequestMapping("/board")
 public class BoardInsertController {
-	IBoardService service = new BoardServiceImpl();
+	@Inject
+	IBoardService service ;
 	
-	@URIMapping("/board/boardInsert.do")
-	public String boardForm(HttpServletRequest req, HttpServletResponse resp) {
+	@RequestMapping("boardInsert.do")
+	public String boardForm() {
 		return "board/boardForm";
 	}
-	 @URIMapping(value="/board/boardInsert.do", method=HttpMethod.POST)
-	public String insert(HttpServletRequest req, HttpServletResponse resp) {
-		Board2VO board = new Board2VO();
-		req.setAttribute("board", board);
+	 @RequestMapping(value="boardInsert.do", method=RequestMethod.POST)
+	public String insert(
+			@ModelAttribute("board")Board2VO board,
+			Errors errors,
+			Model model	) {
+		/*Board2VO board = new Board2VO();
+		model.addAttribute("board", board);
 		try {
 			BeanUtils.populate(board, req.getParameterMap());
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
-		}
+		}*/
 		
 		
-		Map<String, String> errors = new HashMap<String, String>();
-//		Map<String, Object> errors2 = new HashMap<String, String>();
-//		errors.put("reply",reply);
-		req.setAttribute("errors", errors);
+/*		Map<String, String> errors = new HashMap<String, String>();
+		Map<String, Object> errors2 = new HashMap<String, String>();
+		errors.put("reply",reply);
+		model.addAttribute("errors", errors);*/
 		
-		boolean valid = validate(board, errors);
+//		boolean valid = validate(board, errors);
+		boolean valid = !errors.hasErrors();
 		
-		//이미지
+/*		이미지
 		if(req instanceof MultipartRequestWrapper) {
 			PartWrapper[] bo_files = ((MultipartRequestWrapper) req).getPartWrappers("bo_file");
 			//attachVO 만들기?
 			board.setBo_file(bo_files);
 		}
-		//미들티어에 넣어 
+		미들티어에 넣어
+		*/ 
 		
 		
 		String viewName = null;
 		String message = null;
 		 if (valid) {
 	         ServiceResult result = service.createBoard(board);
+	         System.out.println(result);
 	         switch (result) {
 	         case OK:
 //	            - OK   : redirect 
@@ -71,39 +73,15 @@ public class BoardInsertController {
 	         }
 
 	      } else {
+	    	  System.out.println("hi!");
 	         viewName = "board/boardForm";
 	      }
 	      
-	      req.setAttribute("message", message);
+	      model.addAttribute("message", message);
 	      
 	      return viewName;
 	   }
 
-	   private boolean validate(Board2VO board, Map<String, String> errors) {
-	      boolean valid = true;
-	      
-	      if (StringUtils.isBlank(board.getBoard_type())) {
-	         valid = false;
-	         errors.put("board_type", "게시판종류 누락");
-	      }
-	      if (StringUtils.isBlank(board.getBo_title())) {
-	         valid = false;
-	         errors.put("bo_title", "글제목 누락");
-	      }
-	      if (StringUtils.isBlank(board.getBo_writer())) {
-	         valid = false;
-	         errors.put("bo_writer", "작성자 누락");
-	      }
-	      if (StringUtils.isBlank(board.getBo_pass())) {
-	         valid = false;
-	         errors.put("bo_pass", "비밀번호 누락");
-	      }
-	      if (StringUtils.isBlank(board.getBo_ip())) {
-	         valid = false;
-	         errors.put("bo_ip", "아이피 누락");
-	      }
-	      return valid;
-	   }
 	}
 
 

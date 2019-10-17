@@ -13,8 +13,8 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.or.ddit.board.controller.ReplyController.InsertHint;
-import kr.or.ddit.board.controller.ReplyController.UpdateHint;
+import kr.or.ddit.common.hints.InsertHint;
+import kr.or.ddit.common.hints.UpdateHint;
 import lombok.Data;
 /**
  * 10.01

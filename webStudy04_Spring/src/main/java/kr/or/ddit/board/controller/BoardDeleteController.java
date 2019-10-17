@@ -1,35 +1,33 @@
 package kr.or.ddit.board.controller;
 
-import java.io.IOException;
+import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import org.apache.commons.lang3.StringUtils;
-
-import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.enums.ServiceResult;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.HttpMethod;
-import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.Board2VO;
 
-
-
-@CommandHandler
+@Controller
 public class BoardDeleteController {
-	IBoardService service = new BoardServiceImpl();
+	@Inject
+	IBoardService service ;
 	
-	@URIMapping(value="/board/boardDelete.do", method=HttpMethod.POST)
-	public String boardView(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String bo_noParam = req.getParameter("bo_no");
-		String bo_pass = req.getParameter("bo_pass");
-		if(!StringUtils.isNumeric(bo_noParam) || StringUtils.isBlank(bo_pass)) {
-			resp.sendError(400);
-			return null;
-		}
+	@RequestMapping(value="/board/boardDelete.do", method=RequestMethod.POST)
+	public String boardView(HttpSession session, 
+			@RequestParam(name="bo_no", required=true)String bo_noParam,
+			@RequestParam(name="bo_pass",required=true)String bo_pass
+			)  {
+//		String bo_noParam = req.getParameter("bo_no");
+//		String bo_pass = req.getParameter("bo_pass");
+//		if(!StringUtils.isNumeric(bo_noParam) || StringUtils.isBlank(bo_pass)) {
+//			resp.sendError(400);
+//			return null;
+//		}
 		ServiceResult result = service.removeBoard(new Board2VO(Integer.parseInt(bo_noParam), bo_pass));
 		String viewName = "redirect:/board/boardView.do?what="+bo_noParam;
 		String message = null;
@@ -45,7 +43,7 @@ public class BoardDeleteController {
 				viewName = "redirect:/board/boardList.do";
 				break;
 		}
-		req.getSession().setAttribute("message", message);
+		session.setAttribute("message", message);
 		return viewName;
 	}
 }

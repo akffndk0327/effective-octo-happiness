@@ -1,71 +1,65 @@
 package kr.or.ddit.board.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import javax.inject.Inject;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
+import kr.or.ddit.common.hints.UpdateHint;
 import kr.or.ddit.enums.ServiceResult;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.HttpMethod;
-import kr.or.ddit.mvc.annotation.URIMapping;
-import kr.or.ddit.utils.CookieUtil;
-import kr.or.ddit.utils.CookieUtil.TextType;
 import kr.or.ddit.vo.Board2VO;
-import kr.or.ddit.wrapper.MultipartRequestWrapper;
-import kr.or.ddit.wrapper.PartWrapper;
 
-@CommandHandler
+@Controller
+@RequestMapping(value="boardUpdate.do")
 public class BoardUpdateController {
-	IBoardService service = new BoardServiceImpl();
+	@Inject
+	IBoardService service;
 	
-	@URIMapping("/board/boardUpdate.do") //기존 게시글 정보갖고있는 form 뜨우기 
-	public String boardForm(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		String what = req.getParameter("what");
-		if(StringUtils.isBlank(what)) {
-			resp.sendError(400);
-			return null;
-		}
+	@RequestMapping(method=RequestMethod.GET) //기존 게시글 정보갖고있는 form 뜨우기 
+	public String boardForm(@RequestParam(required=true)int what,Model model) {
+//		String what = req.getParameter("what");
+//		if(StringUtils.isBlank(what)) {
+//			resp.sendError(400);
+//			return null;
+//		}
 		Board2VO board = 
-				service.retrieveBoard(new Board2VO(Integer.parseInt(what)));
-		req.setAttribute("board", board);
+				service.retrieveBoard(new Board2VO((what)));
+		model.addAttribute("board", board);
 		return "board/boardForm" ;
 	}
 	
-	@URIMapping(value="/board/boardUpdate.do", method=HttpMethod.POST)
-	public String insert(HttpServletRequest req, HttpServletResponse resp) {
-		Board2VO board = new Board2VO();
-		req.setAttribute("board", board);
-		try {
-			BeanUtils.populate(board, req.getParameterMap());
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
+	@RequestMapping(method=RequestMethod.POST)
+	public String insert(@Validated(UpdateHint.class)@ModelAttribute("board")Board2VO board,
+			Errors errors,
+			Model model) {
+//		Board2VO board = new Board2VO();
+//		req.setAttribute("board", board);
+//		try {
+//			BeanUtils.populate(board, req.getParameterMap());
+//		} catch (IllegalAccessException | InvocationTargetException e) {
+//			throw new RuntimeException(e);
+//		}
 		
 		
-		Map<String, String> errors = new HashMap<String, String>();
-		req.setAttribute("errors", errors);
+//		Map<String, String> errors = new HashMap<String, String>();
+//		req.setAttribute("errors", errors);
 		
-		boolean valid = validate(board, errors);
+//		boolean valid = validate(board, errors);
+		boolean valid = !errors.hasErrors();
 		
 		//첨부파일 
-		if(req instanceof MultipartRequestWrapper) {
-			PartWrapper[] bo_file = ((MultipartRequestWrapper) req).getPartWrappers("bo_file");
-			board.setBo_file(bo_file); //domain layer로 코드 보내니까 중복되는거 줄여 
-		}
+//		if(req instanceof MultipartRequestWrapper) {
+//			PartWrapper[] bo_file = ((MultipartRequestWrapper) req).getPartWrappers("bo_file");
+//			board.setBo_file(bo_file); //domain layer로 코드 보내니까 중복되는거 줄여 
+//		}
 		
 		String viewName = null;
 		String message = null;
@@ -90,42 +84,10 @@ public class BoardUpdateController {
 			viewName = "board/boardForm";
 		}
 		
-		req.setAttribute("message", message);
+		model.addAttribute("message", message);
 		
 		return viewName;
 	}
-
-	private boolean validate(Board2VO board, Map<String, String> errors) {
-		boolean valid = true;
-		
-		if (board.getBo_no()==null || board.getBo_no()<=0) {
-			valid = false;
-			errors.put("bo_no", "글번호 누락");
-		}
-		if (StringUtils.isBlank(board.getBoard_type())) {
-			valid = false;
-			errors.put("board_type", "게시판종류 누락");
-		}
-		if (StringUtils.isBlank(board.getBo_title())) {
-			valid = false;
-			errors.put("bo_title", "글제목 누락");
-		}
-		if (StringUtils.isBlank(board.getBo_writer())) {
-			valid = false;
-			errors.put("bo_writer", "작성자 누락");
-		}
-		if (StringUtils.isBlank(board.getBo_pass())) {
-			valid = false;
-			errors.put("bo_pass", "비밀번호 누락");
-		}
-		if (StringUtils.isBlank(board.getBo_ip())) {
-			valid = false;
-			errors.put("bo_ip", "아이피 누락");
-		}
-		return valid;
-	}
-	
-	
 	
 }
 

@@ -2,24 +2,25 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>Insert title here</title>
-<link rel="stylesheet"	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+<!-- <!DOCTYPE html> -->
+<!-- <html> -->
+<!-- <head> -->
+<!-- <meta charset="UTF-8" /> -->
+<!-- <title>Insert title here</title> -->
+<%-- <link rel="stylesheet"	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css"> --%>
 	
-<script type="text/javascript"	src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script type="text/javascript"	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script type="text/javascript"	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src ="${pageContext.request.contextPath }/js/generataLprodBuye.js"></script>
-</head>
-<style type="text/css">
-	.error{
-		color: red;
-	}
-</style>
-<body>
+<!-- <script type="text/javascript"	src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+<!-- <script type="text/javascript"	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+<%-- <script type="text/javascript"	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script> --%>
+<script type="text/javascript" 
+	src ="${pageContext.request.contextPath }/js/generataLprodBuye.js"></script>
+<!-- </head> -->
+<!-- <style type="text/css"> -->
+<!-- /* 	.error{ */ -->
+<!-- /* 		color: red; */ -->
+<!-- /* 	} */ -->
+<!-- </style> -->
+<!-- <body> -->
   <input style="width: 50px; height: 50px" type="image" src="<c:url value="/images/ko.png" />"
          onclick="location.href='?lang=ko';"
    />
@@ -62,11 +63,10 @@
 	<tbody>
 		<c:set var="prodList" value="${pagingVO.dataList }" />
 		<c:forEach var="prod" items="${prodList }">
-			<c:url value="/prod/prodView.do" var="viewURL">
-<%-- 			<c:url value="/prod/${prod.prod_id} }" var="viewURL"> --%>
-				<c:param name="what" value="${prod.prod_id }" />
-			</c:url>
-			<tr>
+<%-- 			<c:url value="/prod/prodView.do" var="viewURL"> --%>
+			<c:url value="/prod/${prod.prod_id}" var="viewURL"/>
+<%-- 				<c:param name="what" value="${prod.prod_id }" /> --%>
+						<tr>
 				<td>${prod.prod_id }</td>
 				<td><a href="${viewURL }">${prod.prod_name }</a></td>
 				<td>${prod.lprod_nm }</td>
@@ -137,7 +137,7 @@
 	})
 	
 </script>
-</body>
-</html>
+<!-- </body> -->
+<!-- </html> -->
 
 

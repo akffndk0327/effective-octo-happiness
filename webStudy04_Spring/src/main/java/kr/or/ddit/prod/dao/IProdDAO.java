@@ -2,6 +2,8 @@ package kr.or.ddit.prod.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ProdVO;
 
@@ -9,6 +11,7 @@ import kr.or.ddit.vo.ProdVO;
  * 상품관리 Persistence Layer (alt shift j)
  *
  */
+@Repository
 public interface IProdDAO {
 	//아이바티스
 	//마이바티스....?

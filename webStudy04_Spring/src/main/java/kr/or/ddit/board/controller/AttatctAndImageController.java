@@ -4,40 +4,50 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.ServletException;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
-import kr.or.ddit.mvc.annotation.CommandHandler;
-import kr.or.ddit.mvc.annotation.HttpMethod;
-import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.Attatch2VO;
-import kr.or.ddit.wrapper.MultipartRequestWrapper;
-import kr.or.ddit.wrapper.PartWrapper;
 
-@CommandHandler
+@Controller
 public class AttatctAndImageController {
-	IBoardService service = new BoardServiceImpl();
+	@Inject
+	IBoardService service ;
 	
-	File saveFolder = new File("d:/saveFiles");
+	@Inject
+	WebApplicationContext container;
+	ServletContext application;
+	
+	File saveFolder;
+	@PostConstruct
+	public void init() {
+		application = container.getServletContext();
+		saveFolder = new File("d:/saveFiles");
+	}
+	
 	//파일 다운 받기 
-	@URIMapping("/board/download.do")
-	public String download(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	@RequestMapping(value="/board/download.do")
+	public String download(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		//메타데이터 save 파일 , 미들티어의 진자 파일
-		//응답 스트링 
+//		응답 스트링 
 		String what = req.getParameter("what"); // int 
 		if(StringUtils.isBlank(what)) {
 			resp.sendError(400);
@@ -63,20 +73,24 @@ public class AttatctAndImageController {
 		return null;
 	}
 	
-	@URIMapping(value="/board/imageUpload.do", method=HttpMethod.POST)
-	public String upload(HttpServletRequest req,HttpServletResponse resp) throws IOException {
+	@RequestMapping(value="/board/imageUpload.do", method=RequestMethod.POST,
+			produces=MediaType.APPLICATION_JSON_UTF8_VALUE
+			)
+	public Map<String, Object> upload(@RequestParam(name="upload",required=true)MultipartFile uploadFile) throws IOException {
 		//업로드되고 잇는 파일데이터 잡기 
 		//Wrapper형태로 전달하기
-		if(req instanceof MultipartRequestWrapper) {
-			PartWrapper uploadFile = ((MultipartRequestWrapper) req).getPartWrappper("upload");
+//		Map<String, Object> messageMap = new HashMap<>();
+//		if(req instanceof MultipartRequestWrapper) {
+//			PartWrapper uploadFile = ((MultipartRequestWrapper) req).getPartWrappper("upload");
+		Map<String, Object> messageMap = new HashMap<String, Object>();
 			if(uploadFile!=null) {
 				//업로드 하려면 저장해야하닌까 위치 지정해야지
 				//위치잡고 
 				String saveFolderURL="/boardImages";
-				String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL); // 서블릿컨텍스트 작븡ㅁ
+//				String saveFolderPath = req.getServletContext().getRealPath(saveFolderURL); // 서블릿컨텍스트 작븡ㅁ
+				String saveFolderPath = application.getRealPath(saveFolderURL); // 서블릿컨텍스트 작븡ㅁ
 				File saveFolder = new File(saveFolderPath);
 				if(!saveFolder.exists()) saveFolder.mkdirs();					
-				
 				//2. 저장하기
 				//저장명 
 				String savename = UUID.randomUUID().toString();
@@ -85,25 +99,25 @@ public class AttatctAndImageController {
 				){
 					FileUtils.copyInputStreamToFile(is, new File(saveFolder,savename)); //예외는 던지기 
 				}//
-				String saveURL = req.getContextPath()+saveFolderURL+"/"+savename;//서브사이트 절대경로생김 ->front img에서 써야함 
+				String saveURL = application.getContextPath()+saveFolderURL+"/"+savename;//서브사이트 절대경로생김 ->front img에서 써야함 
 				//Map사용하기
-				Map<String, Object> messageMap = new HashMap<String, Object>();
-				messageMap.put("fileName",uploadFile.getFileName()); //원본파일명 뽑기
+				messageMap.put("fileName",uploadFile.getOriginalFilename()); //원본파일명 뽑기
 				messageMap.put("uploaded","1");
 				messageMap.put("url",saveURL);
-				resp.setContentType("application/json;charset=UTF-8");
+//				resp.setContentType("application/json;charset=UTF-8");
+				
 				//마샬링하고 직렬화해서 내보ㄱ내기 
-				ObjectMapper mapper = new ObjectMapper(); 
-				try(
-					PrintWriter out =resp.getWriter();
-				){
-					mapper.writeValue(out, messageMap);
-				}
+//				ObjectMapper mapper = new ObjectMapper(); 
+//				try(
+//					PrintWriter out =resp.getWriter();
+//				){
+//					mapper.writeValue(out, messageMap);
+//				}
 				
 			}
-		}
 		
-		return null;
+		
+		return messageMap;
 		
 	}
 	

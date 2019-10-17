@@ -2,17 +2,17 @@
     pageEncoding="UTF-8"%>
  <%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
  <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet"   href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script type="text/javascript"   src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script type="text/javascript"   src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-</head>
-<body>
+<!-- <!DOCTYPE html> -->
+<!-- <html> -->
+<!-- <head> -->
+<!-- <meta charset="UTF-8"> -->
+<!-- <title>Insert title here</title> -->
+<%-- <link rel="stylesheet"   href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css"> --%>
+<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+<!-- <script type="text/javascript"   src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+<%-- <script type="text/javascript"   src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script> --%>
+<!-- </head> -->
+<!-- <body> -->
 <!-- 행번호, 글번호, 제목, 작성자, 작성일, 조회수, 추천수  -->
 <!-- screensize : 7, blocksize : 5 ok-->
 <!-- 검색조건  전체, 작성자, 제목, 내용 -->
@@ -142,7 +142,6 @@ searchForm.on("submit", function(event){
 		success : function(resp) {
 			window.history.pushState(resp, "boardList", "?"+queryString);
 			makeUI(resp)
-			
 		},
 		error : function(errorResp) {
 			console.log(errorResp.status);
@@ -163,8 +162,8 @@ pagingArea.on("click", "a", function(event){
 // searchForm.submit();
 
 </script>
-</body>
-</html>
+<!-- </body> -->
+<!-- </html> -->
 
 
 
