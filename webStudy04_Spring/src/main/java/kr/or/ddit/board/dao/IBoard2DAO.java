@@ -2,9 +2,11 @@ package kr.or.ddit.board.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import kr.or.ddit.vo.Board2VO;
 import kr.or.ddit.vo.PagingInfoVO;
-
+@Repository
 public interface IBoard2DAO {
 	//crud
 	

@@ -64,6 +64,7 @@ public class Board2VO implements Serializable{
 		//여기 건너뛰면 첨부파일 잇는거 
 		attatchList = new ArrayList<Attatch2VO>();
 		for(MultipartFile tmp:bo_file) { //tmp: 업로드되는 파일들 VO가 만들어져야함.
+			if(tmp.getSize()<=0) continue ;
 			attatchList.add(new Attatch2VO(tmp)); //mapper? wrapper 구조가 됨.
 			
 		}

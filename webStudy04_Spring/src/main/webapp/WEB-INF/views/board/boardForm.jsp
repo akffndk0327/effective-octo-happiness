@@ -8,43 +8,43 @@
 			<th>글번호</th>
 			<td>${board.bo_no } 입력받지 않음.
 			<input type="hidden" name="bo_no" value="${board.bo_no }" />
-			<span class="errors">${errors.bo_no }</span></td>
+			<span class="error">${errors.bo_no }</span></td>
 		</tr>
 		<tr>
 			<th>게시판종류???</th>
 			<td><input type="text" required class="form-control"
 				name="board_type" value="B01" />
-			<span class="errors">${errors.board_type }</span></td>
+			<span class="error">${errors.board_type }</span></td>
 		</tr>
 		<tr>
 			<th>글제목</th>
 			<td><input type="text" required class="form-control"
 				name="bo_title" value="${board.bo_title }" />
-			<span  class="errors">${errors.bo_title }</span></td>
+			<span  class="error">${errors.bo_title }</span></td>
 		</tr>
 		<tr>
 			<th>작성자</th>
 			<td><input type="text" required class="form-control"
 				name="bo_writer" value="${board.bo_writer }" />
-			<span class="errors">${errors.bo_writer }</span></td>
+			<span class="error">${errors.bo_writer }</span></td>
 		</tr>
 		<tr>
 			<th>비밀번호</th>
 			<td><input type="password" required 
 				class="form-control" name="bo_pass" />
-			<span  class="errors">${errors.bo_pass }</span></td>
+			<span  class="error">${errors.bo_pass }</span></td>
 		</tr>
 		<tr>
 			<th>아이피</th>
 			<td><input type="text" required readonly class="form-control"
 				name="bo_ip" value="${pageContext.request.remoteAddr }" />
-			<span class="errors">${errors.bo_ip }</span></td>
+			<span class="error">${errors.bo_ip }</span></td>
 		</tr>
 		<tr>
 			<th>원글번호</th>
 			<td><input type="number" readonly class="form-control" name="bo_parent"
 				value="${param.bo_parent }" />
-			<span class="errors">${errors.bo_parent }</span></td>
+			<span class="error">${errors.bo_parent }</span></td>
 		</tr>
 		<c:if test="${not empty board.attatchList }">
 			<tr>
@@ -74,7 +74,7 @@
 			<th>내용</th>
 			<td>
 			<textarea cols="50" rows="5" name="bo_content">${board.bo_content }</textarea>
-			<span class="errors">${errors.bo_content }</span></td>
+			<span class="error">${errors.bo_content }</span></td>
 		</tr>
 		<tr>
 			<td colspan="2">

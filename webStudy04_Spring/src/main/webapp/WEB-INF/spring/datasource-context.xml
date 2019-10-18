@@ -10,6 +10,7 @@
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd">
 <!-- 마이바티스 커넥션생성 기능 뺏어야해 -->
 <!-- 그래야 여기서 뭘 할수있음  configuration 가기 -->
+<!-- 아래는트랜젝션관리소스임 근데 스프링이 관리하는 1017-->
 <context:property-placeholder 
 	location="classpath:kr/or/ddit/db/dbInfo.properties"/>
 <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" 

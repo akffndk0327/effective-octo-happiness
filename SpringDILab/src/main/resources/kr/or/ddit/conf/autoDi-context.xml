@@ -24,11 +24,15 @@
 <!--  	2) Resource : injection 기준을 명시적으로 설정 가능. 생성자 주입 불 가 -->
 <!--  	3) Inject(JSF-330) pom.xml에 jar 파일 추가하면  @service, @repository 사용할수 있어   -->
 <!-- 	4) @Value = slEL을 사용하기 위한 어노테이션  -->
+
 <!-- use-default-filters="false" 로 해놓고 내가 원하는 거 만 필터 설정 -->
-	<context:component-scan base-package="kr.or.ddit.idol" use-default-filters="false">
+
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
 <!-- 	로딩할거. 이 어노테이션에 잇는거 컨트롤러까지 다 가져옴   -->
 		<context:include-filter type="annotation" 
 			expression="org.springframework.stereotype.Component"/>
+		<context:include-filter type="annotation" 
+			expression="org.aspectj.lang.annotation.Aspect"/>
 <!-- 	제외할거 이 컨트롤러만 뺀다.  -->
 		<context:exclude-filter type="annotation" 
 			expression="org.springframework.stereotype.Controller"/>

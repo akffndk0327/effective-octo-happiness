@@ -28,6 +28,14 @@
 			<artifactId>spring-context</artifactId>
 			<version>4.3.25.RELEASE</version>
 		</dependency>
+<!-- 	AOP	1018 -->
+		<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -62,6 +70,9 @@
 			<artifactId>log4jdbc-remix</artifactId>
 			<version>0.2.7</version>
 		</dependency>
+
+
+
 	</dependencies>
 </project>
 

@@ -122,7 +122,7 @@ public class FileManagerServlet extends HttpServlet {
 		URL current = folder.toURL(); // 왜 씀?
 		if (!root.equals(current)) {
 			File parent = folder.getParentFile(); // 상위파일
-			result.add(new FileWrapper(parent, application, true));
+			result.add(new FileWrapper(parent, application, true)); //상위폴더있으며 ㄴ보여주고 없으면 안보여준다
 		}
 
 		for (File file : files) {

@@ -1,29 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>	
-<!-- <!DOCTYPE html> -->
-<!-- <html> -->
-<!-- <head> -->
-<!-- <meta charset="UTF-8" /> -->
-<!-- <title>Insert title here</title> -->
-<!-- <link rel="stylesheet" -->
-<%-- 	href="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/css/bootstrap.min.css"> --%>
-<!-- <style type="text/css"> -->
-<!--  	a{  -->
-<!-- 		cursor: pointer;  -->
-<!--	}  -->
-<!-- </style>	 -->
-<!-- <script type="text/javascript" -->
-<!-- 	src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
-<!-- <script type="text/javascript" -->
-<!-- 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
-<!-- <script type="text/javascript" -->
-<%-- 	src="${pageContext.request.contextPath }/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script> --%>
-<%-- <link rel="stylesheet" href="${cPath }/toastmessage/css/jquery.toastmessage.css" />	 --%>
-<%-- <script type="text/javascript" src="${cPath }/toastmessage/jquery.toastmessage.js"></script>	 --%>
-<!-- </head> -->
-<!-- <body> -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>	
 	<h4>${board.board_name }</h4>
 	<table class="table table-bordered">
 		<tr>
@@ -50,9 +27,8 @@
 			<th>추천수</th>
 			<td>
 				<span id="likeArea">${board.bo_like }</span>
-<%-- 				<c:if test="${cookie.likeCookie.value.contains(board.bo_no) }"> --%>
 				<c:if test="${likable }">
-				<button  type="button" value="추천" id="like"> 추천하기</button>
+					<button type="button" id="likeBtn">추천</button>
 				</c:if>
 			</td>
 		</tr>
@@ -159,7 +135,7 @@
 	        </button>
 		</div>
 	      <form action="${cPath }/board/boardDelete.do" method="post">
-	      	  <input type="hidden" name="bo_no" id="bo_no"  value="${board.bo_no }"/>
+	      	  <input type="hidden" name="bo_no" value="${board.bo_no }"/>
 		      <div class="modal-body">
 		          <div class="form-group">
 		            <input type="password" class="form-control" name="bo_pass" id="bo_pass" required placeholder="비밀번호"/>
@@ -184,7 +160,7 @@
       </div>
       <form id="updateForm" action="${cPath }/board/replyUpdate.do" method="post">
       	  <input type="hidden" name="page" />	
-      	  <input type="hidden" name="bo_no" id="bo_no"  value="${board.bo_no }"/>
+      	  <input type="hidden" name="bo_no" value="${board.bo_no }"/>
       	  <input type="hidden" name="rep_no" id="rep_no" />
 	      <div class="modal-body">
 	          <div class="form-group">
@@ -207,8 +183,28 @@
 <script type="text/javascript">
 
 	let deleteBoardModal = $("#deleteBoardModal");
-	let like =$('#like');
-	let likeArea = $('#likeArea');
+	let likeArea = $("#likeArea");
+	let likeBtn = $("#likeBtn");
+	
+	likeBtn.on("click", function(){
+		$.ajax({
+			url : "${cPath}/board/boardLike.do",
+			data : {
+				what:${board.bo_no}
+			},
+			dataType : "text",
+			success : function(resp) {
+				if(resp=="OK"){
+					likeArea.text(parseInt(likeArea.text().trim())+1);
+					likeBtn.remove();
+				}
+			},
+			error : function(errorResp) {
+				console.log(errorResp.status);
+			}
+
+		});
+	});
 	deleteBoardModal.on("hidden.bs.modal", function(){
 		$(this).find("form").get(0).reset();
 	});
@@ -216,38 +212,7 @@
 		$(this).find("#bo_pass").focus();
 	});
 	
-
-	
-	like.on('click',function(){
-		$.ajax({
-			url : "${cPath}/board/boardLike.do",
-			data : {
-				"what" : ${board.bo_no}
-			},
- 			dataType : "json", //돌아오는 결과값 
-			dataType : "text",  
-			success : function(resp) { //resp: 언마샬링된 값.
-// 				let tag = $("<p>").text(resp.bo_like);
-// 				$('#likeCount').html(tag);
-// 				$('#like').css('display','none'); //언마샬링 된 값이 나옴 
-				if(resp =="OK"){
-					likeArea.text(parseInt(likeArea.text().trim())+1);
-					like.remove();
-				}
-			},
-			error : function(errorResp) {
-				console.log(errorResp.status);
-			}
-// 	$(this).hide();
-		})
-	
-	})
 </script>
-	<c:if test="${not empty message }">
-		$(document).toastmessage('showWarningToast', '${message }');
-		<c:remove var="message" scope="session"/>
-	</c:if>	
-<!-- </body> -->
-<!-- </html> -->
+
 
 

@@ -13,6 +13,7 @@
 		<config>src/main/resources/kr/or/ddit/conf/collectionDI-context.xml</config>
 		<config>src/main/resources/kr/or/ddit/conf/props-context.xml</config>
 		<config>src/main/resources/kr/or/ddit/conf/autoDi-context.xml</config>
+		<config>src/main/resources/kr/or/ddit/conf/aop-context.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

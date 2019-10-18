@@ -26,17 +26,18 @@ public class ImageServlet extends HttpServlet{
 		// MIME text : main_type/sub_type ; charset=encoding
 		// MIME : 전송 데이터의 형태나 특성을 표현하는 문자
 		resp.setContentType("image/jpeg");
+		//경로
 		String folder = "d:/contents"; //이 코드가 하드코딩 되있는게 맞는지?
 		//변경될만한 코드와 변경안될거는 같이 있으면안되고 분리해야 함 @  ->web.xml에서 수정 
 		String imageName = req.getParameter("image");
 		
 		
 		//09.16 쿠키 예제
-				String value = URLEncoder.encode("한글값","UTF-8");
-				Cookie cookie = new Cookie(imageName,value); //쿠키 객체 생성 
-				cookie.setPath("/");
-				cookie.setMaxAge(60*60*24*2); //데이터 정보 2일 살아잉ㅆ어 
-				resp.addCookie(cookie); //응답보내기
+		String value = URLEncoder.encode("한글값","UTF-8");
+		Cookie cookie = new Cookie(imageName,value); //쿠키 객체 생성 
+		cookie.setPath("/");
+		cookie.setMaxAge(60*60*24*2); //데이터 정보 2일 살아잉ㅆ어 
+		resp.addCookie(cookie); //응답보내기
 		
 		
 		
@@ -44,6 +45,7 @@ public class ImageServlet extends HttpServlet{
 		if (imageName == null || imageName.trim().length() == 0) {
 			status = HttpServletResponse.SC_BAD_REQUEST; // 상수가 int형
 		}
+		
 		File imgFile = new File(folder, imageName); // 읽을 준비는 함. 근데 다른 사진이 필요하면? "Desert.jpg"=> imageName
 		if(!imgFile.exists()) { //서비스가 불가능함 ....	//중간에서 이미지 정보 맞는 지확인하기 
 			status = HttpServletResponse.SC_NOT_FOUND;

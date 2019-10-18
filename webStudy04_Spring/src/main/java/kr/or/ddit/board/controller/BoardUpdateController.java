@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.common.hints.UpdateHint;
@@ -18,7 +17,7 @@ import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.vo.Board2VO;
 
 @Controller
-@RequestMapping(value="boardUpdate.do")
+@RequestMapping("/board/boardUpdate.do")
 public class BoardUpdateController {
 	@Inject
 	IBoardService service;
@@ -37,9 +36,9 @@ public class BoardUpdateController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public String insert(@Validated(UpdateHint.class)@ModelAttribute("board")Board2VO board,
-			Errors errors,
-			Model model) {
+	public String insert(
+			@Validated(UpdateHint.class)@ModelAttribute("board")Board2VO board,
+			Errors errors,	Model model) {
 //		Board2VO board = new Board2VO();
 //		req.setAttribute("board", board);
 //		try {

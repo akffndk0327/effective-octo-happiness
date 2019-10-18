@@ -2,9 +2,11 @@ package kr.or.ddit.board.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.Reply2VO;
-
+@Repository
 public interface IReply2DAO {
 	//댓글 crud
 	public int insertReply(Reply2VO reply);

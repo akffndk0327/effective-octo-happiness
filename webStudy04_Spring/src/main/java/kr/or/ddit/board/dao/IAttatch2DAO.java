@@ -1,10 +1,11 @@
 package kr.or.ddit.board.dao;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
 
 import kr.or.ddit.vo.Attatch2VO;
 import kr.or.ddit.vo.Board2VO;
-
+@Repository
 public interface IAttatch2DAO {
 	public int insertAttatches(Board2VO board);
 	public int insertAttatches(Board2VO board, SqlSession sqlSession);  //한꺼번에 board글이랑  첨부파일 받겟다 //단독트랜젝션 x 오버로딩 필요

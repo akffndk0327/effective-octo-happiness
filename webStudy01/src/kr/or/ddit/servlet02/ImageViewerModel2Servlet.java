@@ -19,13 +19,13 @@ public class ImageViewerModel2Servlet extends HttpServlet {
    private ServletContext application;
 
    @Override
-   public void init() throws ServletException {
+   public void init() throws ServletException { //공통사용 
       super.init();
       application = getServletContext();
       String imageURI = "/images";
       String targetURI = "/07";
-      String imagesPath = application.getRealPath(imageURI);
-      String targetPath = application.getRealPath(targetURI);
+      String imagesPath = application.getRealPath(imageURI); //원본경로
+      String targetPath = application.getRealPath(targetURI);//복사경로
       
       File imagesFolder = new File(imagesPath);
       File targetFolder = new File(targetPath);

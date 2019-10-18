@@ -67,6 +67,8 @@ public class IdolSearchServiceImpl implements IIdolSearchService {
 		for(String[] tmp :list) {
 			infomation.add(Arrays.toString(tmp)); //tmp를 문자열로 만듬 
 		}
+		//1018 AOP
+		if(1==1) throw new NullPointerException("강제예외발생");
 		return infomation;
 	}
 
