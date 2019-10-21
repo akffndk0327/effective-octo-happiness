@@ -1,12 +1,12 @@
 package kr.or.ddit.board.controller;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -15,17 +15,20 @@ import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.vo.Board2VO;
 
 @Controller
-@RequestMapping("/board")
+@RequestMapping("/board/{borad_type}/boardInsert.do")
 public class BoardInsertController {
 	@Inject
 	IBoardService service ;
 	
-	@RequestMapping("boardInsert.do")
-	public String boardForm() {
+	@RequestMapping(method=RequestMethod.GET)
+	public String boardForm(
+			@PathVariable(required=false) String board_type
+			) {
 		return "board/boardForm";
 	}
-	 @RequestMapping(value="boardInsert.do", method=RequestMethod.POST)
+	 @RequestMapping(method=RequestMethod.POST)
 	public String insert(
+			@PathVariable(required=false) String board_type,
 			@ModelAttribute("board")Board2VO board,
 			Errors errors,
 			Model model	) {
@@ -64,7 +67,7 @@ public class BoardInsertController {
 	         switch (result) {
 	         case OK:
 //	            - OK   : redirect 
-	            viewName = "redirect:/board/boardView.do?what="+board.getBo_no();
+	            viewName = "redirect:/board/{board_type}/boardView.do?what="+board.getBo_no();
 	            break;
 	         default:
 	            message = "서버 오류";
@@ -73,7 +76,7 @@ public class BoardInsertController {
 	         }
 
 	      } else {
-	    	  System.out.println("hi!");
+//	    	  System.out.println("hi!");
 	         viewName = "board/boardForm";
 	      }
 	      

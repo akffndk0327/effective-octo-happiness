@@ -23,11 +23,19 @@
            <param-value>UTF-8</param-value>
         </init-param>
      </filter>
-   
    <filter-mapping>
       <filter-name>CharacterEncodingFilter</filter-name>
       <url-pattern>/*</url-pattern>
    </filter-mapping>  
+<!--    1021 히든메소드필터 -->
+   <filter>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
      <!-- The front controller of this Spring Web application, responsible for handling all application requests -->
    <servlet>
       <servlet-name>springDispatcherServlet</servlet-name>

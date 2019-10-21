@@ -54,7 +54,7 @@ public class MemberServiceImpl implements IMemberService {
 
 	@Override
 	public List<MemberVO> retrieveMemberList(PagingInfoVO pagingVO) {
-		return dao.selectMemeberList(pagingVO);
+		return dao.selectMemberList(pagingVO);
 	}
 
 	@Override

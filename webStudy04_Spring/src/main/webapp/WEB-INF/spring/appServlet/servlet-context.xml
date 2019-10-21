@@ -25,6 +25,15 @@
 		p:definitions="classpath:/kr/or/ddit/tiles/sample-definitions.xml"
 		p:preparerFactoryClass="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"
 	/>
+	
+	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver"
+		p:order="2"
+	/>
+	
+	<beans:bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+	<beans:bean id="downloadView" class="kr.or.ddit.board.view.DownloadView"></beans:bean>
+	
+	
 	<!-- 일괄관리 어려울때 default로 사용  -->
 	<default-servlet-handler/>
 	

@@ -17,7 +17,7 @@ public class BoardDeleteController {
 	@Inject
 	IBoardService service ;
 	
-	@RequestMapping(value="/board/boardDelete.do", method=RequestMethod.POST)
+	@RequestMapping(value="/board/{board_type}/boardDelete.do", method=RequestMethod.POST)
 	public String boardView(HttpSession session, 
 			@RequestParam(name="bo_no", required=true)String bo_noParam,
 			@RequestParam(name="bo_pass",required=true)String bo_pass
@@ -29,7 +29,7 @@ public class BoardDeleteController {
 //			return null;
 //		}
 		ServiceResult result = service.removeBoard(new Board2VO(Integer.parseInt(bo_noParam), bo_pass));
-		String viewName = "redirect:/board/boardView.do?what="+bo_noParam;
+		String viewName = "redirect:/board/{board_type}/boardView.do?what="+bo_noParam;
 		String message = null;
 		switch (result) {
 			case INVALIDPASSWORD:
@@ -40,7 +40,7 @@ public class BoardDeleteController {
 				break;
 	
 			default:
-				viewName = "redirect:/board/boardList.do";
+				viewName = "redirect:/board/{board_type}/boardList.do";
 				break;
 		}
 		session.setAttribute("message", message);

@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,13 +18,15 @@ import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.vo.Board2VO;
 
 @Controller
-@RequestMapping("/board/boardUpdate.do")
+@RequestMapping("/board/{board_type}boardUpdate.do")
 public class BoardUpdateController {
 	@Inject
 	IBoardService service;
 	
 	@RequestMapping(method=RequestMethod.GET) //기존 게시글 정보갖고있는 form 뜨우기 
-	public String boardForm(@RequestParam(required=true)int what,Model model) {
+	public String boardForm(
+			@PathVariable(required=false) String board_type,
+			@RequestParam(required=true)int what,Model model) {
 //		String what = req.getParameter("what");
 //		if(StringUtils.isBlank(what)) {
 //			resp.sendError(400);
@@ -67,7 +70,7 @@ public class BoardUpdateController {
 			switch (result) {
 			case OK:
 //				- OK   : redirect 
-				viewName = "redirect:/board/boardView.do?what="+board.getBo_no();
+				viewName = "redirect:/board/{board_type}/boardView.do?what="+board.getBo_no();
 				break;
 			case INVALIDPASSWORD:
 				message = "비번 오류";

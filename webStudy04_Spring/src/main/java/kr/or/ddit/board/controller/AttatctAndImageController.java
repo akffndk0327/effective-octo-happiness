@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,28 +33,30 @@ public class AttatctAndImageController {
 	@Inject
 	IBoardService service ;
 	
-	@Inject
+	@Inject 
 	WebApplicationContext container;
 	ServletContext application;
 	
-	File saveFolder;
+//	File saveFolder;
 	@PostConstruct
 	public void init() {
 		application = container.getServletContext();
-		saveFolder = new File("d:/saveFiles");
+//		saveFolder = new File("d:/saveFiles");
 	}
 	
 	//파일 다운 받기 
 	@RequestMapping(value="/board/download.do")
-	public String download(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	public String download(@RequestParam(required=true)int what,Model model) throws IOException {
 		//메타데이터 save 파일 , 미들티어의 진자 파일
 //		응답 스트링 
-		String what = req.getParameter("what"); // int 
-		if(StringUtils.isBlank(what)) {
-			resp.sendError(400);
-			return null;
-		}
-		Attatch2VO attatch = service.downloadAttatch(Integer.parseInt(what));
+//		String what = req.getParameter("what"); // int 
+//		if(StringUtils.isBlank(what)) {
+//			resp.sendError(400);
+//			return null;
+//		}
+		Attatch2VO attatch = service.downloadAttatch(what);
+		model.addAttribute("attatch",attatch);
+		/*
 		File downloadFile = new File(saveFolder,attatch.getAtt_savename());
 		resp.setContentType("application/octect-stream"); //마임설정 octect : 8비트 바이트스트림이라는 의미
 		resp.setHeader("Content-Length",attatch.getAtt_filesize()+""); //응답데이터으 ㅣ길이
@@ -69,8 +72,8 @@ public class AttatctAndImageController {
 			FileUtils.copyFile(downloadFile, os);
 			
 		}
-		
-		return null;
+		*/
+		return "downloadView"; //null-> 뷰네임 : 
 	}
 	
 	@RequestMapping(value="/board/imageUpload.do", method=RequestMethod.POST,

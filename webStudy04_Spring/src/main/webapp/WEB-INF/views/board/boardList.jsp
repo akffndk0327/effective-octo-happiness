@@ -16,7 +16,7 @@
 <!-- 행번호, 글번호, 제목, 작성자, 작성일, 조회수, 추천수  -->
 <!-- screensize : 7, blocksize : 5 ok-->
 <!-- 검색조건  전체, 작성자, 제목, 내용 -->
-
+<h4> ${board_type }</h4>
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>	
@@ -70,7 +70,7 @@
 					<input type="text" class="form-control mr-2" name="searchWord" />
 					<input type="submit" class="btn btn-info mr-2" value="검색" />
 					<input type="button" class="btn btn-info" value="새글쓰기"
-							onclick="location.href='<c:url value="/board/boardInsert.do" />';"/>
+							onclick="location.href='<c:url value="/board/${board_type }/boardInsert.do" />';"/>
 				</form>
 				<div id="pagingArea">
 					${pagingVO.pagingHTML }
@@ -89,7 +89,7 @@ var pageTag = $("[name='page']");
 //동적으로 만들어지는 ui에 이런 디센던트 필요함
 listBody.on("click","a",function(){
 	let bono = $(this).data("bono"); //집어 넣엇는 key로 꺼내기
-	location.href="${cPath}/board/boardView.do?what="+bono;
+	location.href="${cPath}/board//${board_type}/boardView.do?what="+bono;
 })
 
 $("[data-toggle='tooltip']").tooltip();
@@ -129,7 +129,7 @@ window.onpopstate = function (event) {
 // 	페이지도 넘어가야하닌까
 }
 
-searchForm.on("submit", function(event){
+searchForm.on("submit", function(event){ //비동기로 검색 
 	event.preventDefault();
 	var action = $(this).attr("action");
 	var method = $(this).attr("method");

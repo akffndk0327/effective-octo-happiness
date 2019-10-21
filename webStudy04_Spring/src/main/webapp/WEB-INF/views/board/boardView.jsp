@@ -61,7 +61,7 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				<c:url value="/board/boardUpdate.do" var="updateURL">
+				<c:url value="/board/${board_type }/boardUpdate.do" var="updateURL">
 					<c:param name="what" value="${board.bo_no }" />
 				</c:url>
 				<input type="button" class="btn btn-info" value="수정" 
@@ -70,7 +70,7 @@
 				<input type="button" class="btn btn-info" value="삭제" 
 					data-toggle="modal" data-target="#deleteBoardModal"
 				/>
-				<c:url value="/board/boardInsert.do" var="insertURL">
+				<c:url value="/board/${board_type }/boardInsert.do" var="insertURL">
 					<c:param name="bo_parent" value="${board.bo_no }" />
 				</c:url>
 				<input type="button" class="btn btn-info"
@@ -85,9 +85,9 @@
 			</td>
 		</tr>
 	</table>
-	<form id="insertForm" action="${cPath }/board/replyInsert.do" method="post">
+	<form id="insertForm" action="${cPath }/board/${board.bo_no}/reply" method="get">
 		<input type="hidden" name="page" />
-		<input type="hidden" name="bo_no" value="${board.bo_no }" />
+<%-- 		<input type="hidden" name="bo_no" value="${board.bo_no }" /> --%>
 		<input type="hidden" name="rep_ip" value="${pageContext.request.remoteAddr }"/>
 		<table class="table col-8 ml-4">
 			<tr>
@@ -114,13 +114,14 @@
 		
 		</tfoot>
 	</table>
-	<form id="listForm" action="${cPath }/board/replyList.do">
+	<form id="listForm" action="${cPath }/board/${board.bo_no}/reply" method="post">
 		<input type="hidden" name="page"/>
-		<input type="hidden" name="bo_no" value="${board.bo_no }"/>
+<%-- 		<input type="hidden" name="bo_no" value="${board.bo_no }"/> --%>
 	</form>
-	<form id="deleteForm" action="${cPath }/board/replyDelete.do" method="post">
+	<form id="deleteForm" action="${cPath }/board/${board.bo_no}/reply" method="post">
+		<input type="hidden" name="_method" value="delete">
 		<input type="hidden" name="page" />
-		<input type="hidden" name="bo_no" value="${board.bo_no }"/>
+<%-- 		<input type="hidden" name="bo_no" value="${board.bo_no }"/> --%>
 		<input type="hidden" name="rep_no" />
 		<input type="hidden" name="rep_pass" />
 	</form>
@@ -134,7 +135,7 @@
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 		</div>
-	      <form action="${cPath }/board/boardDelete.do" method="post">
+	      <form action="${cPath }/board/${board_type }/boardDelete.do" method="post">
 	      	  <input type="hidden" name="bo_no" value="${board.bo_no }"/>
 		      <div class="modal-body">
 		          <div class="form-group">
@@ -158,9 +159,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form id="updateForm" action="${cPath }/board/replyUpdate.do" method="post">
+      <form id="updateForm" action="${cPath }/board/${board.bo_no}/reply" method="post">
+      	<input type="hidden" name="_method" value="put"> 
       	  <input type="hidden" name="page" />	
-      	  <input type="hidden" name="bo_no" value="${board.bo_no }"/>
+<%--       	  <input type="hidden" name="bo_no" value="${board.bo_no }"/> --%>
       	  <input type="hidden" name="rep_no" id="rep_no" />
 	      <div class="modal-body">
 	          <div class="form-group">
@@ -188,7 +190,7 @@
 	
 	likeBtn.on("click", function(){
 		$.ajax({
-			url : "${cPath}/board/boardLike.do",
+			url : "${cPath}/board/${board_type}/boardLike.do",
 			data : {
 				what:${board.bo_no}
 			},

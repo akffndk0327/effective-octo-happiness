@@ -13,7 +13,7 @@
 		<tr>
 			<th>게시판종류???</th>
 			<td><input type="text" required class="form-control"
-				name="board_type" value="B01" />
+				name="board_type" value="${board_type }" />
 			<span class="error">${errors.board_type }</span></td>
 		</tr>
 		<tr>

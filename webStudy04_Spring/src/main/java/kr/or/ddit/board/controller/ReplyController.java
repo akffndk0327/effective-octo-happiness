@@ -1,7 +1,6 @@
 package kr.or.ddit.board.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,27 +10,33 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.board.service.IReplyService;
 import kr.or.ddit.common.hints.InsertHint;
 import kr.or.ddit.enums.ServiceResult;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.Reply2VO;
-
+//1021 RESTful 1.requestMapping 삭제 ->getMapping, deleteMapping,...
 @Controller
-@RequestMapping(value = "/board")
+@RequestMapping(value = "/board/{bo_no}/reply", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ReplyController {
 	@Inject
-IReplyService service ;
+	IReplyService service ;
 	
-	@RequestMapping(value="replyList.do",produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping
+	@ResponseBody //마샬링 하게 함. -> 마임설정필요
 	public PagingInfoVO<Reply2VO> list(
 			@RequestParam(name="page", required=false, defaultValue="1") int currentPage
 			, @RequestParam(required=true) int bo_no						
@@ -122,25 +127,17 @@ IReplyService service ;
 		return valid;
 	}
 	*/
-	private String redirectPtrn = "redirect:/board/replyList.do?bo_no=%s&page=%s";	
+	private String redirectPtrn = "redirect:/board/{bo_no}/reply?bo_no=%s&page=%s";	
 	
-	@RequestMapping(value = "replyInsert.do", method = RequestMethod.POST)
-	public String insert(
+	@PostMapping
+//	@RequestMapping(value = "replyInsert.do", method = RequestMethod.POST)
+//	@ResponseBody
+	public String insert( //string->object->string(viewName필요)
 			@RequestParam(required=false, defaultValue="1") int page
-			, @Validated(InsertHint.class) Reply2VO reply
-			, Errors errors, HttpServletResponse resp
+			, @ModelAttribute("reply") @Validated(InsertHint.class) Reply2VO reply
+			, Errors errors, HttpServletResponse resp,
+			Model model
 			) throws IOException{
-//		String pageParam = req.getParameter("page");
-//		Reply2VO reply = new Reply2VO();
-//		try {
-//			BeanUtils.populate(reply, req.getParameterMap());
-//		} catch (IllegalAccessException | InvocationTargetException e) {
-//			throw new ServletException(e);
-//		}
-		
-		Map<String, Object> messageMap = new HashMap<>();
-		messageMap.put("reply", reply);
-//		boolean valid = validate(reply, messageMap, InsertHint.class);
 		boolean valid = !errors.hasErrors();
 		String viewName = null;
 		if(valid) {
@@ -148,14 +145,15 @@ IReplyService service ;
 			if(ServiceResult.OK.equals(result)) {
 				viewName = String.format(redirectPtrn, reply.getBo_no(), page);
 			}else {
-				messageMap.put("failed", true);
-				messageMap.put("message", "저장 실패");
+				model.addAttribute("failed", true);
+				model.addAttribute("message", "저장 실패");
 			}	
 		}else {
-			messageMap.put("failed", true);
-			messageMap.put("message", "입력 데이터 확인 필요");
+			model.addAttribute("failed", true);
+			model.addAttribute("message", "입력 데이터 확인 필요");
 
 		}
+		/*
 		if(messageMap.size()>1) {
 			resp.setContentType("application/json;charset=UTF-8");
 			ObjectMapper mapper = new ObjectMapper();
@@ -164,12 +162,23 @@ IReplyService service ;
 			){
 				mapper.writeValue(out, messageMap);
 			}
+			*/
+		if(model.asMap().size()>2) { //마샬링 방법2
+//			return messageMap;
+			return "jsonView"; //논리적인viewname이라고 생각함 -> 여기서 마샬링?! 대신 servlet-context에서  하기 컨테이너에 등록되 빈..
+		}else {
+//			return list(page, reply.getBo_no()); //redirect아니여도 pageVO내보낼수있음  
+			return viewName; //redirect아니여도 pageVO내보낼수있음  
 		}
-		return viewName;
+			
+//		return viewName; //결과내보내기위한 redirect else 쓸떄 지워야함 
 	}
 	
-	@RequestMapping(value="replyUpdate.do", method = RequestMethod.POST)
-	public String update(
+	@PutMapping
+//	@RequestMapping(value="replyUpdate.do", method = RequestMethod.POST)
+	@ResponseBody //+return messageMap
+	public Object update(
+			@PathVariable(required=true)String board_type,
 			@RequestParam(required=false, defaultValue="1") int page
 			, @Validated(InsertHint.class) Reply2VO reply
 			, Errors errors, HttpServletResponse resp
@@ -201,19 +210,17 @@ IReplyService service ;
 
 		}
 		if(messageMap.size()>1) {
-			resp.setContentType("application/json;charset=UTF-8");
-			ObjectMapper mapper = new ObjectMapper();
-			try(
-				PrintWriter out = resp.getWriter();	
-			){
-				mapper.writeValue(out, messageMap);
-			}
+			return messageMap;
+		}else {
+			return list(page, reply.getBo_no());
 		}
-		return viewName;
+//		return viewName;
 	}
 	
-	@RequestMapping(value="replyDelete.do", method = RequestMethod.POST)
-	public String delete(
+	@DeleteMapping
+//	@RequestMapping(value="replyDelete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Object delete(
 			@RequestParam(required=false, defaultValue="1") int page
 			, @Validated(InsertHint.class) Reply2VO reply
 			, Errors errors, HttpServletResponse resp
@@ -244,15 +251,11 @@ IReplyService service ;
 
 		}
 		if(messageMap.size()>1) {
-			resp.setContentType("application/json;charset=UTF-8");
-			ObjectMapper mapper = new ObjectMapper();
-			try(
-				PrintWriter out = resp.getWriter();	
-			){
-				mapper.writeValue(out, messageMap);
-			}
+			return messageMap;
+		}else {
+			return list(page, reply.getBo_no());
 		}
-		return viewName;
+//		return viewName;
 	}
 	
 	
