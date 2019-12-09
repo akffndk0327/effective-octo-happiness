@@ -51,7 +51,7 @@ import javax.servlet.http.HttpServletResponse;
  *    
  *
  */
-//@WebServlet("/desc")
+@WebServlet("/desc")
 public class DescriptionServlet extends HttpServlet {
 	
 	public DescriptionServlet() {
