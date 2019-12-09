@@ -7,11 +7,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.ddit.common.events.AuthenticateSuccessEvent;
 import kr.or.ddit.member.exception.NotAuthenticatedException;
 import kr.or.ddit.member.exception.UserNotFoundException;
 import kr.or.ddit.member.service.IAuthenticateService;
@@ -20,7 +22,11 @@ import kr.or.ddit.vo.MemberVO;
 
 //@WebServlet("/login")
 @Controller
-public class LoginController{
+public class LoginController {
+	@Inject //1022 주입까지 받음 
+	ApplicationEventPublisher publisher;
+	
+	
 	@RequestMapping("/login")
 	public String loginForm(){
 //		String saveId = new CookieUtil(req).getCookieValue("idCookie");
@@ -58,7 +64,8 @@ public class LoginController{
 			}
 			idCookie.setMaxAge(maxAge);
 			resp.addCookie(idCookie);
-			
+			publisher.publishEvent(
+					new AuthenticateSuccessEvent(this, savedMember)); //우리만의 이벤트를 하나 만들자 ! ^_^ target이 클래스
 			session.setAttribute("authMember", savedMember); // mem_id : scope. 세션스코프에 authMember없으면 로그인 안한거
 			//이동 방식 
 			viewName = "redirect:/";

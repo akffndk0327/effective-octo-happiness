@@ -19,6 +19,8 @@
 			expression="org.springframework.stereotype.Controller"/>
 		<context:exclude-filter type="annotation" 
 			expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
-		
 	</context:component-scan>
+<!-- 	모든빈은 list주입받으루싱ㅆ어 -->
+	<util:set id="userList" value-type="kr.or.ddit.websocket.EchoHandler.SendVO"></util:set>
+	<util:list id="webSocketSessionList" value-type="org.springframework.web.socket.WebSocketSession"></util:list>
 </beans>
