@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.food.dao.IFoodDAO">
+	<sql id="searchFrag">
+			<if test="searchMap!=null">
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+				<choose>
+					<when test="'name'.equals(searchMap.searchType)">
+						AND PRDLSTNM LIKE '%'||#{searchMap.searchWord}||'%'
+					</when>
+					<when test="'allergy'.equals(searchMap.searchType)">
+					 	AND ALLERGY LIKE '%'||#{searchMap.searchWord}||'%'						
+					</when>
+					<otherwise>
+						AND PRDLSTNM LIKE '%'||#{searchMap.searchWord}||'%'
+						OR ALLERGY LIKE '%'||#{searchMap.searchWord}||'%'	
+					</otherwise>
+				</choose>
+				</if>
+			</if>
+	</sql>
+	<select id="selectFoodList" parameterType="PagingInfoVO" resultType="HaccpVO">
+		SELECT B.*
+			FROM(
+				SELECT ROWNUM RNUM, A.*
+					FROM(
+						SELECT
+							PRODUCTGB,PRDLSTNM,RAWMTRL,
+							ALLERGY,NUTRIENT,BARCODE,
+							PRDKIND,PRDKINDSTATE,MANUFACTURE,
+							SELLER,CAPACITY,IMGURL1,
+							IMGURL2,PRDLSTREPORTNO,FC_ID
+						FROM HACCP
+					WHERE FC_ID=#{fcId}
+					<include refid="searchFrag" />
+				) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectFoodCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*) FROM HACCP WHERE FC_ID= #{fcId}
+		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectFood" parameterType="HaccpVO" resultType="HaccpVO">
+		SELECT
+	        PRODUCTGB,PRDLSTNM,RAWMTRL,
+	        ALLERGY,NUTRIENT,BARCODE,
+	        PRDKIND,PRDKINDSTATE,MANUFACTURE,
+	        SELLER,CAPACITY,IMGURL1,
+	        IMGURL2,PRDLSTREPORTNO,FC_ID,
+	        B.RTRVLPRVNS
+	    FROM
+	        HACCP A LEFT OUTER JOIN STOPSELLINGFOOD B ON (A.PRDLSTREPORTNO = B.PRDLST_REPORT_NO)
+	    WHERE A.PRDLSTREPORTNO= #{prdlstreportno}
+	</select>
+
+
+
+</mapper>

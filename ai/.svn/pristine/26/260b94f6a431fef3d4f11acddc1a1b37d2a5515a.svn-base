@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 6.     최서희     최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<tiles-definitions>
+	<definition name="super" template="/WEB-INF/views/layer.jsp">
+      <put-attribute name="preScript" value="/includee/preScript.jsp"/>
+      <put-attribute name="topMenu" value="/includee/header.jsp"/>
+      <put-attribute name="leftMenu" value="/includee/Memleft.jsp"/>
+      <put-attribute name="footer" value="/includee/footer.jsp"/>
+	</definition>
+	 <definition name="com" template="/WEB-INF/views/commypagelayer.jsp">
+      <put-attribute name="preScript" value="/includee/preScript.jsp"/>
+      <put-attribute name="topMenu" value="/includee/header.jsp"/>
+      <put-attribute name="comleft" value="/includee/comleft.jsp"/>
+      <put-attribute name="footer" value="/includee/footer.jsp"/>
+   </definition>
+   <definition name="mem" template="/WEB-INF/views/memmypagelayer.jsp">
+      <put-attribute name="preScript" value="/includee/preScript.jsp"/>
+      <put-attribute name="topMenu" value="/includee/header.jsp"/>
+      <put-attribute name="memleft" value="/includee/memleft.jsp"/>
+      <put-attribute name="footer" value="/includee/footer.jsp"/>
+   </definition>
+   <definition name="admin" template="/WEB-INF/views/adminmypagelayer.jsp">
+      <put-attribute name="preScript" value="/includee/preScript.jsp"/>
+      <put-attribute name="topMenu" value="/includee/adminheader.jsp"/>
+      <put-attribute name="adminleft" value="/includee/adminleft.jsp"/>
+      <put-attribute name="footer" value="/includee/footer.jsp"/>
+   </definition>
+
+	<definition name="prod/prodEmpList" extends="com">
+      <put-attribute name="contents" value="/WEB-INF/views/prod/prodEmpList.jsp" />
+	</definition>
+	<definition name="prod/prodEmpForm" extends="com">
+      <put-attribute name="contents" value="/WEB-INF/views/prod/prodEmpForm.jsp" />
+	</definition>
+	<definition name="order/orderEmpList" extends="com">
+      <put-attribute name="contents" value="/WEB-INF/views/order/orderEmpList.jsp" />
+	</definition>
+	
+	<definition name="prod/prodAdminForm" extends="admin">
+      <put-attribute name="contents" value="/WEB-INF/views/prod/prodAdminForm.jsp" />
+	</definition>
+	<definition name="prod/prodAdminList" extends="admin">
+      <put-attribute name="contents" value="/WEB-INF/views/prod/prodAdminList.jsp" />
+	</definition>
+	<definition name="prod/prodUpdateForm" extends="admin">
+      <put-attribute name="contents" value="/WEB-INF/views/prod/prodUpdateForm.jsp" />
+	</definition>
+	
+	<definition name="order/orderForm" extends="mem">
+      <put-attribute name="contents" value="/WEB-INF/views/order/orderForm.jsp" />
+	</definition>
+	<definition name="order/orderList" extends="mem">
+      <put-attribute name="contents" value="/WEB-INF/views/order/orderList.jsp" />
+	</definition>
+	<definition name="order/orderResult" extends="mem">
+      <put-attribute name="contents" value="/WEB-INF/views/order/orderResult.jsp" />
+	</definition>
+	
+	<definition name="order/orderView" extends="super">
+      <put-attribute name="contents" value="/WEB-INF/views/order/orderView.jsp" />
+	</definition>
+   
+	<definition name="prod/*" extends="super">
+      <put-attribute name="contents" value="/WEB-INF/views/prod/{1}.jsp" />
+	</definition>
+	<definition name="notice/*" extends="super">
+      <put-attribute name="contents" value="/WEB-INF/views/notice/{1}.jsp" />
+	</definition>
+	<definition name="faq/*" extends="super">
+      <put-attribute name="contents" value="/WEB-INF/views/faq/{1}.jsp" />
+	</definition>
+
+	
+	<definition name="cart/*" extends="mem">
+      <put-attribute name="contents" value="/WEB-INF/views/cart/{1}.jsp" />
+	</definition>
+   
+   
+
+</tiles-definitions>       

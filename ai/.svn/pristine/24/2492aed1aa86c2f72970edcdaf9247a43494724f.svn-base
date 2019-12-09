@@ -1,0 +1,299 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* 
+* ----------  ---------  -----------------
+* 2019. 11. 6.      이진희      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="path/to/chartjs/dist/Chart.js"></script>
+<link rel="stylesheet" type="text/css" href="path/to/chartjs/dist/Chart.min.css">
+ <style>
+ h2 {
+    margin: 0px 0 20px;
+    border-top: 5px solid #90c322;
+    display: inline-block;
+	}
+  th,td{
+  	text-align:center;
+  	font-size:20px;
+  	
+  }	
+ 
+ #graph{
+ 	width:800px;
+ } 
+ </style>
+<div id="InnerContainer">
+
+<section id="topic-header">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<h2>Products Details</h2>
+					<p></p>
+				</div>	<!-- /.col-md-4 -->
+			</div>	<!-- /.row -->
+		</div>	<!-- /.container-->
+	</section><!-- /Section -->
+	<section id="single-product">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<div class="single-product-img">
+						<img src="${haccp.imgurl1 }" >
+					</div>
+                	<div class="col-md-9">
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#home" data-toggle="tab">알레르기유발물질</a></li>
+						<li><a href="#profile" data-toggle="tab">More Info</a></li>
+					</ul>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div class="tab-pane active" id="home">
+							<p>${haccp.allergy }</p>
+						</div>
+						<div class="tab-pane" id="profile">
+						<c:choose>
+							<c:when test="${not empty equalsAll }">
+								<p>회원님알레르기 정보와 일치하는 알레르기 유발물질은 
+								<c:forEach items="${equalsAll }" var="all">
+									<b style='color:red;'>${all }</b> 
+								</c:forEach>
+								입니다.</p>
+							</c:when>
+							<c:otherwise>
+								<p>회원님과 일치하는 알레르기 정보 없습니다.
+							</c:otherwise>
+						</c:choose>	
+					  </div>
+					</div>
+				</div>
+				</div> <!-- End of /.col-md-5 -->
+				<div class="col-md-4">
+					<div class="block">
+						<div class="product-des">
+							<h4>${haccp.prdlstnm }</h4>
+							<p class="price">${haccp.seller }</p>
+							<b>원재료 :</b><span>${haccp.rawmtrl }</span><br><br>
+							<b>영양성분 :</b><span>${haccp.nutrient }</span>
+							<br><br>
+						</div>	<!-- End of /.product-des -->
+					</div> <!-- End of /.block -->
+				</div>	<!-- End of /.col-md-4 -->
+						
+			</div>	<!-- End of /.row -->
+			<br></br>
+			<div class="row1">
+				<!--영양성분 그래프 -->
+					<c:choose>
+						<c:when test="${not empty nutrient }">
+							<table id="graph">
+								<thead>
+									<th>1회제공량</th>
+									<th>기준치에 대한 비율</th>
+								</thead>
+								<tbody>
+								   <tr>	
+									<td>나트륨  ${nutrient.sodiumOne }, ${nutrient.sodiumPer }% </td>
+									<input name="sodium" type="hidden" value="${nutrient.sodiumPer }"/>
+									<td style="width:30%;"><canvas id="cxt" height="100"></canvas></td>
+								   </tr>
+								   <tr>	
+									<td>탄수화물 ${nutrient.carbohyOne }, ${nutrient.carbohyPer }%</td>
+									<input name="carbohy" type="hidden" value="${nutrient.carbohyPer }"/>
+									<td style="width:30%;"><canvas id="cxt1" height="100"></canvas></td>
+								   </tr>
+								   <tr>	
+									<td>당류 ${nutrient.convectionOne }, ${nutrient.convectionPer }%</td>
+									<input name="convection" type="hidden" value="${nutrient.convectionPer }"/>
+									<td style="width:30%;"><canvas id="cxt2" height="100"></canvas></td>
+								   </tr>
+								   <tr>	
+									<td>지방 ${nutrient.fatOne }, ${nutrient.fatPer }%</td>
+									<input name="fat" type="hidden" value="${nutrient.fatPer }"/>
+									<td style="width:30%;"><canvas id="cxt3" height="100"></canvas></td>
+								   </tr>
+								   <tr>	
+									<td>단백질 ${nutrient.proteinOne }, ${nutrient.proteinPer}%</td>
+									<input name="protein" type="hidden" value="${nutrient.proteinPer}"/>
+									<td style="width:30%;"><canvas id="cxt4" height="100"></canvas></td>
+								   </tr>
+								</tbody>
+							</table>
+						</c:when>
+						<c:otherwise>
+							<p>영양성분에 대한 정보가 없습니다</p>
+						</c:otherwise>
+					</c:choose>
+					<!-- End of /.col-md-9 -->
+				<div class="col-md-3">
+					<div class="blog-sidebar">
+						<div class="block">
+							<img src="images/food-ad.png" alt="">
+						</div> <!-- End of /.block -->
+					</div>	<!-- End of /.blog-sidebar -->
+				</div>	<!-- End of /.col-md-3 -->
+			</div>	<!-- End of /.row -->
+		<input type="button" class="btn btnAi1" value="목록" onclick="history.back();">
+		</div>	<!-- End of /.Container -->
+	</section> <!-- End of /.Single-product -->
+</div>
+
+<script>
+var sodium = $("[name='sodium']");
+var sodiumValue = sodium.val();
+var carbohy = $("[name='carbohy']");
+var carbohyValue = carbohy.val();
+var convection = $("[name='convection']");
+var convectionValue = convection.val();
+var fat = $("[name='fat']");
+var fatValue = fat.val();
+var protein = $("[name='protein']");
+var proteinValue = protein.val();
+//막대그래프 나트륨		 
+var barChartData = {       
+	        datasets: [{
+	        	label: '나트륨',
+	            backgroundColor: "#F9D5D3",
+	            data: [
+	            	sodiumValue
+	           ]
+	        }]
+	    };
+
+	new Chart(document.getElementById("cxt"), {
+		    type: 'horizontalBar',
+		    data: barChartData,
+		    options: {
+	            scales: {
+	              xAxes: [{
+	                ticks: {
+	                  beginAtZero: true,
+	                  min: 0,
+	                  max: 100,
+	                  stepSize: 20,
+	                }
+	              }]
+	            }
+	          }
+		});	
+//탄수화물 	
+	var barChartData2 = {
+	        datasets: [{
+	        	label: '탄수화물',
+	            backgroundColor: "#B4FFFF",
+	            data: [
+	            	carbohyValue
+	           ]
+	        }]
+	    };
+
+	new Chart(document.getElementById("cxt1"), {
+		    type: 'horizontalBar',
+		    data: barChartData2,
+		    options: {
+	            scales: {
+	              xAxes: [{
+	                ticks: {
+	                  beginAtZero: true,
+	                  min: 0,
+	                  max: 100,
+	                  stepSize: 20,
+	                }
+	              }]
+	            }
+	          }
+		});	
+//당류	
+	var barChartData3 = {
+	        datasets: [{
+	        	label: '당류',
+	            backgroundColor: "#FFFF7E",
+	            data: [
+	            	convectionValue
+	           ]
+	        }]
+	    };
+
+	new Chart(document.getElementById("cxt2"), {
+		    type: 'horizontalBar',
+		    data: barChartData3,
+		    options: {
+	            scales: {
+	              xAxes: [{
+	                ticks: {
+	                  beginAtZero: true,
+	                  min: 0,
+	                  max: 100,
+	                  stepSize: 20,
+	                }
+	              }]
+	            }
+	          }
+		});	
+//지방	
+	var barChartData4 = { 
+	        datasets: [{
+	        	label: '지방',
+	            backgroundColor: "#FFA2FF",
+	            data: [
+	            	fatValue
+	           ]
+	        }]
+	    };
+
+	new Chart(document.getElementById("cxt3"), {
+		    type: 'horizontalBar',
+		    data: barChartData4,
+		    options: {
+	            scales: {
+	              xAxes: [{
+	                ticks: {
+	                  beginAtZero: true,
+	                  min: 0,
+	                  max: 100,
+	                  stepSize: 20,
+	                }
+	              }]
+	            }
+	          }
+		});	
+	
+//단백질	
+	var barChartData5 = {   
+	        datasets: [{
+	        	label: '단백질',
+	            backgroundColor: "#B95AFF",
+	            data: [
+	            	proteinValue
+	           ]
+	        }]
+	        
+	    };
+
+	new Chart(document.getElementById("cxt4"), {
+		    type: 'horizontalBar',
+		    data: barChartData5,
+		    options: {
+	            scales: {
+	              xAxes: [{
+	                ticks: {
+	                  beginAtZero: true,
+	                  min: 0,
+	                  max: 100,
+	                  stepSize: 20,
+	                }
+	              }]
+	            }
+	          }
+		});		
+
+
+</script>

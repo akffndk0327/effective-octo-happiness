@@ -1,0 +1,98 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * @author 허민지
+ * @since 2019. 11. 5.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 5.      허민지       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Data
+@ToString(of= {"memId", "memName"})
+@EqualsAndHashCode(of="memId")
+public class MemberVO implements Serializable, UserDetails{
+	
+	public MemberVO() {
+		super();
+	}
+	
+	public MemberVO(String memId, String memPass) {
+		super();
+		this.memId = memId;
+		this.memPass = memPass;
+	}
+	
+	private String memName;
+	private String memTel;
+	private String memAddr1;
+	private String memAddr2;
+	private String memZip;
+	private String memMail;
+	private String memDelete;
+	private String memGender;
+	private String memAge;
+	private String memId;
+	
+	//join
+	private String memPass;
+	private String authorId;
+	private String allId;
+	private String symId;
+	private String comNum;
+	private String comName;
+	private String comAddr;
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Collections.singleton(new SimpleGrantedAuthority(authorId));
+	}
+
+	@Override
+	public String getPassword() {
+		return memPass;
+	}
+
+	@Override
+	public String getUsername() {
+		return memId;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return !"Y".equals(memDelete);
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return !"Y".equals(memDelete);
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return !"Y".equals(memDelete);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return !"Y".equals(memDelete);
+	}
+}

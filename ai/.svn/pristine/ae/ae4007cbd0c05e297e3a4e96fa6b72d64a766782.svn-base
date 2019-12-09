@@ -1,0 +1,19 @@
+package kr.or.ddit.note.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class webgo {
+
+	@RequestMapping("/websocket")
+	public String websocket() {
+		return "note/websocket";
+	}
+	
+
+	@RequestMapping("/websocket2")
+	public String websocket2() {
+		return "note/websocket2";
+	}
+}

@@ -1,0 +1,81 @@
+package kr.or.ddit.vo;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
+import javax.validation.constraints.Min;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.common.hints.InsertHint;
+import kr.or.ddit.common.hints.UpdateHint;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of="prodId")
+@ToString(exclude= {"prodImg","prodIndate","attFile","prodImage","attatchList"})
+public class ProdVO implements Serializable{
+	private Integer rnum;
+	@NotBlank(groups=UpdateHint.class)
+	private String prodId;
+	@NotBlank(groups=InsertHint.class)
+	private String prodName;
+	private byte[] prodImg;
+	@NotBlank(groups=InsertHint.class)
+	@Min(0)
+	private int prodPrice;
+	@NotBlank(groups=InsertHint.class)
+	@Min(0)
+	private int prodDelivery;
+	private String prodApproval;
+	private String prodIndate;
+	@NotBlank(groups=InsertHint.class)
+	private String prodCont;
+	private String prodUse;
+	@NotBlank(groups=InsertHint.class)
+	private String lprodId;
+	@NotBlank(groups=InsertHint.class)
+	private String memId; //기업회원
+	private String comName; //기업명
+	private List<ProdAttatchVO> attatchList;
+	private MultipartFile[] attFile;
+	
+	private MultipartFile prodImage;
+	
+	private CompanyVO company;
+	private CodeVO code;
+	private LprodVO lprod;
+	private SearchVO search;
+	
+	//binary 파일로 변환
+	public void setProd_image(MultipartFile prodImage) throws IOException {
+		this.prodImage = prodImage;
+		if(prodImage.getSize() <= 0) return;
+		prodImg = prodImage.getBytes();
+	}
+	
+	//blob가져올때
+	public String getProd_imageBase64() {
+		if(prodImg==null) return null;
+		return Base64.getEncoder().encodeToString(prodImg);
+	}
+	
+	//첨부파일
+	public void setProd_file(MultipartFile[] attFile) {
+		this.attFile = attFile;
+		if(attFile==null || attFile.length==0) return;
+		attatchList = new ArrayList<>();
+		for(MultipartFile tmp : attFile) {
+			if(tmp.getSize()<=0) continue;
+			attatchList.add(new ProdAttatchVO(tmp));
+		}
+	}
+}

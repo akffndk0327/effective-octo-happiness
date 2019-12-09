@@ -1,0 +1,14 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of="prodId")
+public class ProdRejectVO {
+	private String prodId;
+	private String rejectReason;
+	private String rejectDate;
+}

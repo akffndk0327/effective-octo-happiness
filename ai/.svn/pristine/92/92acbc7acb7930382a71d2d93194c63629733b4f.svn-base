@@ -1,0 +1,70 @@
+package kr.or.ddit.member.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.CallEvent;
+import com.nexmo.client.voice.VoiceName;
+import com.nexmo.client.voice.ncco.Ncco;
+import com.nexmo.client.voice.ncco.TalkAction;
+
+@Controller
+@RequestMapping("/ars/verify.do")
+public class ARSController {
+		
+	
+	
+
+		
+//		Ncco ncco = new Ncco(
+//				  TalkAction
+//				    .builder("안녕하세요 AI ARS 인증 서비스 입니다. 인증 번호는 삼 사 입니다.")
+//				    .voiceName(VoiceName.SORA)
+//				    .build()
+//				);
+//		
+//		NexmoClient client = NexmoClient.builder()
+//				  .applicationId("d815fd54-7d76-4ec3-95fe-1dd0b8bfba16")
+//				  .privateKeyPath("MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCp9ijAXjS+td5B\r\n" + 
+//				  		"g4b5/qVn42uSu60xGkQR0Thyn1YmQMC4mjhoFE9H1mMt1+khQxzXWDGwoRWbnXXn\r\n" + 
+//				  		"O22l7IbzCLAtOpQL9JRelTeCON+CAR3nn6/QCf/2lPAzqO+xTJweTszJP1zyEDQ+\r\n" + 
+//				  		"TXmHD+rO85MzHc+0WsCUVtffRm/DB39q8LotX+j7SQPl1+rGczoAnxeXxkDPdbmt\r\n" + 
+//				  		"C3Y6Dl0GJE7W2bFeIat4EI0uv/qXnexw25zpsXpOaEYx1UUijb/BXmEeK3FFu39L\r\n" + 
+//				  		"WvLPyNaETM5aq42rkvldGsXxx3bXkUMfDAZG8uA2VdMoODfiK6o0K9NwdB6c30pv\r\n" + 
+//				  		"bMnRDKNtAgMBAAECggEASbgVkOrLofSshGoSP5juEZOY8zooMuYbpEbFXyIxccIg\r\n" + 
+//				  		"VXG/CZXVlWkt95Jw8hZ0Cguc8enMv4SawUMLmi5vkjawg82mrVDWkffS7c7RU0g8\r\n" + 
+//				  		"ulyPG4Na3I9ZaG7cGGEMTjELrjanj+7rWiKslaKXzE/mBwPlNWsvoKfSVmvsygBf\r\n" + 
+//				  		"RjXmg8ScnWNi7ffhVqzdAhToRUYS3e+iue6Hr2oPwwQmayUsD4WRBUtmBcpgPwOL\r\n" + 
+//				  		"ndDzeyDsDzPwweDD6dgnweQdQizntVDVtqMmFhmqLWQkD2BbzQHdybfGJBhGHXlX\r\n" + 
+//				  		"satcpDUV1gk5+YGMq5mfttahNgHgwDy0BjWY4pvAWQKBgQDdPSjzlCKy9f91wPOV\r\n" + 
+//				  		"PxFxGy8fr9EhycuJUcNCHyZwLvetW3pNmpha16WjblXNcOoWWbSTpUKrtyydwJxk\r\n" + 
+//				  		"DIEL6Y+b1cy1+ezzC2YTBA3f0kyNTuF+to6rPEwUTNfLbjHbbAcfxkj++JwHETnU\r\n" + 
+//				  		"1nNCIaYKWCx8m/dtV53thC3a1wKBgQDEqnuP0/upvuXNv8j7CHzlKoNPTBA1oG9E\r\n" + 
+//				  		"SAjFFORwNUAI0j8jT9CQc8fp3fNH7ApSnGXUzG92dV7/S9WQkYThSTp4WioDMl6T\r\n" + 
+//				  		"9q1hG8Iqc4036yFeUoAcPVLmosVk7yZ6RzpNXwUuP7vHRiuqqvoZ7vuCaUla6RAr\r\n" + 
+//				  		"4sj6mBTPWwKBgQDJbExjb4Qj8QnTGIfsYo4rrvc5XyYFICcZ74HZKmkhi/FdOMLh\r\n" + 
+//				  		"8pUxZ9JbODIQJ/RHwwY/wh8wHUYWne0EvcmjodJoq7+EEnYjVUZqm69SDrI5mQ5+\r\n" + 
+//				  		"AhFkXzJY7RkvEjV8Mx9NU4bT9F6BpLJFT7WCCQaVtm9SR+F+AF49h7ED4wKBgQCI\r\n" + 
+//				  		"GySgiajl9UO9fTlu4pTtVNrDinS9aGcY7nGDU841CeVjNX6UxawmDLsSU5UG9Yi/\r\n" + 
+//				  		"W5XuC/4oEVrJfIY1I0C/WZqpqFzjEXz7EgEz764VCxt007moOZiH8rjo/UV3cTtD\r\n" + 
+//				  		"7P+ghF5lf55Jb3rRBrtIL2jI/GzUCfAzLyTAqXfdeQKBgQCIrObQPOcredAcqZOy\r\n" + 
+//				  		"Pkb0RQ6eosnjXTs2HnOXpnVkjsbL4MqIAnUSV9ZAadoz8iE4AzZ8qoZkACYf9WrS\r\n" + 
+//				  		"I/CXVBHacblZaeo2l0hqR0xqEJkC/3k8delyFRnVtrr130ZYPo2V5s8OjpWMG44j\r\n" + 
+//				  		"3d4nPA0AdUXdGqBfKoEBSSpR6w==")
+//				  .build();
+		
+//		String TO_NUMBER = "821075221121";
+//		String FROM_NUMBER = "821075221121";
+//
+//		CallEvent result = client
+//		  .getVoiceClient()
+//		  .createCall(new Call(TO_NUMBER, FROM_NUMBER, ncco));
+//		
+//		System.out.println(result.getConversationUuid());
+		
+	
+	
+}

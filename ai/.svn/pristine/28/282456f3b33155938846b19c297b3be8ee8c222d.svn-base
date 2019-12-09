@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.food.dao.IFoodDAO">
+
+	<select id="selectFoodList" parameterType="PagingInfoVO" resultType="HaccpVO">
+		SELECT B.*
+			FROM(
+				SELECT ROWNUM RNUM, A.*
+					FROM(
+						SELECT
+							PRODUCTGB,PRDLSTNM,RAWMTRL,
+							ALLERGY,NUTRIENT,BARCODE,
+							PRDKIND,PRDKINDSTATE,MANUFACTURE,
+							SELLER,CAPACITY,IMGURL1,
+							IMGURL2,PRDLSTREPORTNO,FC_ID
+						FROM HACCP
+					WHERE FC_ID=#{fcId}
+				) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectFoodCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*) FROM HACCP WHERE FC_ID= #{fcId}
+	</select>
+	
+	<select id="selectFood" parameterType="HaccpVO" resultType="HaccpVO">
+		SELECT
+	        PRODUCTGB,PRDLSTNM,RAWMTRL,
+	        ALLERGY,NUTRIENT,BARCODE,
+	        PRDKIND,PRDKINDSTATE,MANUFACTURE,
+	        SELLER,CAPACITY,IMGURL1,
+	        IMGURL2,PRDLSTREPORTNO,FC_ID,
+	        B.RTRVLPRVNS
+	    FROM
+	        HACCP A LEFT OUTER JOIN STOPSELLINGFOOD B ON (A.PRDLSTREPORTNO = B.PRDLST_REPORT_NO)
+	    WHERE A.PRDLSTREPORTNO= #{prdlstreportno}
+	</select>
+
+
+
+</mapper>

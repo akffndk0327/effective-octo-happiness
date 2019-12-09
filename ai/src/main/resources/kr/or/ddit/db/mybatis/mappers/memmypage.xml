@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일                수정자        수정내용               -->
+<!--  ==========    ======    ==============        -->
+<!--  2019. 11. 18   허민지        최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mypage.dao.IMemMypageDAO">
+
+	<insert id="insertMemAllergy" parameterType="MemberVO">
+    INSERT ALL
+		<foreach collection="memAllList" item="allergy">
+    	INTO MEMALLERGY (
+    		MEM_ID
+        	,ALL_ID
+        	,SYM_ID
+    	) VALUES (
+        	#{memId}
+        	,#{allergy.allId}
+        	,#{allergy.symId}
+    	)
+    </foreach>
+    SELECT * FROM DUAL
+	</insert>
+	
+	
+	<delete id="deleteMemAllergy" parameterType="MemAllergyVO">
+	DELETE FROM MEMALLERGY
+	WHERE 
+		MEM_ID = #{memId}
+		AND ALL_ID = #{allId}
+	</delete>
+	
+   <update id="deleteMember" parameterType="String">
+   UPDATE MEMBER
+   SET
+   		MEM_DELETE = 'Y'
+   WHERE
+   		MEM_ID = #{memId}
+   </update>
+   
+   <update id="updateOthersAllergies" parameterType="String">
+   UPDATE ALLERGY
+	SET
+    	ALL_THERAPY = #{allTherapy}
+    	ALL_PREVENT = #{allPrevent}
+    	ALL_CAUSE =   #{allCause}
+   		ALL_SYMPTOM = #{allSymptom}
+	WHERE
+    	ALL_ID = #{allId}
+   </update>
+   
+   <!--멤버별 list 조회 -->
+   <select id="selectMemberDietList" parameterType="PagingInfoVO" resultType="MonthlyVO"> 
+	   	SELECT B.*
+			FROM(
+			    SELECT ROWNUM RNUM, A.*
+			    FROM(
+			       SELECT
+	                    TO_CHAR(MONTHLY_INDATE,'YYYY.MM.DD') MONTHLY_INDATE,
+	                    MONTHLY_ID,
+	                    MONTHLY_TITLE
+	                FROM
+	                    MONTHLY
+	                WHERE MEM_ID = #{pk}
+			    ) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+   </select>
+   
+   <select id="selectMemberDietCount" parameterType="PagingInfoVO" resultType="int">
+   			SELECT COUNT(*)
+			FROM MONTHLY
+	        WHERE MEM_ID = #{pk}
+   </select>
+	
+
+	<resultMap type="Order2VO" id="orderMap" autoMapping="true">
+		<id column="ORDER_ID" property="orderId"/>
+		<association property="prod" javaType="ProdVO" autoMapping="true">
+			<id column="PROD_ID" property="prodId"/>
+		</association>
+		<association property="payVO" javaType="PaymentVO" autoMapping="true">
+			<id column="ORDER_ID" property="orderId"/>
+		</association>
+		<association property="refund" javaType="RefundVO" autoMapping="true">
+		</association>
+	</resultMap>
+	
+   <select id="orderByOrderList" parameterType="String" resultMap="orderMap">
+			SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		    	SELECT AA.*,
+                (SELECT PROD_NAME
+                    FROM PROD A, ORDER2 B, ORDERDETAIL C
+                    WHERE A.PROD_ID = C.PROD_ID
+                    AND B.ORDER_ID = C.ORDER_ID
+                    AND B.ORDER_ID = AA.ORDER_ID
+                    AND ROWNUM = 1) PROD_NAME
+                FROM (
+                SELECT DISTINCT O.ORDER_ID,
+                        P.PAY_PRICE,
+                        TO_CHAR(O.ORDER_DATE, 'YYYY-MM-DD') AS ORDER_DATE,
+                        P.CODE_NAME AS PAY_STATUS_NAME,
+                        O.CODE_NAME AS ORDER_STATUS_NAME,
+                        Q.PLUS, O.ORDER_STATUS,
+                        R.REFUND_DATE, R.REFUND_REASON, R.REFUND_APPROVAL
+                FROM (SELECT ORDER_ID, ORDER_DATE, CODE_NAME, ORDER_STATUS
+                        FROM ORDER2 INNER JOIN CODE ON (ORDER_STATUS = CODE_ID)
+                        WHERE MEM_ID =  #{memId}) O,
+                      (
+                      SELECT B.ORDER_ID, PAY_PRICE, CODE_NAME
+                        FROM PAYMENT A , ORDER2 B, CODE C
+                        WHERE A.ORDER_ID = B.ORDER_ID
+                        AND A.PAY_STATUS = C.CODE_ID
+                        AND B.MEM_ID = #{memId}
+                      ) P,
+                      (
+                      SELECT B.ORDER_ID, COUNT(*)-1 AS PLUS
+                        FROM ORDER2 A, ORDERDETAIL B, PROD C
+                        WHERE A.ORDER_ID = B.ORDER_ID
+                        AND B.PROD_ID = C.PROD_ID
+                        AND A.MEM_ID = #{memId}
+                        GROUP BY B.ORDER_ID
+                      ) Q,
+                      (
+                      SELECT A.ORDER_ID, REFUND_DATE, REFUND_REASON, REFUND_APPROVAL
+                      FROM ORDER2 A, REFUND B
+                      WHERE A.ORDER_ID = B.ORDER_ID(+)
+                      AND A.MEM_ID = #{memId}
+                      ) R,            
+                      ORDERDETAIL A, PROD B
+                WHERE O.ORDER_ID = P.ORDER_ID
+                AND O.ORDER_ID = Q.ORDER_ID
+                AND O.ORDER_ID = A.ORDER_ID
+                AND A.PROD_ID = B.PROD_ID
+                AND A.ORDER_ID = R.ORDER_ID
+                ORDER BY ORDER_DATE DESC
+                
+                ) AA
+                WHERE <![CDATA[
+    				ROWNUM <= 3]]>
+		    ) A
+		) B
+
+   </select>
+</mapper>

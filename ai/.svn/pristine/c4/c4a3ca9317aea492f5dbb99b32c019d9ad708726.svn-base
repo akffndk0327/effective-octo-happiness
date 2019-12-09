@@ -1,0 +1,90 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+    <%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 7.      박주연      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+ <div class="InnerContainer">
+<h3>${advertise.memId}님의 광고신청 </h3>
+<form class="adAdmin">
+	<table class="table adtable table-condensed" >
+	<thead>
+	</thead>
+		<tbody>
+			<tr>
+			 	<td>번호  	</td>
+			 	<td>${advertise.adId }</td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td><span class="Bold">${advertise.adTitle }<span></td>
+			</tr>
+			<tr>
+				<th>성 명</th>
+				<td>${advertise.memId }</td>
+			</tr>
+			<tr>
+				<th>승인상태</th>
+				<td>${advertise.adApprove }
+					
+				</td>
+			</tr>
+			<tr>
+				<th>광고 시작 날짜</th>
+				<td>${advertise.adIndate }</td>
+			</tr>
+			<tr>
+				<th>광고 종료 날짜</th>
+				<td>${advertise.adTerm}</td>
+			</tr>
+			<tr>
+				<th>이동 URL</th>
+				<td>${advertise.adLink }</td>
+			</tr>
+			<tr>
+				<th>게시 위치</th>
+				<td>
+					<div id="location">${Adposition.adpoName }</div>
+				</td>
+			</tr>
+			<tr>
+				<th>첨부파일</th>
+				<td>${adattView.adattSavename }</td>
+			</tr>
+		<tr>
+			<th>반려사유</th>
+			<td>
+			<select id="adUnapprove">
+				<option value="">선택하세요</option>
+				<option >부적절한 광고 내용입니다.</option>
+				<option >이동할 수 없는 URL 주소입니다.</option>
+				<option >부적절한 게시 위치 입니다.</option>
+			</select>
+			</td>
+		</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2">
+					<input type="submit" class="btn btnAi0" value="승인"> 
+					<input type="submit" class="btn btnAi1" value="반려">
+				</td>
+			</tr> 
+		</tfoot>
+	</table>
+	</form>
+</div>
+<script>
+// 	var approve = ${".btnAi0"};
+// 	var cancle = ${".btnAi0"};
+// 	var adreply = ${"#adreply"};
+// 	cancle.on("click",function(){
+// 		adreply.
+		
+// 	})
+</script>

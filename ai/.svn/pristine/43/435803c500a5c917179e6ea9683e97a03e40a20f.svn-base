@@ -1,0 +1,71 @@
+package kr.or.ddit.vo;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Base64;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of="allId")
+public class AllergyVO implements Serializable {
+	private Object what;
+
+	public AllergyVO(String allId) {
+		this.allId = allId;
+	}
+
+	public AllergyVO(int what) {
+		this.what = what;
+	}
+	private int rnum ; 
+	private String allId; // 아이디
+	private String allName; //이름
+	private String allType; //타입
+	private String allTherapy; //치료
+	private String allPrevent; //예방
+	private String allCause; //원인
+	private String allSymptom; //알레르기 증상 
+	private byte[] allImg;	 //사진 BLOB
+
+	private AllergySymtomVO allergySymtom;
+
+	private int cnt;
+
+	//비교를 하려면 contains로 해야하는데 다른 타입을 비교하는것이므로 무조건 false
+	//그래서 allId로 비교 할 수 있게 메서드를 만들어줘야함
+	//비교대상은 MemAllergyVO allId랑 AllergyVO allId를 비교해줘야해요.
+	//타입이 달라서 같게 해줘야 한다고요.
+	public boolean notContains(List<MemAllergyVO> allergyList) {
+		return !allergyList.contains(new MemAllergyVO(allId));
+	}
+
+	//이미지 등록 
+	private MultipartFile allImage ;
+
+	//바이너리로 변환됨
+	public void setAll_Image(MultipartFile allImage) throws IOException {
+		this.allImage = allImage;
+		if(allImage.getSize()<=0) {
+			return;
+		}
+		allImg = allImage.getBytes();
+	}
+
+	@JsonIgnore
+	public String getAll_imgBase64() {
+		if(allImg==null) {
+			return null;
+		}
+		return Base64.getEncoder().encodeToString(allImg);
+	}
+
+}

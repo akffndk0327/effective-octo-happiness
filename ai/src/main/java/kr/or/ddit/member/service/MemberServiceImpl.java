@@ -1,0 +1,178 @@
+package kr.or.ddit.member.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.member.dao.IMemberDAO;
+import kr.or.ddit.member.exception.NotAuthenticatedException;
+import kr.or.ddit.prod.dao.IProdDAO;
+import kr.or.ddit.prod.service.IProdService;
+import kr.or.ddit.vo.AccountVO;
+import kr.or.ddit.vo.ComInfoVO;
+import kr.or.ddit.vo.CompanyVO;
+import kr.or.ddit.vo.MemAllergyVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.MonthlyVO;
+import kr.or.ddit.vo.RecipeBoardVO;
+
+/**
+ * @author 허민지
+ * @since 2019. 11. 9.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 5.      허민지       최초작성
+ * 2019. 11. 9       허민지       create 추가
+ * 2019. 11
+ * 2019. 11. 12.     허민지	 retrieveCompany, retrieveCompanyForSignUp, createCompany 추가
+ * 2019. 11. 13.     허민지      createCompany 삭제
+ * 2019. 11. 13.     허민지	 processMemAllergy 추가
+ * 2109. 11. 15		 허민지      orderByMonthly , orderByRecipe, modifyMember 추가
+ * 2019. 11. 16      이진희     회원한명의 알레르기 정보 
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Service("memberService")
+public class MemberServiceImpl implements IMemberService {
+
+	@Inject
+	private IMemberDAO memberDAO;
+	
+	@Inject
+	private IAuthenticateService service;
+	
+	
+	@Override
+	public MemberVO retrieveMember(MemberVO member) {
+		return memberDAO.selectMember(member);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult createMember(MemberVO member) {
+		service.encodePassword(member);
+		ServiceResult result = null;
+		if(memberDAO.selectMember(member)==null) {
+			int cnt = memberDAO.insertAccount(member);
+			cnt += memberDAO.insertMember(member);
+			if(cnt >= 3) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}else {
+			result = ServiceResult.PKDUPLICATED;
+		}
+		return result;
+	}
+
+	
+	@Override
+	public List<String> retrieveListAllergy() {
+		return memberDAO.selectAllergyList();
+	}
+
+	@Override
+	public List<String> retrieveSytomsList() {
+		return memberDAO.selectSytomsList();
+	}
+
+
+	@Override
+	public ComInfoVO retrieveCompanyForSignUp(String comNum) {
+		return memberDAO.selectCompanyForSignUp(comNum);
+	}
+
+	@Override
+	public CompanyVO retrieveCompany(CompanyVO company) {
+		return memberDAO.selectCompany(company);
+	}
+
+	@Override
+	public List<MonthlyVO> orderByMonthly(String memId) {
+		return memberDAO.orderByMonthly(memId);
+	}
+
+	@Override
+	public List<RecipeBoardVO> orderByRecipe(String memId) {
+		return memberDAO.orderByRecipe(memId);
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult modifyMember(MemberVO member) {
+		ServiceResult result = null;
+		//비밀번호 수정도 하고 다른 정보도 수정 할 수 있다.
+		//비밀번호는 AccountVO로 받기 때문에
+		//AccountVO를 만들어서  
+		AccountVO account = new AccountVO();
+		//그곳에 파라미터로 받은 멤버의 아이디와
+		account.setMemId(member.getMemId());
+		//비밀번호를 set해주자
+		account.setMemPass(member.getMemPass());
+		//그리고 비밀번호를 encode하자
+		service.encodePassword(account);
+		int cnt = memberDAO.updatePass(account);
+		if(member.getAuthorId().equals("ROLE_EMP")) {
+			member.setMemAddr1("없음");
+			member.setMemAddr2("없음");
+			member.setMemZip("없음");
+		}
+		cnt += memberDAO.updateMember(member);
+		if(cnt > 0) result = ServiceResult.OK;
+		else result = ServiceResult.FAILED;
+		return result;
+	}
+
+	@Override
+	public MemberVO selectMemberAll(MemberVO mem) {
+		return memberDAO.selectMemberAll(mem);
+	}
+
+	@Override
+	public List<MemAllergyVO> selectMemAllergy(String memId) {
+		return memberDAO.selectMemAllergy(memId);
+	}
+
+	@Override
+	public MemberVO idCheck(String memId) {
+		return memberDAO.idCheck(memId);
+	}
+
+	@Override
+	public MemberVO mailCheck(String memMail) {
+		return memberDAO.mailCheck(memMail);
+	}
+
+	@Override
+	public MemberVO findId(MemberVO member) {
+		return memberDAO.findId(member);
+	}
+
+	@Override
+	public ServiceResult updatePass(AccountVO account) {
+		service.encodePassword(account);
+		ServiceResult result = null;
+		int cnt = memberDAO.updatePass(account);
+		if(cnt > 0) result = ServiceResult.OK;
+		else result = ServiceResult.FAILED;
+		return result;
+	}
+	
+	@Override
+	public MemberVO findPass(MemberVO member) {
+		return memberDAO.findPass(member);
+	}
+
+
+
+}

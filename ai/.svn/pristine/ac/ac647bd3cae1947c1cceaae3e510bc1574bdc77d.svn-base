@@ -1,0 +1,49 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 박주연
+ * @since 2019. 11. 15.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 15.      박주연       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+ #memleft {
+   width: 220px;
+    height: 500px;
+    background: #FAFAFA;
+    font-size: 22px;
+    padding: 7px;
+    display: inline-block;
+    float: left;
+    margin-left: 50px;
+}
+
+ul {
+   list-style: none;
+}
+
+li {
+   list-style: none;
+   padding: 5px;
+}
+
+#memleft a {
+   color: black;
+}
+
+#MemTitle {
+   font-size: 33px;
+   font-weight: bold;
+}
+
+#memleft ul li a:link, :visited, :hover {
+   color: black;
+   text-decoration: none;
+} 

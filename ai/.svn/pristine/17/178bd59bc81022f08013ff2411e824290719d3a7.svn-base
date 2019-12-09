@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 7.    최서희     최초작성              -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.prod.dao.IProdDAO">
+	<select id="selectReviewCount" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM Review
+		WHERE PROD_ID = #{prodId}
+		AND REVIEW_USE = '1'
+	</select>
+	
+	<select id="selectReviewList" parameterType="PagingInfoVO" resultType="ReviewVO">
+		SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		    	 SELECT
+				    REVIEW_NO,  REVIEW_CONTENT,    REVIEW_USE,
+				    REVIEW_INDATE,   A.ORDER_ID,   A.PROD_ID,
+                    C.MEM_ID
+				FROM
+				    review A, ORDERDETAIL B, ORDER2 C
+				WHERE REVIEW_USE = '1'
+				AND A.PROD_ID = B.PROD_ID
+                AND B.ORDER_ID = C.ORDER_ID
+                AND A.PROD_ID = #{pk}
+                ORDER BY REVIEW_NO DESC
+		    ) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<insert id="insertReview" parameterType="ReviewVO">
+		INSERT INTO REVIEW (
+		    REVIEW_NO,    REVIEW_CONTENT,
+		    ORDER_ID,    PROD_ID
+		) VALUES (
+		    REVIEW_SEQ.NEXTVAL, #{reviewContent},
+		    #{orderId}, #{prodId}
+		)
+	</insert>
+	
+	<update id="deleteReview" parameterType="int">
+		UPDATE REVIEW
+    	SET  REVIEW_USE = '0'
+		WHERE REVIEW_NO = #{reviewNo}
+	</update>
+
+</mapper>

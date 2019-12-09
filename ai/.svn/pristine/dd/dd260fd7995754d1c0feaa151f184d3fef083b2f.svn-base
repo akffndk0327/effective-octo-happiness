@@ -1,0 +1,172 @@
+package kr.or.ddit.survey.service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.survey.dao.ISurveyDAO;
+import kr.or.ddit.vo.ExampleVO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.QuestionVO;
+import kr.or.ddit.vo.SurveyResultVO;
+import kr.or.ddit.vo.SurveyVO;
+
+@Service
+public class SurveyServiceImpl implements ISurveyService {
+    @Inject
+    ISurveyDAO dao;
+
+    @Override
+    public ServiceResult insertSurvey(SurveyVO survey) {
+        ServiceResult result = null;        //설문지 등록 결과
+        int surId = dao.getSurveyNextVal(); //설문지 등록 시퀀스 조회
+        survey.setSurId(surId+"");
+
+        //survey 삽입
+        int cnt = dao.insertSurvey(survey);
+
+        List<QuestionVO> questionlist = survey.getQuestionList();
+        List<QuestionVO> qlist        = new ArrayList<QuestionVO>();
+        List<QuestionVO> elist        = new ArrayList<QuestionVO>();
+
+        //설문조사 삽입이 잘 되었으면!
+        if (cnt > 0) {
+            //질문 테이블에 데이터 등록 시 getSurveyId()를 이용하여 설문지ID를 가져올 때
+            //이전 설문조사 ID를 가져오는 오류 발생으로 인해 해당 부분 주석처리
+            //getSurveyNextVal() 메소드 신규생성 해당 메소드로 등록된 설문지 시퀀스를 조회한 뒤 해당 시퀀스를 이용하여
+            //surId 모두 처리
+            //surId = dao.getSurveyId();
+
+            if (questionlist!=null) {
+                for (int i = 0; i < questionlist.size(); i++) {
+                    if (!(questionlist.get(i).getQuestCont() == null)) {
+                        qlist.add(questionlist.get(i));
+                    }
+                }
+            }
+        }
+
+        if (surId == 0) result = ServiceResult.FAILED;
+
+        // 질문 삽입
+        //해당 부분도 설문조사 등록과 같은 오류 발생으로 인해 nextval을 미리한 뒤 사용
+        List<Integer> questionID = new ArrayList<>();
+        for (int i = 0; i < qlist.size(); i++) {
+            int questionId = dao.getQuestionNextVal();
+
+            QuestionVO quest = new QuestionVO();
+            quest.setQuestId(questionId+"");
+            quest.setSurveyId(surId + "");
+            quest.setQuestCont(qlist.get(i).getQuestCont());
+            quest.setQuestType(qlist.get(i).getQuestType());
+            dao.insertQuestion(quest);
+
+            if (qlist.get(i).getQuestType().equals("example")) {
+                questionID.add(questionId);
+                System.out.println("dao.getQ  " + dao.getQuestion());
+            }
+        }
+
+        // 객관식만 거르기
+        for (int i = 0; i < qlist.size(); i++) {
+            if (qlist.get(i).getQuestType().equals("example")) {
+                elist.add(qlist.get(i));
+            }
+        }
+
+        // 답변항목 삽입
+        for (int i = 0; i < elist.size(); i++) {
+            for (int j = 0; j < elist.get(i).getExampleList().size(); j++) {
+                ExampleVO example = new ExampleVO();
+                String examCont = elist.get(i).getExampleList().get(j).getExamCont().toString();
+
+                String[] excont = examCont.split(",");
+                for (int k = 0; k < excont.length; k++) {
+                    example.setExamCont(excont[k]);
+                    example.setQuestionId(questionID.get(i) + "");
+                    dao.insertExample(example);
+                }
+            }
+        }
+
+        result = ServiceResult.OK;
+
+        return result;
+    }
+
+    @Override
+    public List<SurveyVO> selectSurveyList(PagingInfoVO<SurveyVO> pagingVO) {
+        return dao.selectSurveyList(pagingVO);
+    }
+
+    @Override
+    public SurveyVO selectSurvey(String recipe) {
+        return dao.selectSurvey(recipe);
+    }
+
+    @Override
+    public int selectSurveyCount(PagingInfoVO<SurveyVO> pagingVO) {
+        return dao.selectSurveyCount(pagingVO);
+    }
+
+    @Override
+    public ServiceResult insertSurveyResult(SurveyResultVO result) {
+        ServiceResult status=null;
+        List<SurveyResultVO> list=result.getList();
+
+        for (int i = 0; i < list.size(); i++) {//빈 값 정리
+            if(StringUtils.isBlank(list.get(i).getTokenResult())&&StringUtils.isBlank(list.get(i).getExamId())) {
+                list.get(i).setTokenResult("");
+            }
+        }
+
+        System.out.println(list);
+
+        for (int i = 0; i < list.size(); i++) {
+            SurveyResultVO vo = new SurveyResultVO();
+            vo.setSurId(list.get(i).getSurId());
+            vo.setQuestId(list.get(i).getQuestId());
+
+            if(StringUtils.isBlank(list.get(i).getExamId())) {
+                vo.setTokenResult(list.get(i).getTokenResult());
+            }
+
+            if(StringUtils.isBlank(list.get(i).getTokenResult())) {
+                vo.setExamId(list.get(i).getExamId());
+            }
+
+            dao.insertSurveyResult(vo);
+        }
+        status = ServiceResult.OK;
+        return status;
+    }
+
+    @Override
+    public List<SurveyResultVO> selectSurveyResponse(int surId) {
+
+        return dao.selectSurveyResponse(surId);
+    }
+
+    @Override
+    public List<ExampleVO> selectExample(int surId){
+        return dao.selectExample(surId);
+    }
+
+    @Override
+    public int deleteSurvey(SurveyVO survey) {
+        return  dao.deleteSurvey(survey);
+    }
+
+	@Override
+	public List<SurveyResultVO> selectSurveyResponseCount(int surId) {
+		// TODO Auto-generated method stub
+		return dao.selectSurveyResponseCount(surId);
+	}
+
+}

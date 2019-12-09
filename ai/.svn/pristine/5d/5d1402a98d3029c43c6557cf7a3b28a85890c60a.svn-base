@@ -1,0 +1,12 @@
+package kr.or.ddit.vo;
+
+public class SurveyVO {
+	private String surId;
+	private String subName;
+	private String surEnddate;
+	private String surPurpose;
+	private String surContent;
+	private String surLead;
+	private String surIndate;
+	private String surUse;
+}

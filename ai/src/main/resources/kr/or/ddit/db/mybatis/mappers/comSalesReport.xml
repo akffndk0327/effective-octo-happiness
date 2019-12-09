@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일                  수정자        수정내용               -->
+<!--  ==========     ======    ==============        -->
+<!--  2019. 11. 11.    최서희       최초작성               -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.mypage.dao.IComReportDAO">
+
+<select id="selectJan" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '01'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+	</if>
+</select>
+
+<select id="selectFeb" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '02'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectMar" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '03'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectApr" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '04'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectMay" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '05'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectJun" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '06'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectJul" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '07'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectAug" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '08'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectSep" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '09'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectOct" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '10'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectNov" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '11'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+<select id="selectDec" parameterType="String" resultType="int">
+SELECT NVL(SUM(ORDER_PRICE),0) AS ORDER_PRICE
+FROM  ORDER2 A, ORDERDETAIL B, PROD C
+WHERE A.ORDER_ID = B.ORDER_ID
+	AND B.PROD_ID = C.PROD_ID
+	AND TO_CHAR(ORDER_DATE,'YYYY') = '2019' 
+	AND  SUBSTR(TO_CHAR(ORDER_DATE,'YYYYMMDD'),5,2) = '12'
+	<if test="String!=null"> 
+	AND C.MEM_ID = #{loginId}
+</if>
+</select>
+
+</mapper>

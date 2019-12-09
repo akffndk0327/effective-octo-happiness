@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--						-->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 18.     박주연     최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.advertiseReply.dao.IAdReplyDAO">
+	<select id="selectReplyCount" resultType="int" parameterType="PagingInfoVO">
+		SELECT COUNT(*) FROM ADREPLYVO
+	</select>
+	
+	<select id="selectReplyList" parameterType="PagingInfoVO" resultType="AdreplyVO">
+		SELECT B.*
+		FROM(
+			SELECT ROWNUM RNUM, A.*
+			FROM(
+				SELECT AD_ID,   ADREPLY_CONT,
+				    MEM_ID,   TO_CHAR(ADREPLY_DATE, 'YYYY-MM-DD') ADREPLY_DATE
+				FROM ADREPLY
+				ORDER BY ADREPLY_ID DESC
+			) A  
+		) B  
+		<![CDATA[
+			WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+		]]>
+	</select>
+</mapper>

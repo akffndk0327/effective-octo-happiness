@@ -1,0 +1,22 @@
+package kr.or.ddit.diet.controller;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.diet.service.IDietService;
+
+@Controller
+public class DietDelete {
+	@Inject
+	IDietService service;
+	
+	@RequestMapping(value = "diet/dietDelete.do")
+	public String DietDelete(@RequestParam(required = true) String monId) {
+		service.removeDiet(monId);
+		        
+		return "redirect:/diet/dietList.do";
+	}
+}

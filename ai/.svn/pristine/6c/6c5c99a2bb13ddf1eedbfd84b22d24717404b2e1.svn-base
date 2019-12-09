@@ -1,0 +1,102 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 14.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 14.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+#InnerContainer{
+	margin-left : 350px;
+	
+}
+#mainTable{
+	width : 83%;
+	min-height : 400px;	
+}
+#mainTable th{
+	height : 30px;
+}
+#mainTable td{
+		font-size : 16px;
+		vertical-align : middle;
+}
+.btnGreen{
+
+	background: #90c322;
+	color: #fff;
+	font-size: 11px;
+}
+.btnWhite{
+	background: #fff;
+	color: #90c322;
+	font-size: 11px;
+	border: 1px solid #90c322;
+}
+th, td{
+	text-align : center;
+}
+.leftTd{
+	text-align : left;
+	width:35%;
+}
+.btnLong{
+	width : 100px;
+}
+.SearchT{
+	border : 0px;
+}
+.SearchT input {
+	width : 250px;
+	height : 30px;
+	padding-left : 10px;
+}
+.SearchT select {
+	width : 100px;
+	height : 30px;
+	padding-left : 10px;
+}
+.SearchT a, #search{
+	cursor : pointer;
+	font-size : 15px;
+}
+.SearchT a:hover{
+	background: #90c322;
+	color: #fff;
+}
+.blank{
+	width : 48%;
+}
+.blank2{
+	width : 38%;
+}
+.table a{
+	cursor : pointer;
+}
+#inputReason{
+	width : 300px;
+	height : 100px;
+}
+.modal-title{
+	font-size : 20px;
+	font-weight : bold;
+}
+.modal-dialog { 
+	width: 23%; height: 30%;
+}
+
+.prodImg{
+	width : 100px;
+	height : 100px;
+}
+#pagingArea{
+	text-align : center;
+}

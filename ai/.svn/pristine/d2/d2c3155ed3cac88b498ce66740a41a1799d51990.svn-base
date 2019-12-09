@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.addrChart.dao.IAddrChartDAO">
+
+	<select id="selectSeoulAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='서울'
+	</select>
+	
+	<select id="selectBusanAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='부산'
+	</select>
+	
+	<select id="selectDaeguAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='대구'
+	</select>
+	
+	<select id="selectGwangjuAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='광주'
+	</select>
+	
+	<select id="selectDaejeonAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1 LIKE '%대전%'
+	</select>
+	
+	<select id="selectUlsanAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='울산'
+	</select>
+	
+	<select id="selectChungbukAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='충북'
+	</select>
+	
+	<select id="selectJeonnamAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='전남'
+	</select>
+	
+	<select id="selectJejuAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_ADDR1='제주'
+	</select>
+	
+	<select id="selectSeoulAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='서울'
+	</select>
+	
+	<select id="selectBusanAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='부산'
+	</select>
+	
+	<select id="selectDaeguAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='대구'
+	</select>
+	
+	<select id="selectGwangjuAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='광주'
+	</select>
+	
+	<select id="selectDaejeonAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1 LIKE '%대전%'
+	</select>
+	
+	<select id="selectUlsanAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='울산'
+	</select>
+	
+	<select id="selectChungbukAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='충북'
+	</select>
+	
+	<select id="selectJeonnamAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='전남'
+	</select>
+	
+	<select id="selectJejuAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_ADDR1='제주'
+	</select>
+	
+	<select id="selectSeoulRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='서울'
+	</select>
+	
+	<select id="selectBusanRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='부산'
+	</select>
+	
+	<select id="selectDaeguRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='대구'
+	</select>
+		
+	<select id="selectGwangjuRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='광주'
+	</select>
+	
+	<select id="selectDaejeonRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1 LIKE '%대전%'
+	</select>
+	
+	<select id="selectUlsanRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='울산'
+	</select>
+	
+	<select id="selectChungbukRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='충북'
+	</select>
+	
+	<select id="selectJeonnamRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='전남'
+	</select>
+	
+	<select id="selectJejuRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_ADDR1='제주'
+	</select>
+	
+	<select id="selectOneAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '2001' AND '2004' AND B.ALL_ID='D4'
+	</select>
+	
+	<select id="selectOneAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '2001' AND '2004' AND B.ALL_ID='D3'
+	</select>
+	
+	<select id="selectOneRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '2001' AND '2004' AND B.ALL_ID='D5'
+	</select>
+	
+	<select id="selectTwoAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1991' AND '2000' AND B.ALL_ID='D4'
+	</select>
+	
+	<select id="selectTwoAsthma" resultType="int" >
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1991' AND '2000' AND B.ALL_ID='D3'
+	</select>
+	
+	<select id="selectTwoRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1991' AND '2000' AND B.ALL_ID='D5'
+	</select>
+	
+	<select id="selectThrAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1981' AND '1990' AND B.ALL_ID='D4'
+	</select>
+	
+	<select id="selectThrAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1981' AND '1990' AND B.ALL_ID='D3'
+	</select>
+	
+	<select id="selectThrRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1981' AND '1990' AND B.ALL_ID='D5'
+	</select>
+	
+	<select id="selectFourAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1971' AND '1980' AND B.ALL_ID='D4'
+	</select>
+	
+	<select id="selectFourAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1971' AND '1980' AND B.ALL_ID='D3'
+	</select>
+	
+	<select id="selectFourRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1971' AND '1980' AND B.ALL_ID='D5'
+	</select>
+	
+	<select id="selectFiveAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1961' AND '1970' AND B.ALL_ID='D4'
+	</select>
+	
+	<select id="selectFiveAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1961' AND '1970' AND B.ALL_ID='D3'
+	</select>
+	
+	<select id="selectFiveRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND A.MEM_AGE BETWEEN '1961' AND '1970' AND B.ALL_ID='D5'
+	</select>		
+	
+	<select id="selectWoAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_GENDER='여'
+	</select>		
+	
+	<select id="selectWoAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_GENDER='여'
+	</select>	
+	
+	<select id="selectWoRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_GENDER='여'
+	</select>	
+	
+	<select id="selectManAtopy" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D4' AND A.MEM_GENDER='남'
+	</select>	
+	
+	<select id="selectManAsthma" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D3' AND A.MEM_GENDER='남'
+	</select>	
+	
+	<select id="selectManRhinitis" resultType="int">
+		SELECT COUNT(*) FROM MEMBER A,MEMALLERGY B WHERE A.MEM_ID=B.MEM_ID AND B.ALL_ID='D5' AND A.MEM_GENDER='남'
+	</select>			
+
+</mapper>

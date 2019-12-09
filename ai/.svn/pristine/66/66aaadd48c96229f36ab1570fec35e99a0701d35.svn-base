@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일                수정자        수정내용               -->
+<!--  ==========    ======    ==============        -->
+<!--  2019. 11. 23   허민지        최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mypage.dao.IAdminMypageDAO">
+
+  <sql id="searchFrag">
+  	<where>
+  		<if test="searchMap!=null">
+  			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+  			<choose>
+  				<when test="'id'.equals(searchMap.searchType)">
+  					MEM_ID = #{searchMap.searchWord}
+  				</when>
+  				<when test="'name'.equals(searchMap.searchType)">
+  					MEM_NAME = #{searchMap.searchWord}
+  				</when>
+  				<otherwise>
+  					MEM_ID = #{searchMap.searchWord}
+  					OR MEM_NAME = #{searchMap.searchWord}
+  				</otherwise>
+  			</choose>
+  			</if>
+  		</if>
+  	</where>
+  </sql>
+
+	<select id="selectMemberCount" parameterType="PagingInfoVO" resultType="int">
+  	SELECT COUNT(MEM_ID)
+  	FROM MEMBER
+  	<include refid="searchFrag" />
+    </select>
+    
+	<select id="selectMemberList" parameterType="PagingInfoVO" resultType="MemberVO">
+	   SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		          	C.MEM_ID, MEM_NAME, MEM_DELETE, AUTHOR_ID
+				FROM 
+					MEMBER C LEFT OUTER JOIN COMPANY D ON (C.MEM_ID = D.MEM_ID)
+                             LEFT OUTER JOIN AUTHORITIES E ON (C.MEM_ID = E.MEM_ID)
+		        <include refid="searchFrag" />	
+		    	) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<resultMap type="MemberVO" id="listMap" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		<association property="company" javaType="CompanyVO" autoMapping="true" />
+	</resultMap>
+	
+	<select id="selectMember" parameterType="MemberVO" resultMap="listMap" >
+	SELECT
+    	MEM_NAME, MEM_TEL, MEM_ADDR1, MEM_ADDR2,
+    	MEM_ZIP, MEM_MAIL, MEM_DELETE, MEM_GENDER,
+    	MEM_AGE, A.MEM_ID, AUTHOR_ID,
+    	COM_NUM, COM_NAME, COM_ADDR
+	FROM
+    	MEMBER A LEFT OUTER JOIN COMPANY B ON (A.MEM_ID = B.MEM_ID)
+    			 LEFT OUTER JOIN AUTHORITIES C ON (A.MEM_ID = C.MEM_ID)
+	WHERE
+    	A.MEM_ID = #{memId}
+	</select>
+
+
+	<resultMap type="CompanyVO" id="comMap" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		<association property="member" javaType="MemberVO" autoMapping="true">
+		</association>
+	</resultMap>
+	
+	<select id="selectCompanyList" resultMap="comMap">
+	SELECT
+    	MEM_NAME, MEM_TEL, MEM_MAIL,
+    	COM_NUM, COM_NAME, COM_ADDR,
+    	A.MEM_ID ,MEM_DELETE
+	FROM
+    	MEMBER A, COMPANY B
+	WHERE
+    	A.MEM_ID = B.MEM_ID;
+	</select>
+	
+	<select id="selectBrowser">
+	
+	</select>
+</mapper>

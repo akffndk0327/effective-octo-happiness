@@ -1,0 +1,226 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 11.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 11.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+.prodImg{
+	width : 80px;
+	height : 80px;
+}
+.t{
+	width : 55%;
+	height : auto;
+	font-size : 18px;
+	text-align : center;
+	margin-left : 250px;
+	border-collapse: collapse;
+
+}
+.prodName{
+	font-size : 20px;
+	text-align : left;
+}
+.td2 p{
+	font-size : 14px;
+	color : #5D5D5D;
+	text-align : left;
+}
+tr{
+	width : 100%;
+}
+th{
+/* 	border-top: 1px solid #8C8C8C; */
+	border-bottom: 1px solid #8C8C8C;
+	height : 35px;
+}
+td{
+	padding : 10px;
+}
+.cartBox{
+	border : 1px solid #8C8C8C;
+	width : 55%;
+	height : auto;
+	text-align : center;
+	margin : 5px;
+	margin-left : 250px;
+	border-collapse: collapse;
+}
+
+.td1{
+	width : 12%;
+}
+.td2{
+	width : 47%;
+	text-align : left;
+}
+.td3{
+	width : 10%;
+}
+.title{
+	width : 55%;
+	margin-top : 20px;
+	margin-left : 250px;
+	border-left : 6px solid #077B5F;
+	padding : 10px;
+	font-size : 28px;
+	font-weight : bold;
+	color : #077B5F;
+}
+
+.t2{
+	width : 55%;
+	height : auto;
+	font-size : 18px;
+/* 	text-align : center; */
+	margin-left : 250px;
+	border-collapse: collapse;
+	border : 1px solid #8C8C8C;
+}
+.t2 th{
+	width : 30%;
+	border : 1px solid #8C8C8C;
+	padding : 10px;
+}
+.t2 td{
+	width : 70%;
+	border : 1px solid #8C8C8C;
+}
+.t2 td input{
+	height : 30px;	
+	margin : 5px;	
+	padding: 10px;
+}
+
+.t3{
+	width : 55%;
+	height : auto;
+	font-size : 18px;
+/* 	text-align : center; */
+	margin-left : 250px;
+	border-collapse: collapse;
+	border : 1px solid #8C8C8C;
+	
+}
+.t3 th{
+	width : 30%;
+	border : 1px solid #8C8C8C;
+	padding : 10px;
+}
+.t3 td{
+/* 	width : 70%; */
+	border : 1px solid #8C8C8C;
+}
+#sample6_postcode{
+	width : 100px;
+}
+
+#sample6_address{
+	width : 480px;
+}
+#sample6_extraAddress{
+	width : 480px;
+}
+
+#btnZip, #btnChange{
+	width : 140px;
+	margin : 0px;
+	padding: 2px;
+	background-color : white;
+	border : 1px solid #077B5F;
+	color : #077B5F;
+	
+}
+#btnChange{
+	margin : 5px;
+	margin-left : 480px;
+	background-color : #077B5F; 
+	color : white;
+}
+
+.memInfo{
+	background-color : #E1E1E1;
+	
+}
+
+.payul{
+	margin-left : 55px;
+	margin-top : 10px;
+	color : #515151;
+	
+}
+
+#defaultCheck1{
+	margin : 0px;
+	width : 19px;
+	height : 19px;
+}
+
+label{
+	margin-left : 25px;
+}
+
+.t4{
+	width : 55%;
+	height : auto;
+	font-size : 18px;
+	margin-left : 250px;
+	border-collapse: collapse;
+	border-top : 2px solid #077B5F;
+	border-bottom : 2px solid #077B5F;
+	
+}
+.resultTh{
+	width : 330px;
+	padding : 20px;
+	background-color : #077B5F;
+/* 	border : 1px solid #077B5F; */
+	color : white;
+	
+}
+.resultPrice{
+	width : 180px;
+	background-color : #077B5F;
+	color : white;
+	text-align : right;
+}
+.resultTd{
+	width : 300px;
+}
+.resultTd div{
+	margin-left : 38px;
+	
+}
+.btnpay{
+	width : 100px;
+	height : 70px;
+	margin : 2px;
+	font-size : 26px;
+	background-color : #077B5F;
+	border : 1px solid #077B5F;
+	color : white;
+}
+.btnreset{
+	background-color : white;
+	border : 1px solid #077B5F;
+	color : #077B5F;
+}
+
+.resultPriceTitle{
+	font-size : 25px;
+}
+
+/* *{ */
+/* 	border : 1px solid white; */
+	
+/* } */

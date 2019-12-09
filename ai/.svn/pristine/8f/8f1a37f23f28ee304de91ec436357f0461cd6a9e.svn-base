@@ -1,0 +1,25 @@
+package kr.or.ddit.prod.controller;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.prod.service.IProdService;
+
+@Controller
+public class ProdUpdate {
+	@Inject IProdService service;
+	
+	@RequestMapping("/prod/prodUpdate.do")
+	public String prodForm() {
+		return "prod/prodAdminForm";
+	}
+	
+	public String updateProd() {
+		return null;
+	}
+	
+	
+
+}

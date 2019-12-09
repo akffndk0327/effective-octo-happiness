@@ -1,0 +1,98 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 18.      박주연      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<h1>광고 신청</h1>
+			<div id="adTable" class="table-responsive-vertical shadow-z-1">
+				<!-- Table starts here -->
+				<table id="table" class="table table-hover table-mc-light-blue">
+					<thead>
+						<tr>
+							<th>글번호</th>
+							<th>제목</th>
+							<th>작성자</th>
+							<th>광고 게시 날짜</th>
+							<th>광고 종료 날짜 </th>
+							<th>승인 상태</th>
+							<th>사용 상태</th>
+						</tr>
+					</thead>
+
+					<tbody id="listBody">
+						<c:set var="adList" value="${pagingVO.dataList }" />
+						<c:choose>
+							<c:when test="${not empty adList }">
+								<c:forEach items="${adList }" var="adList">
+									<c:url value="/advertise/adView.do?adNo=${adList.adId }"
+										var="viewURL" />
+									<tr>
+										<td>${adList.rnum }</td>
+										<td><a href="${viewURL }">${adList.adTitle }</td>
+										<td>${adList.memId }</td>
+										<td>${adList.adIndate }</td>
+										<td>${adList.adTerm }</td>
+										<td>${adList.adApprove }</td>
+										<td>${adList.adUse }</td>
+									</tr>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td colspan="4">신청된 광고가 없습니다.</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td>
+								<div id="pagingArea">${pagingVO.pagingHTML }</div>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+				<input type="button" class="btn btnAi2" value="등록"
+					onclick="location.href='<c:url value="/advertise/adInsert.do"/>';" />
+
+			</div>
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- </div> -->
+<script>
+	var listBody = $("#listBody");
+	var pagingArea = $("#pagingArea");
+	var pageTag = $("[name='page']");
+
+	var makeUI = function(resp) {
+		let adList = resp.dataList;
+		let trTags = [];
+		$(adList).each(
+				function(i, v) {
+					let trTag = $("<tr id='"+v.adId+"'>").append(
+							$("<td>").text(v.rnum), $("<td>").text(v.adTitle),
+							$("<td>").text(v.memId),
+							$("<td>").text(v.adIndate),
+							$("<td>").text(v.adTerm),
+							$("<td>").text(v.adApprove));
+					trTags.push(trTag);
+				});
+		listBody.html(trTags);
+		pagingArea.html(resp.pagingHTML);
+		pageTag.val("1");
+	}
+
+	pagingArea.on("click", "a", function(event) {
+		event.preventDefault();
+		let page = $(this).data("page");
+		if (page < 1)
+			return false;
+		pageTag.val(page);
+		searchForm.submit();
+		return false;
+	});
+</script>

@@ -1,0 +1,93 @@
+/**
+ * d3.js 로 word cloud 생성
+ * handsontable 로 sheet 생성
+ */
+    let weight = 5,   // change me
+        width = 800,
+        height = 500;
+
+    let fill = d3.scale.category20();
+    d3.csv("words.csv", function(d) {
+        return {
+          text: d.word,
+          size: +d.freq*weight
+        }
+      },
+      function(data) {
+        d3.layout.cloud().size([width, height]).words(data)
+          .rotate(0)
+          .font("Impact")
+          .fontSize(function(d) { return d.size; })
+          .on("end", draw)
+          .start();
+
+        function draw(words) {
+        	let zoom = d3.behavior.zoom();
+            d3.select("#cloud").append("svg")
+              .attr("width", width)
+              .attr("height", height)
+            .append("g")
+              .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
+            .selectAll("text")
+              .data(words)
+            .enter().append("text")
+              .style("font-size", function(d) { return d.size + "px"; })
+              .style("font-family", "Impact")
+              .style("fill", function(d, i) { return fill(i); })
+              .attr("text-anchor", "middle")
+              .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+              })
+            .text(function(d) { return d.text; })
+            .on("click", function(d){
+            	let newData = {keyword:d.text, desc:""};
+            	hot.getSourceData().push(newData);
+            	hot.render();
+            	hot.selectCell(hot.countRows()-1, 1);
+            	this.remove();
+            });
+        }
+      });
+    
+    let hotElement = document.querySelector('#handson');
+    let filenameTag = document.querySelector('#filename');
+    let hotElementContainer = hotElement.parentNode;
+    let hotSettings = {
+      columns: [
+        {
+          data: 'keyword',
+          type: 'text',
+          width:'20%'
+        },
+        {
+          data: 'desc',
+          type:'text' ,
+          width:'80%'
+        }
+      ],
+      stretchH: 'all',
+      width: '100%',
+      autoWrapRow: true,
+      allowInsertRow:true,
+      height: 100,
+      maxRows: 100,
+      startRows: 0,
+      rowHeaders: true,
+      colHeaders: [
+        'keyword',
+        'description'
+      ],
+      contextMenu:true,
+      licenseKey:"non-commercial-and-evaluation"
+    };
+    let hot = new Handsontable(hotElement, hotSettings);
+    document.querySelector('#saveBtn').onclick=function(){
+    	let filename = filenameTag.value;
+    	if(filenameTag.checkValidity()){
+    		hot.getPlugin('exportFile').downloadFile('csv', {filename:filename,columnHeaders:true});
+    	}else{
+    		alert("저장파일명 ex)용어정리_뫄뫄뫄");
+    		filenameTag.select();
+    		filenameTag.focus();
+    	}
+    }

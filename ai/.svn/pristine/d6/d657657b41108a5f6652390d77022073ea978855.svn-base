@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+appender : 메세지 기록 위치(장소)  
+layout : appender에 어떤 형식으로 기록할 것인가를 정함. 메세지형식
+logger : 각 name값을 갖는 로그 기록자(로그 메시지 전달자)
+event level : debug < info < warn < trace < error < fatal
+additivity -> 중복제거
+sqltiming, resultsettable -> 얘내들은 모두 sql을 위한 log4j이다.
+-->
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%-5level %logger{.1} - %msg%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+  	
+    <Logger name="org.springframework.web" level="info" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="jdbc.sqltiming" level="info" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="jdbc.resultsettable" level="info" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="kr.or.ddit" level="info" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Root level="error">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>

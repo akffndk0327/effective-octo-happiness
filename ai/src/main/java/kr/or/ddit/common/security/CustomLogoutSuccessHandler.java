@@ -1,0 +1,51 @@
+package kr.or.ddit.common.security;
+
+import java.io.IOException;
+
+import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import kr.or.ddit.common.events.LogoutSuccessEvent;
+import kr.or.ddit.vo.MemberVO;
+/**
+ * @author 허민지
+ * @since 2019. 11. 7.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 7.      허민지       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+public class CustomLogoutSuccessHandler implements LogoutSuccessHandler{
+	@Inject
+	ApplicationEventPublisher publisher;
+
+	@Override
+	public void onLogoutSuccess(HttpServletRequest request,
+			HttpServletResponse response, 
+			Authentication authentication)
+			throws IOException, ServletException {
+		String message = null;
+		if(authentication==null) {
+			response.sendRedirect(request.getContextPath() + "/");
+			message = "이미 로그아웃된 상태입니다.";
+			request.setAttribute("message", message);
+		}else {
+			MemberVO authMember = (MemberVO) authentication.getPrincipal();
+			publisher.publishEvent(new LogoutSuccessEvent(this, authMember));
+			response.sendRedirect(request.getContextPath() + "/");
+		}
+	}
+}
+

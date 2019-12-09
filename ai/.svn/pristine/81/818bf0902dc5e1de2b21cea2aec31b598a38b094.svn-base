@@ -1,0 +1,47 @@
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 박주연
+ * @since ${date}
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019.11.1      박주연       최초작성
+ * 2019.11.14           박주연	  공통 css 작업 
+ 						 저장 ,확인,승인 버튼 : class name:btn btnAi0  배경색: #90c322, 글자색 : #fff (흰색)
+ 						 취소,삭제,반려 버튼  : class name:btn btnAi1  배경색: #fff, 글자색 : #90c322 테두리색 : #90c322
+ 						 등록, 목록 버튼 :class name: btnAi2  배경색: #90c322, 글자색 : #fff (흰색)
+ 						 버튼 위치  : 우측 하단  . 배치는  확인/취소
+ 						  검색 버튼 : class nama: btnAi2 배경색: #90c322, 글자색 : #fff (흰색)
+ 						 class="btn btnAi0"으로 앞에 btn쓰기(부트스트랩에서 기본제공하는 녀석)
+ * Copyright (c) ${year} by DDIT All right reserved
+ * </pre>
+ */
+@charset "utf-8";
+
+/* 저장,확인, 승인  */
+.btnAi0 {
+	background: #90c322;
+	color: #fff;
+	font-size: 17px;
+}
+
+/* 취소, 삭제, 반려 버튼 */
+.btnAi1 {
+	background: #fff;
+	color: #90c322;
+	font-size: 17px;
+	border: 1px solid #90c322;
+}
+
+/* 등록, 목록 버튼 */
+
+.btnAi2 {
+	background: #90c322;
+	color: #fff;
+	font-size: 17px;
+}
+

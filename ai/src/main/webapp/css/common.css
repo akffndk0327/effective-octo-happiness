@@ -1,0 +1,87 @@
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 박주연
+ * @since ${date}
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        		수정자       수정내용
+ * ----------     --------    ----------------------
+ * 2019.11.1        박주연       최초작성
+ * 2019.11.14           박주연	  공통 css 작업 
+ 							 저장 ,확인,승인 버튼 : class name:btn btnAi0  배경색: darkslategray, 글자색 : #fff (흰색)
+ 							 취소,삭제,반려 버튼  : class name:btn btnAi1  배경색: #fff, 글자색 : darkslategray 테두리색 : darkslategray
+ 						 	등록, 목록 버튼 :class name: btnAi2  배경색: darkslategray, 글자색 : #fff (흰색)
+ 						 	버튼 위치  : 우측 하단  . 배치는  확인/취소
+ 						  	검색 버튼 : class nama: btnAi2 배경색: darkslategray, 글자색 : #fff (흰색)
+ 						 	class="btn btnAi0"으로 앞에 btn쓰기(부트스트랩에서 기본제공하는 녀석)
+ * 2019.11.19		최서희	타이틀 CSS 두 가지 버전
+ * 2019.12.02      박주연      버튼 호버 수정 함 .....
+ * Copyright (c) ${year} by DDIT All right reserved
+ * </pre>
+ */
+@charset "utf-8";
+
+/* 저장,확인, 승인  */
+.btnAi0 {
+	width:101px;
+	height:44px;
+	background: darkslategray;
+	color: #fff;
+	font-size: 19px;
+	float:right;
+	margin :5px;
+	font-weight: bold;
+}
+
+/* 취소, 삭제, 반려 버튼 */
+.btnAi1 {
+	width:101px;
+	height:44px;
+	background: #fff;
+	color: darkslategray;
+	font-size: 19px;
+	border: 1px solid darkslategray;
+	float:right;
+	margin:5px;
+	font-weight: bold;
+}
+
+/* 등록, 목록 버튼 */
+
+.btnAi2 {
+	width:101px;
+	height:44px;
+	background: darkslategray;
+	color: #fff;
+	font-size: 19px;
+	flaot:left;
+	margin:5px;
+	font-weight: bold;
+}
+
+/* 상단 라인, 글씨 색 그레이  */
+.titleTopBar{
+	margin: 0px 0 20px;
+    border-top: 5px solid #2F4F4F;
+    display: inline-block;
+	font-family: 'Eoe_Zno_L';
+    color: #555;
+    font-size:40px;
+}
+
+/* 왼쪽 라인, 글씨 색 초록 */
+.titleLeftBar{
+    width : 100%;
+	margin-top : 30px;
+	margin-bottom : 30px;
+	border-left : 8px solid #2F4F4F;
+	padding : 3px;
+	font-size : 30px;
+	font-weight : bold;
+	color : #2F4F4F;
+	width : 60%;
+	text-align : left;
+}

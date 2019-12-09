@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 수정자 수정내용 -->
+<!-- ========== ====== ============== -->
+<!-- 2019. 11. 22. 박주연 최초작성 -->
+<!-- Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.allergy.dao.IAllergyDAO">
+	<!-- 검색 -->
+	<sql id="searchFrag">
+		<if test="searchMap!=null">
+			<if	test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+				<choose>
+					<when test="'allname'.equals(searchMap.searchType)">
+						AND ALL_NAME LIKE '%'|| #{searchMap.searchWord}||'%'
+					</when>
+					<when test="'code'.equals(searchMap.searchType)">
+						AND ALL_ID LIKE '%'|| #{searchMap.searchWord}||'%'
+					</when>
+					<otherwise>
+						AND
+						( ALL_NAME LIKE '%'|| #{searchMap.searchWord}||'%'
+						OR ALL_ID LIKE '%'|| #{searchMap.searchWord}||'%'
+						)
+					</otherwise>
+				</choose>
+			</if>
+		</if>
+	</sql>
+
+	<!-- 페이징 처리를 위한 count -->
+	<select id="selectAllergyCount" parameterType="PagingInfoVO"
+		resultType="int">
+		SELECT COUNT(*) FROM ALLERGY
+	</select>
+
+	<!-- 전체 리스트 조회 -->
+	<select id="selectAllergyList" parameterType="PagingInfoVO"
+		resultType="AllergyVO">
+		SELECT B.*
+		FROM(
+		SELECT ROWNUM RNUM, A.*
+		FROM(
+		SELECT ALL_ID, ALL_NAME
+		FROM AllERGY
+		WHERE NOT ALL_TYPE ='식품'
+		AND NOT ALL_TYPE ='해당없음' 
+		<include refid="searchFrag" />
+		ORDER BY ALL_ID
+		) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+</mapper>

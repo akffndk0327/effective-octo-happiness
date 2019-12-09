@@ -1,0 +1,118 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 5.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ *
+ * --------     --------    ----------------------
+ * 2019. 11. 5.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+.body {
+  display: flex;
+  justify-content: center;
+/*   margin-top: 20px; */
+/*   font-family: 'PT Sans', sans-serif; */
+  color: #222
+}
+
+.tempTr{
+	margin : 30px;
+	width : 100%;
+	height : 50px;
+}
+
+h3,
+h4,
+h5 {
+  margin: 10px 0;
+}
+
+h5 {
+  transition-duration: .2s;
+}
+
+.li {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  width: 250px;
+  height: 300px;
+  padding: 20px;
+  transition-duration: .2s;
+}
+
+.li:hover {
+  cursor: pointer;
+  background-color: #eee;
+  transition-duration: .2s;
+}
+
+.li:hover h5 {
+  color: #14B235;
+  transition-duration: .2s;
+}
+
+.li:hover .sale {
+  transform: translateY(-15px) scale(1.1);
+  transition-duration: .2s;
+}
+
+.img-placeholder {
+  width: 250px;
+  height: 200px;
+  background-color: #aaa;
+}
+
+.info {
+  margin-top: auto;
+  width : 250px;
+}
+
+.non-sale-price {
+  color: #777;
+  text-decoration: line-through;
+}
+
+.sale {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 2.5px 0;
+  background-color: #393835;
+  transition-duration: .2s;
+  color : white;
+}
+ 
+.sale h4 {
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff;
+}
+
+.info h3{
+	font-size : 20px;
+	font-weight : bold;
+	color :  #576454;
+}
+
+.box {
+	margin : 30px;
+}
+
+.pagination{
+	margin : 100px;
+	
+}
+
+.img-placeholder img{
+	width : 100%;
+	height : 100%;
+}
+

@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 6.   허민지      최초작성
+* 2019. 11. 7.   허민지      로그인 상태 제거
+* 2019. 11. 11	 박주연	css 수정 
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<style>
+	#InnerContainer{
+		height:800px;
+	}
+</style>
+ 
+<div id="InnerContainer">
+
+협소한 메인화면 좀 키워봤습니다...ㅎ
+
+</div>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일                수정자        수정내용               -->
+<!--  ==========    ======    ==============        -->
+<!--  2019. 11. 18   허민지        최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mypage.dao.IMemMypageDAO">
+
+	<insert id="insertMemAllergy" parameterType="MemberVO">
+    INSERT ALL
+		<foreach collection="memAllList" item="allergy">
+    	INTO MEMALLERGY (
+    		MEM_ID
+        	,ALL_ID
+        	,SYM_ID
+    	) VALUES (
+        	#{memId}
+        	,#{allergy.allId}
+        	,#{allergy.symId}
+    	)
+    </foreach>
+    SELECT * FROM DUAL
+	</insert>
+	
+	
+	<delete id="deleteMemAllergy" parameterType="MemAllergyVO">
+	DELETE FROM MEMALLERGY
+	WHERE 
+		MEM_ID = #{memId}
+		AND ALL_ID = #{allId}
+	</delete>
+	
+   <update id="deleteMember" parameterType="String">
+   UPDATE MEMBER
+   SET
+   		MEM_DELETE = 'Y'
+   WHERE
+   		MEM_ID = #{memId}
+   </update>
+   
+   <update id="updateOthersAllergies" parameterType="String">
+   UPDATE ALLERGY
+	SET
+    	ALL_THERAPY = #{allTherapy}
+    	ALL_PREVENT = #{allPrevent}
+    	ALL_CAUSE =   #{allCause}
+   		ALL_SYMPTOM = #{allSymptom}
+	WHERE
+    	ALL_ID = #{allId}
+   </update>
+	   <!--멤버별 list 조회 -->
+   <select id="selectMemberDietList" parameterType="PagingInfoVO" resultType="MonthlyVO"> 
+	   	SELECT B.*
+			FROM(
+			    SELECT ROWNUM RNUM, A.*
+			    FROM(
+			       SELECT
+	                    TO_CHAR(MONTHLY_INDATE,'YYYY.MM.DD') MONTHLY_INDATE,
+	                    MONTHLY_ID,
+	                    MONTHLY_TITLE
+	                FROM
+	                    MONTHLY
+	                WHERE MEM_ID = #{pk}
+			    ) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+   </select>
+   
+   <select id="selectMemberDietCount" parameterType="PagingInfoVO" resultType="int">
+   			SELECT COUNT(*)
+			FROM MONTHLY
+	        WHERE MEM_ID = #{pk}
+   </select>
+	
+   <resultMap type="MemberVO" id="orderMap" autoMapping="true">
+   		<id property="memId" column="MEM_ID"/>
+<!-- 		<collection property="orderList" java> -->
+<!-- 		</collection> -->
+   </resultMap>	
+	
+	
+   <select id="orderByOrderList" parameterType="MemberVO" resultMap="orderMap">
+   SELECT F.*
+   		FROM(
+        	SELECT ROWNUM RNUM, E.*
+        	FROM(
+            	SELECT
+                	PROD_NAME,
+                	C.ORDER_ID, ORDER_STATUS, ORDER_DATE,
+                	A.MEM_ID
+            	FROM
+                	MEMBER A LEFT OUTER JOIN PROD B ON (A.MEM_ID = B.MEM_ID)
+                    	LEFT OUTER JOIN ORDER2 C ON (A.MEM_ID = C.MEM_ID)
+                    	LEFT OUTER JOIN ORDERDETAIL D ON (C.ORDER_ID = D.ORDER_ID)
+            	ORDER BY ORDER_DATE DESC
+            	) E
+        	)F
+		WHERE
+			<![CDATA[
+    		F.MEM_ID = #{memId}
+    		AND ROWNUM <= 3]]>
+   </select>
+</mapper>

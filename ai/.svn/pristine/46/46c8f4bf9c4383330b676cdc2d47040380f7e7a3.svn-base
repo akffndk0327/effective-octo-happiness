@@ -1,0 +1,7 @@
+package kr.or.ddit.vo;
+
+public class WeightVO {
+	private String weightId;
+	private int weightValue;
+	private String symId;
+}

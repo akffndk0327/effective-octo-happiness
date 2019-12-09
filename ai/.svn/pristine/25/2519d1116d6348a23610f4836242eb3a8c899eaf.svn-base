@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.addrChart.dao.IMemChartDAO">
+	<select id="selectGender" parameterType="MemberVO" resultType="AllergyVO">
+		SELECT * FROM 
+		(SELECT C.ALL_NAME,C.ALL_ID,COUNT(*) CNT FROM MEMBER A,MEMALLERGY B,ALLERGY C 
+		WHERE A.MEM_ID = B.MEM_ID AND B.ALL_ID = C.ALL_ID
+		AND A.MEM_GENDER= #{memGender}
+		GROUP BY C.ALL_NAME,C.ALL_ID
+		ORDER BY 3 DESC ) AA
+		WHERE ROWNUM =1 
+	</select>
+	
+	<select id="selectAddr" parameterType="MemberVO" resultType="AllergyVO">
+		SELECT * FROM 
+		(SELECT C.ALL_NAME,C.ALL_ID,COUNT(*) CNT FROM MEMBER A,MEMALLERGY B,ALLERGY C 
+		WHERE A.MEM_ID = B.MEM_ID AND B.ALL_ID = C.ALL_ID
+		AND A.MEM_ADDR1 LIKE '%'||SUBSTR(#{memAddr1},1,INSTR(#{memAddr1},' ')-1)||'%'
+		GROUP BY C.ALL_NAME,C.ALL_ID
+		ORDER BY 3 DESC ) AA
+		WHERE ROWNUM =1
+	</select>
+	
+	<select id="selectAge" parameterType="MemberVO" resultType="AllergyVO" >
+		SELECT * FROM 
+		(SELECT C.ALL_NAME,C.ALL_ID,COUNT(*) CNT FROM MEMBER A,MEMALLERGY B,ALLERGY C 
+		WHERE A.MEM_ID = B.MEM_ID AND B.ALL_ID = C.ALL_ID
+		AND A.MEM_AGE = #{memAge}
+		GROUP BY C.ALL_NAME,C.ALL_ID
+		ORDER BY 3 DESC ) AA
+		WHERE ROWNUM =1
+	</select>
+
+
+</mapper>

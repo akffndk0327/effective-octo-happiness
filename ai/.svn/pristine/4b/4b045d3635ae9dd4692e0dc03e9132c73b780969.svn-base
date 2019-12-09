@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!--    캐시 메인메서드에 저장 -->
+   <bean id="cacheManager"
+		class="org.springframework.cache.jcache.JCacheCacheManager"
+		p:cacheManager-ref="JCacheManager" />
+	<bean id="JCacheManager"
+		class="org.springframework.cache.jcache.JCacheManagerFactoryBean"
+		p:cacheManagerUri="classpath:kr/or/ddit/ehcache.xml" />
+
+	<cache:annotation-driven cache-manager="cacheManager" />
+
+</beans>

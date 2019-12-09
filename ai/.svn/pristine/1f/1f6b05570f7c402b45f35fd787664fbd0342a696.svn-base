@@ -1,0 +1,120 @@
+package kr.or.ddit.order.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.cart.dao.ICartDAO;
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.order.dao.IOrderDAO;
+import kr.or.ddit.vo.Order2VO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.RefundVO;
+
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 7.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                      수정자               수정내용
+ * --------------   --------    ----------------
+ * 2019. 11. 7.       최서희            최초작성
+ * 2019. 11. 10.      최서희            주문결제 기능 추가
+ * 2019. 11. 18.      최서희		   주문취소, 환불
+ * 2019. 11. 19.      최서희		   주문취소, 환불 Refund로 옮김
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Service
+public class OrderServiceImpl implements IOrderService {
+
+	@Inject	IOrderDAO dao;
+	@Inject ICartDAO cartDao;
+	
+	@Override
+	public String retrieveOrderId(String memId) {
+		return dao.selectOrderId(memId);
+	}
+	
+	@Override
+	public List<String> retrieveOrderIdList(Order2VO order) {
+		return dao.selectOrderIdList(order);
+	}
+
+	@Override
+	public int retrieveOrderCount(String pk) {
+		return dao.selectOrderCount(pk);
+	}
+
+	@Override
+	public List<Order2VO> retrieveOrderList(PagingInfoVO<Order2VO> pagingVO) {
+		return dao.selectOrderList(pagingVO);
+	}
+
+	@Override
+	public Order2VO retrieveOrder(String orderId) {
+		return dao.selectOrder(orderId);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED) 
+	@Override
+	public ServiceResult createOrder(Order2VO order) {
+		ServiceResult result = null;
+		int cnt = dao.insertOrder(order);
+		cnt += dao.insertOrderDetail(order);
+		cnt += dao.insertPayment(order);
+		cnt += cartDao.deleteCart(order);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult modifyOrder(String orderId) {
+		ServiceResult result = null;
+		int cnt = dao.updateOrder(orderId);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult removeOrder(String orderId) {
+		ServiceResult result = null;
+		int cnt = dao.deleteOrder(orderId);
+		cnt+=dao.deletePayment(orderId);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public int retrieveOrderEmpCount(PagingInfoVO<Order2VO> pagingVO) {
+		return dao.selectOrderEmpCount(pagingVO);
+	}
+
+	@Override
+	public List<Order2VO> retrieveOrderEmpList(PagingInfoVO<Order2VO> pagingVO) {
+		return dao.selectOrderEmpList(pagingVO);
+	}
+
+	
+	
+
+}

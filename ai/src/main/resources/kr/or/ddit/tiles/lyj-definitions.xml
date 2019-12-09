@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 6.     최서희     최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<tiles-definitions>
+   <definition name="super" template="/WEB-INF/views/layer.jsp">
+      <put-attribute name="preScript" value="/includee/preScript.jsp"/>
+      <put-attribute name="topMenu" value="/includee/header.jsp"/>
+      <put-attribute name="leftMenu" value="/includee/Memleft.jsp"/>
+      <put-attribute name="footer" value="/includee/footer.jsp"/>
+   </definition>
+   
+   <definition name="recipe/*" extends="super">
+      <put-attribute name="contents" value="/WEB-INF/views/recipe/{1}.jsp" />
+   </definition>
+      <definition name="survey/*" extends="super">
+      <put-attribute name="contents" value="/WEB-INF/views/survey/{1}.jsp" />
+   </definition>
+         <definition name="note/*" extends="super">
+      <put-attribute name="contents" value="/WEB-INF/views/note/{1}.jsp" />
+   </definition>
+   
+</tiles-definitions>       

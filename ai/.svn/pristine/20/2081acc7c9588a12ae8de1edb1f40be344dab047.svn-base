@@ -1,0 +1,168 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 6.      최서희      최초작성
+* 2019. 11. 13.     최서희	장바구니 삭제
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<link rel="stylesheet" href="${cPath }/css/cartList.css">
+
+<div id="InnerContainer">
+<h1>장바구니 리스트</h1>
+<table class="t">
+	<tr>
+		<th class="td1">이미지</th>
+		<th class="td2">제품명/판매자</th>
+		<th class="td3">가격</th>
+		<th class="td3">수량</th>
+		<th class="td3">배송비</th>
+		<th class="td3"></th>
+	</tr>
+</table>
+<div id="cartMainTable">
+<table  class="t">
+	<c:forEach items="${cartVO }" var="cart">
+	<tr>
+	<table class="cartBox"><tr>
+		<td class="td1">
+			<img class="active prodImg" src="data:image/*;base64,${cart.prod.prod_imageBase64 }" />
+		</td>
+		<td class="td2">
+			<div class="prodName">${cart.prod.prodName }</div>
+			<p>${cart.prod.company.comName }</p>
+		</td>
+		<td class="td3">${cart.orderPrice } 원</td>
+		<td><input name="cartQty" type="number" value="${cart.cartQty}"/></td>
+		<c:if test="${cart.prodDelivery eq 0 }">
+			<td class="td3">무료</td>
+		</c:if>
+		<c:if test="${cart.prodDelivery ne 0 }">
+			<td class="td3">${cart.prodDelivery }</td>
+		</c:if>
+		<input type="hidden" value="${cart.payPrice }" />
+		<td class="td3 trashTd">
+			<input type="hidden" name="cartId" class="cartId" value="${cart.cartId}" />
+<%-- 			<c:url value="/cart/cartDelete.do" var="deleteURL"> --%>
+<%-- 					<c:param name="memId" value="${loginId }"></c:param> --%>
+<%-- 				</c:url> --%>
+<%-- 			<img src="${cPath }/images/trashcan.jpg" class="btnDelCart" onclick="location.href='${deleteURL}';"> --%>
+			<img src="${cPath }/images/trashcan.jpg" class="btnDelCart" >
+		</td>
+		</tr></table>
+	</tr>
+</c:forEach>
+</table>
+</div>
+<table class="t3">
+	<tr>
+		<td>
+			<p>
+			
+			
+			 <img src="${cPath }/images/alert.png"> AI(Allergy Infromation)는 결제정보의 중개서비스 또는 통신판매중개시스템의 제공자로서, 통신판매의 당사자가 아니며 상품의 주문, 배송 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
+			
+			</p>
+		</td>
+	</tr>
+</table>
+<table class="t4">
+
+	<tr>
+		<th colspan="2" class="resultTh">
+			<div>주문금액</div>					
+			<div>배송비</div>
+			<br>					
+			<div class="resultPriceTitle">결제금액</div>
+			<br><div></div>
+		</th>
+		<td class="resultPrice" colspan="1">
+			<div>${list[0].orderTotal} 원</div>					
+			<div>${list[0].totalPrice - list[0].orderTotal} 원</div>
+			<br>
+			<div class="resultPriceTitle">${list[0].totalPrice } 원</div>
+			<br><div></div>
+		</td>
+		<td colspan="2"  class="resultTd">
+			<div>
+				<c:url value="/order/orderInsert.do" var="orderURL">
+					<c:param name="memId" value="${loginId }"></c:param>
+				</c:url>
+				<input type="button" class="btn btnpay" onclick="location.href='${orderURL}';" value="전체구매" />
+			</div>
+		</td>
+	</tr>
+</table>
+
+
+</div>
+
+<script type="text/javascript">
+var cartQty = $("[name='cartQty']");
+var btnDelCart = $(".btnDelCart");
+var cartMainTable = $("#cartMainTable");
+
+
+//수량을 음수로 적었을때 검증
+$(cartQty).change(function() {
+    var num = $(this).val() - 0;
+    if(typeof num !== "number" || num < 0) {
+    	$(this).val('1');
+    	alert("1개 이상 선택하세요");
+        $(this).focus();
+    }
+});
+
+// //장바구니 리스트 UI
+var makeCartListUI = function(resp){
+	let trTags = "<table  class='t'>";
+	$(resp).each(function(i, c){
+	 	trTags+= "<tr><table class='cartBox'><tr><td class='td1'>";
+		trTags+="<img class='active prodImg' src='data:image/*;base64,"+c.prod.prod_imageBase64+"' />";
+		trTags+="</td><td class='td2'><div class='prodName'>"+c.prod.prodName+"</div>";
+		trTags+="<p>"+c.prod.company.comName+"</p></td>";
+		trTags+="<td class='td3'>"+c.orderPrice+" 원</td>";
+		trTags+="<td><input name='cartQty' type='number' value='"+c.cartQty+"'/></td>";
+		if(c.prodDelivery == 0){
+		trTags+="<td class='td3'>무료</td>";
+		}else{
+		trTags+="<td class='td3'>"+c.prodDelivery+"</td>";
+		}
+		trTags+="<input type='hidden' value='"+c.payPrice+"' />";
+		trTags+="<td class='td3 trashTd'>";
+		trTags+="<input type='hidden' name='cartId' class='cartId' value='"+c.cartId+"' />";
+		trTags+="<img src='/ai/images/trashcan.jpg' class='btnDelCart'>";
+		trTags+="</td></tr></table></tr>";
+	});
+	trTags+="</table>";
+	$("#cartMainTable").html(trTags);
+}
+
+
+// //장바구니 삭제 버튼 클릭
+cartMainTable.on("click", "img",function() {
+	let cartVal = $(this).siblings('.cartId').val();
+// 	alert(cartVal);
+	$.ajax({
+		url : "${cPath}/cart/cartDelete.do",
+		method : "post",
+		data : {"cartId":cartVal},
+		dataType : "json",
+		success : function(resp) {
+			alert("삭제성공");
+// 			console.log(resp);
+			makeCartListUI(resp);
+		},
+		error : function(xhr) {
+			alert("삭제실패");
+			console.log(xhr.status);
+		}
+	});
+	return false;
+})
+
+
+</script>

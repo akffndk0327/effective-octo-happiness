@@ -1,0 +1,165 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="authMember" />
+</sec:authorize>
+<c:set var="loginId" scope="request" value="${authMember.memId}" />
+<c:set var="authorId" scope="request" value="${authMember.authorId }" />
+<c:set var="loginPass" scope="request" value="${authMember.memPass }" />
+<c:set var="memName" scope="request" value="${authMember.memName }" />
+
+<form name="logoutForm" action="${cPath }/logout" method="post"></form>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 1    박주연      최초작성
+* 2019. 11. 6    허민지      로그인시 로그인->로그아웃, 마이페이지, 장바구니
+* 2019. 11. 7    허민지      로그아웃
+* 2019. 11. 7    허민지      회원의 권한에 따른 마이페이지 메뉴 출력
+* 2019. 11. 7    최서희      로그인 정보 저장
+* 2019. 11. 7    허민지      로그인한 회원의 이름, 권한 저장
+* 2019. 11. 7    최서희      장바구니 파라미터(로그인id) 가지고 이동 
+* 2019. 11. 7    허민지      회원가입 경로 추가
+* 2019. 11. 8    허민지      로그인한 회원 비밀번호 저장
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+
+<section id="top">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2">
+				<div class="search-box">
+					<div class="input-group">
+						<input placeholder="Search Here" type="text" class="form-control">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"></button>
+						</span>
+					</div>
+					<!-- /.input-group -->
+				</div>
+				<!-- /.search-box -->
+			</div>
+			<div class="col-md-3 clearfix">
+				<ul class="login-cart">
+				<c:set var="ROLE_MEM" value="ROLE_MEM" />
+                     <c:set var="ROLE_EMP" value="ROLE_EMP" />
+                     <c:set var="ROLE_ADMIN" value="ROLE_ADMIN" />
+                  <c:choose>
+                     <c:when test="${not empty authMember}">
+                        <c:if test="${authMember.authorId eq ROLE_MEM}">
+                           <li id="memPage" class="fa fa-user"><a href="${cPath }/mypage/member">${authMember.memName }님</a></li>
+                             <c:url value="/cart/cartList.do" var="cartURL">
+                                <c:param name="memId" value="${loginId}" />
+                             </c:url>
+                           <li class="fa fa-user"><a href="${cartURL }" title="장바구니">장바구니</a></li>
+                        </c:if>
+                        <c:if test="${authMember.authorId eq ROLE_EMP}">
+                           <li class="fa fa-user"><a href="${cPath }/mypage/company">${authMember.memName }님</a></li>
+                        </c:if>
+                        <c:if test="${authMember.authorId eq ROLE_ADMIN}">
+                           <li class="fa fa-user"><a href="${cPath }/mypage/admin">${authMember.memName }님</a></li>
+                        </c:if>
+                        <li class="fa fa-user"><a href="#" onclick="document.logoutForm.submit();">로그아웃</a></li>
+                     </c:when>
+                     <c:otherwise>
+                        <li class="fa fa-user"><a href="${cPath}/login" title="로그인">로그인</a></li>
+                        <li class="fa fa-user"><a href="${cPath}/member/memberInsert.do" title="회원가입">회원가입</a></li>
+                     </c:otherwise>
+                  </c:choose>
+				
+<%-- 					<li class="fa fa-user"><a href="${cPath}/login" title="로그인">로그인</a></li> --%>
+<!-- 					<li class="fa fa-user"><a -->
+<%-- 						href="${cPath}/member/memberInsert.do" title="회원가입">회원가입</a></li> --%>
+				</ul>
+			</div>
+
+		</div>
+		<!-- End Of /.row -->
+	</div>
+	<!-- End Of /.Container -->
+</section>
+<!-- End of /Section -->
+
+
+<!-- LOGO Start
+    ================================================== -->
+
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<a href="${cPath }"> <img src="${cPath}/images2/logo.png"
+					alt="logo">
+				</a>
+			</div>
+			<!-- End of /.col-md-12 -->
+		</div>
+		<!-- End of /.row -->
+	</div>
+	<!-- End of /.container -->
+</header>
+<!-- End of /Header -->
+
+
+<!-- MENU Start
+    ================================================== -->
+
+<nav class="navbar navbar-default">
+	<!-- 		<div class="collapse navbar-collapse" -->
+	<!-- 			id="bs-example-navbar-collapse-1"> -->
+	<ul class="nav navbar-nav nav-main">
+		<li class="dropdown"><a href="#">FOOD</a>
+			<ul class="dropdown-menu">
+				<li><a href="#">식단</a></li>
+				<li><a href="${cPath }/food/foodCategory.do">식품 상세 검색</a></li>
+				<li><a href="${cPath }/uneatable/uneatableList.do">부적합한 식품</a></li>
+				<li><a href="${cPath }/stopSellingFood/stopSellingList.do">회수 판매 중지 식품 </a></li>
+			</ul></li>
+		<li class="dropdown"><a href="#">CHEMICAL</a>
+			<ul class="dropdown-menu">
+				<li><a href="${cPath }/dailysupply/dsList.do">생활용품</a></li>
+				<li><a href="${cPath }/allergy/allergyList.do">알레르기 검색 </a></li>
+			</ul></li>
+		<li class="dropdown"><a href="#">WEATHER</a>
+			<ul class="dropdown-menu">
+				<li><a href="${cPath}/weather/weatherView.do">대기중 중금속 오염 정보
+						조회</a></li>
+				<li><a href="${cPath}/weather/weatherPollution.do">대기오염정보
+						조회</a></li>
+			</ul></li>
+		<li class="dropdown"><a href="#">OTHERS</a>
+			<ul class="dropdown-menu">
+				<li><a href="${cPath }/othersAllergies/othersAllergies.do">금속알레르기</a></li>
+				<li><a href="${cPath }/othersAllergies/othersAllergies.do">동물
+						털 알레르기</a></li>
+				<li><a href="${cPath }/othersAllergies/othersAllergies.do">천식</a></li>
+				<li><a href="${cPath }/othersAllergies/othersAllergies.do">곰팡이
+						알레르기</a></li>
+				<li><a href="${cPath }/othersAllergies/othersAllergies.do">먼지알레르기</a></li>
+				<li><a href="${cPath }/othersAllergies/othersAllergies.do">희귀알레르기</a></li>
+			</ul></li>
+		<li class="dropdown"><a href="#">WACCP PRODUCT</a>
+			<ul class="dropdown-menu">
+				<li><a href="${cPath }/prod/prodIntro.do">인증절차 소개</a></li>
+				<li><a href="${cPath }/prod/prodList.do">제품 조회</a></li>
+			</ul></li>
+		<li class="dropdown"><a href="#">BOARD</a>
+			<ul class="dropdown-menu">
+				<li><a href="${cPath }/notice/noticeList.do">공지사항</a></li>
+				<li><a href="${cPath }/faq/faqList.do">FAQ 자주 묻는 질문</a></li>
+				<li><a href="${cPath }/news/newsList.do">뉴스</a></li>
+				<li><a href="${cPath }/correct/correctList.do">정정게시판</a></li>
+				<li><a href="${cPath}/survey/surveyList.do">설문게시판</a></li>
+				<li><a href="${cPath }/diet/dietList.do">식단 공유 게시판 </a></li>
+				<li><a href="${cPath}/recipe/recipeList.do">레시피 게시판</a></li>
+			</ul>
+		</li>	<!-- End of /.dropdown -->
+	</ul>	<!-- End of /.nav-main -->
+	<!-- 		</div> -->
+<!-- 	</div>	/.container-fluid -->
+</nav>
+<!-- End of /.nav -->

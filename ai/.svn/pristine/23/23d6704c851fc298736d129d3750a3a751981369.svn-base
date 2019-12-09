@@ -1,0 +1,55 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>      
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 6.      이진희      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"">
+
+<style>
+	#btn1,#btn2{
+ 		background-color: #077B5F;
+ 		color:white;
+ 		width:80px;
+ 		float:right;
+ 		margin:8px;
+	}
+</style> 
+<h1>정정게시글 상세보기</h1>
+<div>
+<button id="btn1" class="btn btn" type="button" >삭제</button>
+<button id="btn2" class="btn btn" type="button" onclick="location.href='<c:url value="/correct/correctInsert.do"/>';">답글달기</button>
+</div>
+<script type="text/javascript">
+	var btn1 = $("#btn1");
+	
+	btn1.on("click",function(){
+		swal({
+			  title: "정말 삭제하시겠습니까?",
+			  icon: "warning",
+			  buttons: true,
+			  dangerMode: true,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+			    swal("삭제 성공", {
+			      icon: "success",
+			    });
+			  } else {
+			    swal("삭제 취소");
+			  }
+			});
+		
+	})
+
+</script>

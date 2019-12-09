@@ -1,0 +1,6 @@
+package kr.or.ddit.vo;
+
+public class Like2VO {
+	private int recipeNo;
+	private String memId;
+}

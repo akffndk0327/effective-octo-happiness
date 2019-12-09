@@ -1,0 +1,47 @@
+package kr.or.ddit.prod.service;
+
+import java.util.List;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.vo.LprodVO;
+import kr.or.ddit.vo.Order2VO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.ProdAttatchVO;
+import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.vo.ReviewVO;
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 4.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                  수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 4.    최서희         최초작성
+ * 2019. 11. 5.	    최서희		 리뷰 추가
+ * 2019. 11. 10.  최서희          대분류 중분류 셀렉트박스
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+public interface IProdService {
+	public int retrieveProdCount(PagingInfoVO<ProdVO> pagingVO);
+	public List<ProdVO> retrieveProdList(PagingInfoVO<ProdVO> pagingVO);
+	public ProdVO retrieveProd(String prodId); 
+	public ServiceResult createProd(ProdVO prod); 
+	public ServiceResult modifyProd(ProdVO prod); 
+	public ServiceResult removeProd(String prodId); 
+	
+	public ProdAttatchVO downloadAttatch(int prodattId);
+	
+	public int retrieveReviewCount(String prodId);
+	public List<ReviewVO> retrieveReviewList(PagingInfoVO<ReviewVO> pagingVO);
+	public ServiceResult createReview(ReviewVO review, Order2VO order); 
+	public ServiceResult removeReview(int reviewNo); 
+	
+	//대분류
+	public List<LprodVO> retrieveLprodAList();
+	//중분류
+	public List<LprodVO> retrieveLprodBList(String lprodParent);
+}

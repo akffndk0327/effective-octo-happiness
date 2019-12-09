@@ -1,0 +1,558 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 	수정일  	                 수정자		           수정내용
+* -------------  ---------  -----------------
+* 2019. 11. 7.     박주연      		최초작성
+* 2019. 11. 7.	       박주연			View 구현
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<script type="text/javascript"
+	src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<link rel="stylesheet" href="${cPath }/css/orderForm.css">
+<script src="${cPath }/js/orderForm.js"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<!-- Datepicker 한국어로 변환 -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/datepicker-ko.js"></script>
+<style>
+td {
+	border: 1px solid black;
+}
+
+th {
+	border: 1px solid black;
+	text-align: center;
+}
+
+.gig-detail-option-btn:nth-child(2), .gig-detail-decision-option-btn>a:nth-child(2),
+	.gig-detail-decision-option-btn>span:nth-child(2) {
+	width: 30px;
+	heigth: 25px;
+	line-height: 18.5px;
+	background-color: #fff;
+	border-radius: 0;
+	line-height: 18.5px
+}
+
+.gig-detail-option-btn, .gig-detail-decision-option-btn>a,
+	.gig-detail-decision-option-btn>span {
+	width: 30px;
+	heigth: 25px;
+	line-height: 20px;
+	background-color: #f3f4f8;
+	display: inline-block;
+	text-align: center;
+	color: #4d4d4d;
+	font-size: 15px;
+}
+
+.col-xs-offset-7 {
+	margin-left: 58.33333%;
+}
+
+.col-xs-5 {
+	width: 41.66667%;
+}
+
+#options .list-group-item:first-child, #options .extra-option-list-group-item:first-child,
+	#options .index-side-list-group-item:first-child, #options .gig-form-container .gig-form-list-group-item:first-child,
+	.gig-form-container #options .gig-form-list-group-item:first-child {
+	border-top: 1px solid #999 !important;
+}
+
+textarea:focus {
+	outline: none;
+}
+</style>
+<div id="InnerContainer">
+	<h1>광고 신청 하기</h1>
+	<div class="container">
+		<div id="adRead" style="font-size: 17px;">
+			광고 신청 전 꼭 읽어주세요 !<br /> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+			<광고 신청 방법> <br />
+			1. 신청자 정보를 입력하세요. <br />
+			2. 광고를 게시할 게시판을 선택하세요.<br />
+			3. 광고를 게시할 위치를 선택하세요.<br />
+			4. 광고 시작 날짜를 선택하세요 (당일 선택 불가. 관리자 승인까지 2일은 소요됨니다.)<br />
+			5. 광고 기간은 기본 30일입니다. 그 이상의 게시기간은 관리자에게 연락하세요. <br />
+			6. 이미지를 첨부해주세요. (첨부파일은 1개만 등록 가능하며 크기는 1MB이하입니다.)<br />
+			7. 관리자에게 남길말을 써주세요.<br />
+			8. 신청버튼을 누르면 결제 화면으로 이동합니다.<br />
+			9. 결제 후 마이페이지 > 광고 관리 에서 작성글을 확인 할 수 있습니다.<br />
+			<br>
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;** 주의 사항 **<br />
+			1. 수정은 1회만 가능합니다.<br />
+			2. 한 게시판에 광고 신청은 5건으로 제한 됩니다. <br />
+			3. 광고는 랜덤으로 보여집니다. <br />
+			4. 광고 신청 후 승인까지 최소 2일이 소요됩니다.<br />
+			5. 광고 내용이 부적절하거나 홈페이지와 관련없는 내용의 광고는 관리자에 의해 반려 될 수 있습니다.<br />
+			6. 회원들을 위한 레포트 서비스를 제공해드립니다. 
+		</div>
+		<p />
+		<p />
+		<form id="adForm" method="post" enctype="multipart/form-data">
+			<table border="0" cellpadding="0" cellspacing="0" class="Write">
+				<tbody>
+					<h5>신청자 정보</h5>
+					<tr>
+						<th>* 제목</th>
+						<td><input type="text" name="title"
+							value="${advertise.adTitle }" class="INP100"> <span
+							class="error">${errors.adTitle }</span></td>
+					</tr>
+					<tr>
+						<th scope="row">* 담당자명</th>
+						<td><input type="text" name="Name"
+							value="${advertise.memId }" class="INP100"> <span
+							class="error">${errors.memId }</span></td>
+					</tr>
+					<tr>
+						<th>* 게시판 선택</th>
+						<td><select id="boardCode">
+								<option value="">선택해주세요</option>
+								<option value="S011">정정게시판 리스트</option>
+								<option value="S012">정정게시판 상세보기</option>
+<!-- 								<option value="">생활용품 게시판</option> -->
+<!-- 								<option value="">뉴스 게시판</option> -->
+						</select></td>
+					</tr>
+					<tr>
+						<th>* 위치</th>
+						<td>
+							<div id="location">
+								<div>
+									<img class="adimg" src="${cPath }/images/adposition.png" />
+
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>* 광고 시작 날짜</th>
+						<td>
+							<form>
+								<input type="date" class="inputDate" name="fromDate"
+									id="fromDate" size="8">
+							</form> <span id="term" value="30" hidden/>
+						</td>
+					</tr>
+<!-- 					<tr> -->
+<!-- 					<th>기간 선택</th> -->
+<!-- 					<td><select id="term" > -->
+<!-- 							<option>선택하세요</option> -->
+<!-- 							<option value="ad01">30</option> -->
+<!-- 					</select></td> -->
+<!-- 					</tr> -->
+					<tr>
+						<th>* 광고 종료일</th>
+						<td><input type="text" class="inputDate" name="toDate"
+							id="toDate" size="8"></td>
+					</tr>
+					<tr>
+						<th>* 이동 URL</th>
+						<td><input type="text" placeholder="https://"></td>
+					</tr>
+					<tr>
+						<th>* 첨부파일</th>
+						<td><input type="file" name="FileName" data-width="300"
+							data-height="300" /></td>
+					</tr>
+				</tbody>
+			</table>
+		<br>
+<!-- 			가격선택  -->
+			<div id="options"
+				class="margin-top-50 informationDiv overflow-hidden">
+				<div class="font-size-18 font-color-333">
+					<h5>가격정보</h5>
+				</div>
+				<div class="panel  margin-top-10 font-size-14 font-color-666">
+					<ul class="list-group panel-list-group-only">
+						<!-- 						상단 -->
+						<li class="list-group-item padding-all-20 border-top-999 ">
+							<div class="row">
+								<div id="STANDARDInformationDiv" class="col-xs-8">
+									<div class="row">
+										<div class="col-xs-12">
+											<strong>상단 배너 30일</strong>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12">실속형배너(800*130) 30일동안, 우리 홈페이지 내에서
+											30일 광고게재</div>
+									</div>
+									<div class="row margin-top-15">
+										<div class="col-xs-12 package-selected-options-list-item">
+											<i class="kmong kmong-check margin-right-5 color-dark-yellow-400"
+												style="font-size: 10px"> </i> <span class="font-color-light">배너
+												노출기간 추가 <span> : 30 <span>일</span>
+											</span>
+											</span>
+										</div>
+									</div>
+									<div class="row margin-top-15 font-color-light">
+										<div class="col-xs-4">
+											<i class="fa fa-calendar-alt margin-right-5"></i> 작업일 : <span>2일</span>
+
+										</div>
+										<div class="col-xs-6 padding-left-0">
+											<i class="fa fa-wrench margin-right-6"></i> 수정 횟수 : <span>1회</span>
+
+										</div>
+									</div>
+								</div>
+								<div id="STANDARDPriceDiv" class="col-xs-4"
+									style="padding-top: 43px; padding-bottom: 43px;">
+									<div class="row">
+										<div class="col-xs-5 padding-right-0 inline-block">
+											<div class="gig-detail-decision-option-btn">
+												<a class="plain"> <i class="fa fa-minus"
+													aria-hidden="true"></i>
+												</a> <span><b>1</b></span> <a class="plain"> <i
+													class="fa fa-plus" aria-hidden="true"></i>
+												</a>
+											</div>
+										</div>
+
+										<div
+											class="col-xs-7 text-right  inline-block font-size-18 font-color-444 padding-left-0">
+											<span class="tahoma">50,000원</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<!-- 						하단 -->
+						<li
+							class="list-group-item padding-all-20 border-top-999 bg-color-fa">
+							<div class="row">
+								<div id="STANDARDInformationDiv" class="col-xs-8">
+									<div class="row">
+										<div class="col-xs-12">
+											<strong>하단 배너 30일</strong>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12">하단 배너(800*130) 30일동안, 우리 홈페이지 내에서
+											30일 광고게재</div>
+									</div>
+									<div class="row margin-top-15">
+										<div class="col-xs-12 package-selected-options-list-item">
+											<i
+												class="kmong kmong-check margin-right-5 color-dark-yellow-400"
+												style="font-size: 10px"> </i> <span class="font-color-light">배너
+												노출기간 추가 <span> : 30 <span>일</span>
+											</span>
+											</span>
+										</div>
+									</div>
+									<div class="row margin-top-15 font-color-light">
+										<div class="col-xs-4">
+											<i class="fa fa-calendar-alt margin-right-5"></i> 작업일 : <span>2일</span>
+
+										</div>
+										<div class="col-xs-6 padding-left-0">
+											<i class="fa fa-wrench margin-right-6"></i> 수정 횟수 : <span>1회</span>
+
+										</div>
+									</div>
+								</div>
+								<div id="STANDARDPriceDiv" class="col-xs-4"
+									style="padding-top: 43px; padding-bottom: 43px;">
+									<div class="row">
+										<div class="col-xs-5 padding-right-0 inline-block">
+											<div class="gig-detail-decision-option-btn">
+												<a class="plain"> <i class="fa fa-minus"
+													aria-hidden="true"></i>
+												</a> <span><b>1</b></span> <a class="plain"> <i
+													class="fa fa-plus" aria-hidden="true"></i>
+												</a>
+											</div>
+										</div>
+
+										<div
+											class="col-xs-7 text-right  inline-block font-size-18 font-color-444 padding-left-0">
+											<span class="tahoma">50,000원</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+<!-- 						왼쪽 -->
+						<li
+							class="list-group-item padding-all-20 border-top-999 bg-color-fa">
+							<div class="row">
+								<div id="STANDARDInformationDiv" class="col-xs-8">
+									<div class="row">
+										<div class="col-xs-12">
+											<strong>왼쪽 배너 30일</strong>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12">왼쪽 배너(150*500) 30일동안, 우리 홈페이지 내에서
+											30일 광고게재</div>
+									</div>
+									<div class="row margin-top-15">
+										<div class="col-xs-12 package-selected-options-list-item">
+											<i
+												class="kmong kmong-check margin-right-5 color-dark-yellow-400"
+												style="font-size: 10px"> </i> <span class="font-color-light">배너
+												노출기간 추가 <span> : 30 <span>일</span>
+											</span>
+											</span>
+										</div>
+									</div>
+									<div class="row margin-top-15 font-color-light">
+										<div class="col-xs-4">
+											<i class="fa fa-calendar-alt margin-right-5"></i> 작업일 : <span>2일</span>
+
+										</div>
+										<div class="col-xs-6 padding-left-0">
+											<i class="fa fa-wrench margin-right-6"></i> 수정 횟수 : <span>1회</span>
+
+										</div>
+									</div>
+								</div>
+								<div id="STANDARDPriceDiv" class="col-xs-4"
+									style="padding-top: 43px; padding-bottom: 43px;">
+									<div class="row">
+										<div class="col-xs-5 padding-right-0 inline-block">
+											<div class="gig-detail-decision-option-btn">
+												<a class="plain"> <i class="fa fa-minus"
+													aria-hidden="true"></i>
+												</a> <span><b>1</b></span> <a class="plain"> <i
+													class="fa fa-plus" aria-hidden="true"></i>
+												</a>
+											</div>
+										</div>
+
+										<div
+											class="col-xs-7 text-right  inline-block font-size-18 font-color-444 padding-left-0">
+											<span class="tahoma">50,000원</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+<!-- 						오른쪽 -->
+						<li
+							class="list-group-item padding-all-20 border-top-999 bg-color-fa">
+							<div class="row">
+								<div id="STANDARDInformationDiv" class="col-xs-8">
+									<div class="row">
+										<div class="col-xs-12">
+											<strong>오른쪽 배너 30일</strong>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12">오른쪽 배너(150*500) 30일동안, 우리 홈페이지내에서
+											30일 광고게재</div>
+									</div>
+									<div class="row margin-top-15">
+										<div class="col-xs-12 package-selected-options-list-item">
+											<i
+												class="kmong kmong-check margin-right-5 color-dark-yellow-400"
+												style="font-size: 10px"> </i> <span class="font-color-light">배너
+												노출기간 추가 <span> : 30 <span>일</span>
+											</span>
+											</span>
+										</div>
+									</div>
+									<div class="row margin-top-15 font-color-light">
+										<div class="col-xs-4">
+											<i class="fa fa-calendar-alt margin-right-5"></i> 작업일 : <span>2일</span>
+
+										</div>
+										<div class="col-xs-6 padding-left-0">
+											<i class="fa fa-wrench margin-right-6"></i> 수정 횟수 : <span>1회</span>
+
+										</div>
+									</div>
+								</div>
+								<div id="STANDARDPriceDiv" class="col-xs-4"
+									style="padding-top: 43px; padding-bottom: 43px;">
+									<div class="row">
+										<div class="col-xs-5 padding-right-0 inline-block">
+											<div class="gig-detail-decision-option-btn">
+												<a class="plain"> <i class="fa fa-minus"
+													aria-hidden="true"></i>
+												</a> <span><b>1</b></span> <a class="plain"> <i
+													class="fa fa-plus" aria-hidden="true"></i>
+												</a>
+											</div>
+										</div>
+
+										<div
+											class="col-xs-7 text-right  inline-block font-size-18 font-color-444 padding-left-0">
+											<span class="tahoma">50,000원</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-offset-7 col-xs-5 text-right">
+						<!-- Button trigger modal -->
+						<button type="button" class="btn btnAi0" data-toggle="modal"
+							data-target="#myModal">
+							<span><b>구매하기</b> (<span class="tahoma">50,000</span>원<span
+								style="display: none;"> / VAT포함</span>)</span>
+						</button>
+					</div>
+				</div>
+			</div>
+<!-- 			취소 환불 규정 -->
+			<div id="asrule"
+				class="margin-top-50 margin-bottom-50 informationDiv ">
+					<h5>취소 및 환불 규정</h5>
+				<div style="font-size: 14px; word-break: break-all; white-space: pre-line">
+					01. 작업 시작 전 100% 환불 가능합니다. ()작업 시작 후에도 결과물이 완성되지 않았을 경우에는 100% 환불
+					가능합니다.) 02. 판매자의 사정으로 작업이 당초 약속했던 일자보다 지연되거나 그에 상응하는 사안이 발생하였을 경우
+					진행한 작업 건수 또는 작업 노출 일수를 계산하여 제외한 금액을 환불 가능합니다. (1) 작업 건수 환불금액 = 결제금액
+					- (진행한 작업 건수 × 건단가) (2) 작업 노출 기간 환불금액 = 결제금액 ÷ 30일 × 작업 노출되지 않은 일수
+					03. 협의기간, 작업 기간, 광고기간에 따른 환불 규정 - 전문가가 작업을 시작하기 전, 의뢰인과 작업 일정 및 가능
+					여부를 논의하는 '협의기간'에는 100% 환불 가능합니다. - 사전 협의된 광고기간(노출 기간)에는 작업건수/노출기간에
+					따라 환불 금액이 산출됩니다. (단, 의뢰인의 과실이나 단순 변심, 광고 매체 규제 등으로 인한 불이익은 환불이 불가)
+					04. 컨설팅·노하우 강의 및 자료, 솔루션 등 서비스 상품을 받은 이후에는 환불이 불가합니다. 05. 이메일 · 메시지
+					(솔루션 포함) 발송 이후에는 환불이 불가합니다.
+				</div>
+			</div>
+	</div>
+<!-- container 끝 -->
+	</form>
+</div>
+<!-- InnerContainer 끝  -->
+<div>
+	<input id="cancle" class="btn btnAi1" type="button" value="취소">
+	<input id="ok" class="btn btnAi0" type="button" value="등록">
+</div>
+</div>
+
+<!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">결제 </h4>
+        </div>
+        <div class="modal-body">
+		<table class="t4" style="width:100%; margin : auto">
+		    <tr>
+		    <td>
+		          	총 결제 금액 :
+		          	</td>
+		          	<td>
+		          		
+		          	</td>
+		    </tr> 
+			<tr>
+				<th colspan="1">카카오페이 결제</th>
+				<td colspan="4"><input type="radio" checked /> <img
+					src="${cPath }/images/kp.jpg"></td>
+			</tr>
+			<tr>
+				<th colspan="5">구매자 주문 동의</th>
+			</tr>
+			<tr>
+				<td colspan="5">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="Y"
+							id="defaultCheck1" /> <label class="form-check-label"
+							for="defaultCheck1"> 구매 및 결제대행 서비스 이용약관 등에 모두 동의합니다. </label>
+					</div>
+					<ul class="payul">
+						<li>구매조건 확인 및 결제 진행 동의</li>
+						<li>결제 대행 서비스 이용약관 동의</li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+<script>
+	var plus = document.getElementsByClassName("fa fa-plus");
+	var minus = document.getElementsByClassName("fa fa-minus");
+	var fromDate = $("#fromDate");
+	var start;
+	
+	var ok =${"#ok"};
+	
+	ok.on('click',function(){
+		
+		
+	})
+	
+	var toDate = $("#toDate");
+	plus.on("click",function(){
+		
+		
+	})
+	$(function() {
+		$.datepicker.setDefaults($.datepicker.regional['ko']);
+		//시작일.
+		$('#fromDate').datepicker({
+			showOn : "both", // 달력을 표시할 타이밍 (both: focus or button)
+			// 			buttonImage: "../images/calendar.png", // 버튼 이미지
+			buttonImageOnly : true, // 버튼 이미지만 표시할지 여부
+			buttonText : "날짜선택", // 버튼의 대체 텍스트
+			dateFormat : "yy-mm-dd", // 날짜의 형식
+			changeMonth : true, // 월을 이동하기 위한 선택상자 표시여부
+			minDate : 2, // 선택할수있는 최소날짜, ( 0 : 오늘 이전 날짜 선택 불가)
+			onClose : function(selectedDate) {
+				// 시작일(fromDate) datepicker가 닫힐때
+				// 종료일(toDate)의 선택할수있는 최소 날짜(minDate)를 선택한 시작일로 지정
+				$("#toDate").datepicker("option", "minDate", selectedDate);
+			}
+		});
+		// 		
+
+		// 		//종료일
+		// 		$('#toDate').datepicker({
+		// 			showOn : "both",
+		// 			//      buttonImage: "resources/images/calendar.png", 
+		// 			buttonImageOnly : true,
+		// 			buttonText : "날짜선택",
+		// 			dateFormat : "yy-mm-dd",
+		// 			changeMonth : true,
+		// 			minDate : 0, // 오늘 이전 날짜 선택 불가
+		// 			onClose : function(selectedDate) {
+		// 				// 종료일(toDate) datepicker가 닫힐때
+		// 				// 시작일(fromDate)의 선택할수있는 최대 날짜(maxDate)를 선택한 종료일로 지정 
+		// 				$("#fromDate").datepicker("option", "maxDate", selectedDate);
+		// 			}
+		// 		});
+
+		//기간 선택 
+		let term = $("#term");
+		var date;
+		term.on("change", function() {
+			let value = $(this).val();
+			if (value = "ad01") {
+				date = 15;
+			} else {
+				date = 30;
+			}
+		})
+
+		
+
+	});
+</script>

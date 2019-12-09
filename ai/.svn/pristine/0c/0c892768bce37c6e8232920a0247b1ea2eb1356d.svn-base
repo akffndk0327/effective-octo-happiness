@@ -1,0 +1,46 @@
+package kr.or.ddit.dailysupplies.service;
+
+import java.util.List;
+
+import kr.or.ddit.vo.NewsVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+public class DailySupplyServiceImpl implements IDailySupplyService{
+
+	@Override
+	public int selectBoardCount(PagingInfoVO<NewsVO> pagingVO) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<NewsVO> selectBoardList(PagingInfoVO<NewsVO> pagingVO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NewsVO selectNews(NewsVO news) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int insertNews(NewsVO news) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateNews(NewsVO news) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteNews(NewsVO news) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

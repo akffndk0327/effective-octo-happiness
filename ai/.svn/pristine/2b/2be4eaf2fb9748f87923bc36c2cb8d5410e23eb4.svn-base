@@ -1,0 +1,99 @@
+package kr.or.ddit.food.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.food.service.IFoodService;
+import kr.or.ddit.vo.HaccpVO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.UneatableVO;
+/**
+ * @author 이진희
+ * @since 2019. 11. 15.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                              수정자               수정내용
+ * 2019. 11. 17.      이진희              해당제품상세보기 메서드 추가
+ * 2019. 11. 16.      이진희              리스트카테고리별 리스트 보기 
+ * -------------     --------    ----------------------
+ * 2019. 11. 15.      이진희               최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Controller
+@RequestMapping("/food")
+public class FoodViewController {
+	
+	@Inject
+	IFoodService service;
+	
+	@RequestMapping("foodCategory.do")
+	public String category() {
+		return "food/foodCategoryList";
+	}
+	
+	@RequestMapping("foodList.do")
+	public String foodList(@RequestParam(required=false) String searchWord,
+			@RequestParam(name="page",required=false,defaultValue="1") int currentPage,
+			@RequestParam(name="fcId",required=true) String fcId,
+			Model model
+			) {
+		
+		Map<String , Object> searchMap = new HashMap<>();
+		searchMap.put("searchWord",searchWord);
+		
+		
+		PagingInfoVO<HaccpVO> pagingVO = new PagingInfoVO<>(5, 5);
+		
+		pagingVO.setSearchMap(searchMap);
+		pagingVO.setFcId(fcId);
+		
+		int totalRecord = service.selectFoodCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		
+		List<HaccpVO> list = service.selectFoodList(pagingVO);
+		pagingVO.setDataList(list);
+		
+		model.addAttribute("pagingVO", pagingVO);
+		
+		return "food/foodList";
+	}
+	
+	@RequestMapping(value="foodList.do",produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public PagingInfoVO<HaccpVO> listAjax(
+			@RequestParam(required=false) String searchWord,
+			@RequestParam(name="page",required=false,defaultValue="1") int currentPage,
+			@RequestParam(name="fcId",required=true) String fcId,
+			Model model
+			){
+		foodList(searchWord,currentPage,fcId,model);
+		return (PagingInfoVO<HaccpVO>) model.asMap().get("pagingVO");
+	}
+	
+	@RequestMapping("foodView.do")
+	public String foodView(@RequestParam(required=true) Long prdlstreportno,Model model) {
+		
+		HaccpVO haccp = new HaccpVO();
+		haccp.setPrdlstreportno(prdlstreportno);
+		
+		HaccpVO hac = service.selectFood(haccp);
+		model.addAttribute("haccp", hac);
+		
+		return "food/foodView";
+	}
+
+}

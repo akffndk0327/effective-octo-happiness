@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.notice.dao.INoticeDAO">
+
+	<select id="selectNoticeCount" resultType="int">
+		SELECT COUNT(*)
+		FROM NOTICE
+		WHERE NOTICE_USE = '1'
+	</select>
+	
+	<resultMap type="NoticeVO" id="noticeListMap" autoMapping="true">
+		<id property="noticeNo" column="NOTICE_NO"/>
+		<association property="admin" javaType="AdminVO" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		</association>
+	</resultMap>
+	<select id="selectNoticeList" parameterType="PagingInfoVO" resultMap="noticeListMap">
+		SELECT B.*
+				FROM(
+				    SELECT ROWNUM RNUM, A.*
+				    FROM(
+				    	 SELECT
+						    NOTICE_NO,   NOTICE_TITLE,  NOTICE_USE,
+						    NOTICE_INDATE,  NOTICE_HIT,  a.MEM_ID,
+						    NOTICE_CONTENT,  NOTICE_LEVEL, ADMIN_NAME
+							FROM  NOTICE a, ADMIN b
+						WHERE NOTICE_USE = '1'
+						  AND a.MEM_ID = b.MEM_ID
+						ORDER BY NOTICE_LEVEL ASC, NOTICE_NO DESC
+				    ) A
+				) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<resultMap type="NoticeVO" id="noticeMap" autoMapping="true">
+		<id property="noticeNo" column="NOTICE_NO"/>
+		<association property="admin" javaType="AdminVO" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		</association>
+	</resultMap>
+	<select id="selectNotice" parameterType="int" resultMap="noticeMap">
+		SELECT
+		    NOTICE_NO,   NOTICE_TITLE,  NOTICE_USE,
+		    NOTICE_INDATE,  NOTICE_HIT,  a.MEM_ID,
+		    NOTICE_CONTENT,  NOTICE_LEVEL, ADMIN_NAME
+		FROM  NOTICE a, ADMIN b
+		WHERE NOTICE_USE = '1'
+		  AND a.MEM_ID = b.MEM_ID
+		  AND NOTICE_NO = #{noticeNo}
+	</select>
+	
+	<insert id="insertNotice" parameterType="NoticeVO">
+		INSERT INTO NOTICE (
+		    NOTICE_NO,  NOTICE_TITLE, MEM_ID,  NOTICE_CONTENT  
+		    <if test="noticeLevel!=null">
+		     ,NOTICE_LEVEL
+		    </if>
+		) VALUES (
+		    NOTICE_SEQ.NEXTVAL, #{noticeTitle},  'admin', #{noticeContent}
+		    <if test="noticeLevel!=null">
+		    ,#{noticeLevel}
+		    </if>
+		)
+	</insert>
+	
+	<update id="updateNoticeHit" parameterType="int">
+		UPDATE  NOTICE
+		   SET  NOTICE_HIT = NOTICE_HIT+1
+		 WHERE  NOTICE_NO = #{noticeNo}
+	</update>
+	
+	<update id="updateNotice" parameterType="NoticeVO">
+		UPDATE NOTICE
+	       SET
+		       NOTICE_TITLE = #{noticeTitle},
+		       NOTICE_CONTENT = #{noticeContent}
+		       <if test="noticeLevel!=null">
+		       ,NOTICE_LEVEL = #{noticeLevel}
+		       </if>
+	    WHERE  NOTICE_NO = #{noticeNo}
+	</update>
+	
+	<update id="deleteNotice" parameterType="int">
+		UPDATE NOTICE
+		   SET NOTICE_USE = '0'
+		 WHERE NOTICE_NO = #{noticeNo}
+	</update>
+</mapper>

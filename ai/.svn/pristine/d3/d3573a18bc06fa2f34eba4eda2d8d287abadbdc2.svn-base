@@ -1,0 +1,48 @@
+package kr.or.ddit.mypage.controller;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.mypage.service.IMemMypageService;
+import kr.or.ddit.vo.MemAllergyVO;
+
+@Controller
+@RequestMapping("/memMypage")
+public class MemberAllergyDeleteController {
+
+	@Inject
+	IMemMypageService service;
+	
+	@RequestMapping(value="memAllergyDelete.do", method=RequestMethod.POST)
+	public String deleteAllergy(
+			@Valid @ModelAttribute("member") MemAllergyVO member,
+			RedirectAttributes redirectAttributes,
+			Authentication authentication) {
+		
+		String memId = authentication.getName();
+		member.setMemId(memId);
+		String viewName = "redirect:/memMypage/memAllergyView.do?";
+		String message = null;
+		ServiceResult result = service.removeMemAllergy(member);
+		
+		switch(result) {
+			case FAILED:
+				message = "서버오류";
+				break;
+			default:
+				message = "삭제완료";
+			break;
+		}
+		
+		redirectAttributes.addFlashAttribute("message", message);
+		return viewName;
+	}
+}

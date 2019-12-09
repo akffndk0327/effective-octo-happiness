@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일                수정자        수정내용               -->
+<!--  ==========    ======    ==============        -->
+<!--  2019. 11. 23   허민지        최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mypage.dao.IAdminMypageDAO">
+
+  <sql id="searchFrag">
+  	<where>
+  		<if test="searchMap!=null">
+  			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+  			<choose>
+  				<when test="'id'.equals(searchMap.searchType)">
+  					C.MEM_ID = #{searchMap.searchWord}
+  				</when>
+  				<when test="'name'.equals(searchMap.searchType)">
+  					MEM_NAME = #{searchMap.searchWord}
+  				</when>
+  				<otherwise>
+  					C.MEM_ID = #{searchMap.searchWord}
+  					OR MEM_NAME = #{searchMap.searchWord}
+  				</otherwise>
+  			</choose>
+  			</if>
+  		</if>
+  	</where>
+  </sql>
+
+	<select id="selectMemberCount" parameterType="PagingInfoVO" resultType="int">
+  	SELECT COUNT(C.MEM_ID)
+  	FROM MEMBER C
+  	<include refid="searchFrag" />
+    </select>
+    
+	<select id="selectMemberList" parameterType="PagingInfoVO" resultType="MemberVO">
+	   SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		          	C.MEM_ID, MEM_NAME, MEM_DELETE, AUTHOR_ID
+				FROM 
+					MEMBER C LEFT OUTER JOIN COMPANY D ON (C.MEM_ID = D.MEM_ID)
+                             LEFT OUTER JOIN AUTHORITIES E ON (C.MEM_ID = E.MEM_ID)
+		        <include refid="searchFrag" />	
+		        Order by 1
+		    	) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<resultMap type="MemberVO" id="listMap" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		<association property="company" javaType="CompanyVO" autoMapping="true" />
+	</resultMap>
+	
+	<select id="selectMember" parameterType="MemberVO" resultMap="listMap" >
+	SELECT
+    	MEM_NAME, MEM_TEL, MEM_ADDR1, MEM_ADDR2,
+    	MEM_ZIP, MEM_MAIL, MEM_DELETE, MEM_GENDER,
+    	MEM_AGE, A.MEM_ID, AUTHOR_ID,
+    	COM_NUM, COM_NAME, COM_ADDR
+	FROM
+    	MEMBER A LEFT OUTER JOIN COMPANY B ON (A.MEM_ID = B.MEM_ID)
+    			 LEFT OUTER JOIN AUTHORITIES C ON (A.MEM_ID = C.MEM_ID)
+	WHERE
+    	A.MEM_ID = #{memId}
+	</select>
+
+
+	<resultMap type="CompanyVO" id="comMap" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		<association property="member" javaType="MemberVO" autoMapping="true">
+		</association>
+	</resultMap>
+	
+	<select id="selectCompanyList" resultMap="comMap">
+	SELECT
+    	MEM_NAME, MEM_TEL, MEM_MAIL,
+    	COM_NUM, COM_NAME, COM_ADDR,
+    	A.MEM_ID ,MEM_DELETE
+	FROM
+    	MEMBER A, COMPANY B
+	WHERE
+    	A.MEM_ID = B.MEM_ID;
+	</select>
+	
+	<select id="selectChorme" resultType="int">
+	SELECT COUNT (*) 
+	    BRO_TYPE
+	FROM BROWSER
+	WHERE BRO_TYPE='크롬'
+	</select>
+		
+	<select id="selectFireFox" resultType="int">
+	SELECT COUNT (*) 
+	    BRO_TYPE
+	FROM BROWSER
+	WHERE BRO_TYPE='파이어폭스'
+		</select>
+		
+	<select id="selectEx" resultType="int">
+	SELECT COUNT (*) 
+	    BRO_TYPE
+	FROM BROWSER
+	WHERE BRO_TYPE='익스플로러'
+	</select>
+		
+	<select id="selectSafari" resultType="int">
+	SELECT COUNT (*) 
+	    BRO_TYPE
+	FROM BROWSER
+	WHERE BRO_TYPE='사파리'
+	</select>
+	
+	<select id="selectOthers" resultType="int">
+	SELECT COUNT (*) 
+	    BRO_TYPE
+	FROM BROWSER
+	WHERE BRO_TYPE='기타브라우저'
+	</select>
+		
+	<select id="selectWindows" resultType="int">
+	SELECT COUNT (*) 
+	    OS_TYPE
+	FROM BROWSER
+	WHERE OS_TYPE='윈도우'
+	</select>
+		
+	<select id="selectLinux" resultType="int">
+	SELECT COUNT (*) 
+	    OS_TYPE
+	FROM BROWSER
+	WHERE OS_TYPE='리눅스'
+	</select>
+	<select id="selectAndroid" resultType="int">
+	SELECT COUNT (*) 
+	    OS_TYPE
+	FROM BROWSER
+	WHERE OS_TYPE='안드로이드'
+	</select>
+	<select id="selectIOS" resultType="int">
+	SELECT COUNT (*) 
+	    OS_TYPE
+	FROM BROWSER
+	WHERE OS_TYPE='IOS'
+	</select>
+		
+	<select id="selectEtc" resultType="int">
+	SELECT COUNT (*) 
+	    OS_TYPE
+	FROM BROWSER
+	WHERE OS_TYPE='기타OS'
+	</select>
+	
+	<!-- 제품 판매 순위 10 -->
+	<resultMap type="ProdVO" id="prodRankMap" autoMapping="true">
+		<association property="search" javaType="SearchVO" autoMapping="true"/>
+	</resultMap>
+	<select id="selectSaleProd"  resultMap="prodRankMap">
+		SELECT XX.SEARCH_COUNT, Y.PROD_NAME, Y.PROD_IMG
+		FROM(
+		    SELECT ROWNUM , AA.*
+		    FROM (
+		        SELECT
+		            COUNT(B.PROD_ID) AS SEARCH_COUNT, B.PROD_ID
+		        FROM
+		            ORDER2 A, ORDERDETAIL B, PROD C
+		        WHERE A.ORDER_ID = B.ORDER_ID
+		          AND B.PROD_ID = C.PROD_ID
+		          AND C.PROD_USE = 'p1'
+		        GROUP BY B.PROD_ID
+		        ORDER BY 1 DESC
+		    ) AA
+		    WHERE ROWNUM BETWEEN 1 AND 5
+		) XX, PROD Y
+		WHERE XX.PROD_ID = Y.PROD_ID
+		ORDER BY 1 DESC
+	</select>
+	
+	
+</mapper>

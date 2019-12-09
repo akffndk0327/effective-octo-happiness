@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.correctboard.dao.ICorrectBoardDAO">
+	<select id="selectCorrectCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*) 
+		FROM CORRECTBOARD 
+		WHERE CORRECT_TYPE= #{correctType} 
+		<if test="resId != null">
+		AND RES_ID = #{resId}
+		</if>
+	</select>
+	
+	<select id="selectCorrectList" parameterType="PagingInfoVO" resultType="CorrectBoardVO">
+		SELECT B.* 
+			FROM(
+				SELECT ROWNUM RNUM, A.*
+				FROM(
+					<![CDATA[
+					SELECT LEVEL,
+						CORRECT_NO,CORRECT_TYPE,
+						LPAD('    re:',12*(level-1), '&nbsp;&nbsp;') || CORRECT_TITLE AS CORRECT_TITLE,CORRECT_PW,
+						MEM_ID,TO_CHAR(CORRECT_INDATE,'YYYY-MM-DD') CORRECT_INDATE,CORRECT_USE,CORRECT_CONTENT,
+						NVL(RES_ID,' ') RES_ID,
+						NVL((SELECT CODE_NAME FROM CODE C 
+							WHERE C.CODE_ID=#{correctType}),' ') CODE_NAME,
+						NVL((SELECT CODE_NAME FROM CODE C 
+                                    WHERE C.CODE_ID=A.RES_ID ),' ') RES_NAME	
+					FROM CORRECTBOARD A
+					]]>
+					WHERE CORRECT_TYPE= #{correctType} 
+					<if test="resId != null">
+					AND RES_ID = #{resId}
+					</if>
+					START WITH CORRECT_PARENT IS NULL
+					CONNECT BY PRIOR CORRECT_NO = CORRECT_PARENT
+					ORDER SIBLINGS BY CORRECT_NO DESC
+					
+				)A
+			) B
+			WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<resultMap type="CorrectBoardVO" id="correctMap" autoMapping="true">
+		<id property="correctNo" column="coNO"/>
+		<collection property="attatchList" ofType="CorrectAttatchVO" autoMapping="true">
+			<id property="coattId" column="COATT_ID"/>
+		</collection>
+	</resultMap>
+	<select id="selectCorrect" parameterType="CorrectBoardVO" resultMap="correctMap"> 
+		SELECT 
+				A.CORRECT_NO "coNO", CORRECT_TYPE, CORRECT_TITLE,CORRECT_USE,
+				MEM_ID, TO_CHAR(CORRECT_INDATE,'YYYY-MM-DD') CORRECT_INDATE,
+				CORRECT_CONTENT,CORRECT_PW,CORRECT_PARENT,RES_ID,
+				(SELECT CODE_NAME FROM CODE C 
+					WHERE C.CODE_ID=A.CORRECT_TYPE) CODE_NAME,
+				 (SELECT CODE_NAME FROM CODE C 
+						WHERE C.CODE_ID=A.RES_ID ) RES_NAME	
+				,COATT_ID,COATT_SAVENAME,COATT_NAME,COATT_FILESIZE,
+				COATT_FILETYPE,COATT_FANCY
+			FROM CORRECTBOARD A LEFT OUTER JOIN CORRECTATTATCH B ON (A.CORRECT_NO = B.CORRECT_NO)
+		WHERE A.CORRECT_NO = #{correctNo}
+	</select>
+	
+	<insert id="createCorrectBoard" parameterType="CorrectBoardVO">
+		<selectKey order="BEFORE" keyProperty="correctNo" resultType="int">
+		    SELECT NVL(MAX(CORRECT_NO),0)+1 FROM CORRECTBOARD	
+		</selectKey>
+		INSERT INTO CORRECTBOARD (
+			CORRECT_NO, CORRECT_TYPE,
+			MEM_ID,CORRECT_INDATE,CORRECT_CONTENT,
+			CORRECT_PW,CORRECT_TITLE,RES_ID
+			<if test="correctParent != null and correctParent gt 0">
+			 ,CORRECT_PARENT
+			</if>
+		 ) VALUES (
+		 	#{correctNo},#{correctType},
+		 	#{memId},SYSDATE,#{correctContent},
+		 	#{correctPw},#{correctTitle},#{resId}
+		 	<if test="correctParent != null and correctParent gt 0">
+		 	,#{correctParent}
+		 	</if>
+		 )
+	</insert>
+	
+	<delete id="deleteCorrect" parameterType="CorrectBoardVO">
+		DELETE FROM CORRECTBOARD
+		WHERE CORRECT_NO=#{correctNo}
+	</delete>
+	
+	<delete id="deleteCorrectRe" parameterType="CorrectBoardVO">
+		DELETE FROM CORRECTBOARD
+		WHERE CORRECT_PARENT=#{correctNo}	
+	</delete>
+	
+	<select id="selectCodeList" resultType="CodeVO">
+		SELECT DISTINCT A.CODE_ID,A.CODE_NAME FROM CODE A,CORRECTBOARD B WHERE A.CODE_ID=B.CORRECT_TYPE
+	</select>
+
+	<select id="selectBoardList" resultType="CodeVO">
+		SELECT CODE_ID,CODE_NAME FROM CODE WHERE CODE_ID LIKE '%B%'
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

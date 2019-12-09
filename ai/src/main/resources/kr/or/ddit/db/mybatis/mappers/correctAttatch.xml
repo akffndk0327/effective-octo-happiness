@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.correctboard.dao.ICorrectAttatchDAO">
+	<insert id="createCorrectAttatch" parameterType="CorrectBoardVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="attNoStart" >
+			SELECT NVL(MAX(COATT_ID),0)+1 FROM CORRECTATTATCH
+		</selectKey>
+		INSERT ALL 
+		<foreach collection="attatchList" item="attatch" index="idx">
+			INTO CORRECTATTATCH(
+				COATT_ID,CORRECT_NO,COATT_NAME,COATT_SAVENAME,
+				COATT_FILETYPE,COATT_FILESIZE,COATT_FANCY
+			) VALUES (
+				#{attNoStart}+#{idx},#{correctNo},#{attatch.coattName}
+				,#{attatch.coattSavename},#{attatch.coattFiletype},#{attatch.coattFilesize}
+				,#{attatch.coattFancy}
+			)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	
+	<delete id="deleteAttatch" parameterType="CorrectBoardVO">
+		DELETE FROM CORRECTATTATCH WHERE CORRECT_NO =#{correctNo}
+			<if test="delAttaches!=null and delAttaches.length gt 0">
+				AND ATT_NO IN
+				<foreach collection="delAttaches" item="delNo" open="(" close=")" separator=",">
+					#{delNo}
+				</foreach>
+			</if>
+	</delete>
+	
+	<select id="selectAttatch" parameterType="int" resultType="CorrectAttatchVO">
+		SELECT
+		    COATT_ID,
+		    COATT_SAVENAME,
+		    COATT_NAME,
+		    COATT_FILESIZE,
+		    COATT_FILETYPE,
+		    COATT_FANCY,
+		    CORRECT_NO
+		FROM
+		    CORRECTATTATCH 
+		WHERE 
+			COATT_ID = #{coattId}
+	</select>
+
+
+</mapper>

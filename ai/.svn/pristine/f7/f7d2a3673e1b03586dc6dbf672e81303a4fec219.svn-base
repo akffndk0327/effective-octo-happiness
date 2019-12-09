@@ -1,0 +1,10 @@
+package kr.or.ddit.vo;
+
+public class SurveyResultVO {
+	private String resultSub;
+	private String tokenColumn;
+	private String examId;
+	private String surId;
+	private String resultId;
+	private String questId;
+}

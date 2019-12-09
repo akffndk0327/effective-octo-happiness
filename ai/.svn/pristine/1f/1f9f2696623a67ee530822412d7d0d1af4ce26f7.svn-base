@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일              수정자      수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 5   허민지     최초작성               -->
+<!--  2019. 11. 9   허민지    insertAccount,insertMember,insertAuthorities 추가   -->
+<!--  2019. 11. 11  허민지     -->
+<!--  2019. 11. 12  허민지    selectCompany, insertCompany,selectCompanyForSignUp 추가  -->
+<!--  2019. 11. 13  허민지    insertCompany 제거 -->
+<!--  2019. 11. 14  허민지    getAuthority 추가, selectMember if추가 
+                     	   selectMember에 resultMap추가
+                     	   selectMemAllergy 추가-->
+<!--  2019. 11. 15  허민지    orderByMonthly 추가 -->
+<!--  2019. 11. 26  이유진    orderByRecipe 수정 -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.member.dao.IMemberDAO">
+ 
+   <resultMap type="MemAllergyVO" id="memAllergyMap" autoMapping="true">
+   	  <association property="allergy" javaType="AllergyVO" autoMapping="true">
+   	  	<id property="allId" column="All_ID"/>
+   	  	<association property="allergySymtom" javaType="AllergySymtomVO" autoMapping="true">
+   	  		<id property="symId" column="SYM_ID"/>
+   	  	</association>
+   	  </association>
+   </resultMap>
+   
+   <select id="selectMemAllergy" parameterType="String" resultMap="memAllergyMap">
+   SELECT
+       SYM_RECITAL,
+       A.ALL_ID,
+       D.SYM_NAME, ALL_NAME
+   FROM 
+      MEMALLERGY A, MEMBER M, ALLERGY C, ALLERGYSYMTOM D
+   WHERE 
+      A.MEM_ID = M.MEM_ID
+      AND C.ALL_ID = A.ALL_ID
+      AND D.SYM_ID = A.SYM_ID
+        AND M.MEM_ID = #{memId}
+   </select>
+   
+   <select id="orderByMonthly" parameterType="String" resultType="MonthlyVO">
+    SELECT
+     <![CDATA[
+        MONTHLY_ID, MONTHLY_TITLE,
+        MEM_ID , MONTHLY_INDATE
+    FROM
+        MONTHLY
+    WHERE 
+        MEM_ID = #{memId} 
+        AND ROWNUM <= 3 ]]>
+    ORDER BY 1 DESC
+   </select>
+   
+   <select id="orderByRecipe" parameterType="String" resultType="RecipeBoardVO">
+    SELECT A.* 
+	FROM (
+		  <![CDATA[
+		  SELECT ROWNUM RNUM, 
+          	RECIPE_NO, RECIPE_TITLE,RECIPE_TYPENM AS RECIPE_TYPE,
+            RECIPE_INDATE, M.MEM_ID
+          FROM MEMBER M, RECIPEBOARD R,RECIPETYPE T
+          WHERE M.MEM_ID = R.MEM_ID
+                AND T.RECIPE_TYPE=R.RECIPE_TYPE
+                AND M.MEM_ID = #{memId}) A
+    WHERE RNUM <= 3]]>
+    ORDER BY A.RECIPE_INDATE DESC
+   </select>
+   
+   <resultMap type="MemberVO" id="memberMap" autoMapping="true">
+      <id property="memId" column="MEM_ID" />
+      <association property="company" javaType="CompanyVO" autoMapping="true">
+      </association>
+      <collection property="memAllList" column="MEM_ID" 
+      		   ofType="MemAllergyVO" autoMapping="true">
+      		   <association property="allergy" javaType="AllergyVO" autoMapping="true">
+      		   </association>
+      </collection>
+      <collection property="monthlyList" column="MONTHLY_ID"
+               ofType="MonthlyVO" autoMapping="true">
+      </collection>
+      <collection property="recipeBoardList" column="MEM_ID"
+      			ofType="RecipeBoardVO" autoMapping="true">
+      </collection>
+   </resultMap>
+   
+   <select id="selectAccount" parameterType="String" resultType="MemberVO">
+   SELECT
+   		A.MEM_ID, MEM_PASS, AUTHOR_ID
+   FROM 
+    	ACCOUNT A LEFT OUTER JOIN AUTHORITIES B ON (A.MEM_ID = B.MEM_ID)
+   WHERE
+    	A.MEM_ID = #{memId}
+   </select>
+   
+   <select id="selectMember" parameterType="MemberVO" resultMap="memberMap">
+   <if test="authorId=='ROLE_MEM'">
+	   SELECT
+          MEM_NAME, MEM_TEL, MEM_ADDR1,
+          MEM_ADDR2, MEM_ZIP, MEM_MAIL,
+          MEM_DELETE, MEM_GENDER, MEM_AGE,
+          A.MEM_ID, B.MEM_PASS, C.AUTHOR_ID,
+          D.*, E.ALL_NAME
+          , F.RECIPE_NO, F.RECIPE_TITLE ,F.RECIPE_INDATE
+          , G.G.MONTHLY_ID, G.MONTHLY_USE, G.MONTHLY_INDATE, G.MONTHLY_TITLE, G.MON_PASS
+          , (
+          SELECT 
+				   count(*)
+				FROM NOTE
+				WHERE 
+				 RECIEVE_ID=#{memId}
+				 and delete_no='N'
+				 and read_no='N'
+          ) NOTE_COUNT
+          
+      FROM
+          ACCOUNT B LEFT OUTER JOIN MEMBER A ON (A.MEM_ID = B.MEM_ID)
+                    LEFT OUTER JOIN AUTHORITIES C ON (A.MEM_ID = C.MEM_ID) 
+                    LEFT OUTER JOIN MEMALLERGY D ON (A.MEM_ID = D.MEM_ID)
+                    LEFT OUTER JOIN ALLERGY E ON (D.ALL_ID = E.ALL_ID)
+                    LEFT OUTER JOIN RECIPEBOARD F ON (A.MEM_ID = F.MEM_ID)
+                    LEFT OUTER JOIN MONTHLY G ON (A.MEM_ID = G.MEM_ID)
+      WHERE
+          A.MEM_ID = #{memId}
+    </if>
+     <if test="authorId == 'ROLE_EMP'">
+     SELECT
+        MEM_NAME, MEM_TEL, MEM_MAIL,
+        B.MEM_ID, MEM_PASS, AUTHOR_ID,
+        COM_NUM, COM_NAME, COM_ADDR
+     FROM
+        ACCOUNT B LEFT OUTER JOIN MEMBER A ON (A.MEM_ID = B.MEM_ID)
+                  LEFT OUTER JOIN AUTHORITIES C ON (A.MEM_ID = C.MEM_ID)
+                  LEFT OUTER JOIN COMPANY D ON (A.MEM_ID = D.MEM_ID)
+     WHERE
+        B.MEM_ID = #{memId}
+    </if>
+    <if test="authorId=='ROLE_ADMIN'">
+    SELECT
+        A.ADMIN_NAME, A.ADMIN_TEL,
+        A.MEM_ID, C.MEM_PASS, B.AUTHOR_ID
+    FROM ADMIN A, AUTHORITIES B, ACCOUNT C
+    WHERE 
+        A.MEM_ID = B.MEM_ID
+        AND B.MEM_ID = C.MEM_ID
+        AND A.MEM_ID = #{memId}
+   </if>
+   </select>
+   
+   
+   <!-- ACCOUNT TABLE -->
+   <insert id="insertAccount" parameterType="MemberVO">
+   INSERT INTO ACCOUNT (
+        MEM_ID,
+        MEM_PASS
+    ) VALUES (
+        #{memId}, #{memPass}
+    )
+   </insert>
+   
+   <insert id="insertMember" parameterType="MemberVO">
+   INSERT ALL
+   <if test="authorId=='ROLE_MEM'">
+   INTO MEMBER (
+       MEM_NAME,   MEM_TEL,   MEM_ADDR1,
+       MEM_ADDR2,   MEM_ZIP,   MEM_MAIL,
+       MEM_GENDER,   MEM_AGE,   MEM_ID
+   ) VALUES (
+       #{memName},   #{memTel},   #{memAddr1},
+       #{memAddr2},   #{memZip},   #{memMail},
+       #{memGender},   #{memAge},   MEM_ID
+   )
+   INTO AUTHORITIES (
+       AUTHOR_ID,
+       MEM_ID
+   ) VALUES (
+       #{authorId},
+       MEM_ID
+   )
+   <if test="memAll != 0">
+   	<if test="memAllList!= null and memAllList.size() gt 0">
+         	<foreach collection="memAllList" item="allergy">
+            	INTO MEMALLERGY (
+               	MEM_ID
+               	,ALL_ID
+               	,SYM_ID
+            	) VALUES (
+               	MEM_ID
+               	,#{allergy.allId}
+               	,#{allergy.symId}
+            	)
+         	</foreach>
+      	</if>
+   	</if>
+   </if>
+   <if test="authorId=='ROLE_EMP'">
+   INTO MEMBER (
+       MEM_NAME,   MEM_TEL,     
+       MEM_MAIL,   MEM_ID
+   ) VALUES (
+       #{memName},   #{memTel},   
+       #{memMail},   MEM_ID
+   )
+   INTO AUTHORITIES (
+       AUTHOR_ID,
+       MEM_ID
+   ) VALUES (
+       #{authorId},
+       MEM_ID
+   )
+   INTO COMPANY (
+         MEM_ID
+         ,COM_NUM
+         ,COM_NAME
+        ,COM_ADDR
+   ) VALUES (
+         MEM_ID
+         ,#{comNum}
+         ,#{comName}
+        ,#{comAddr}
+   )
+   </if>
+   SELECT  MEM_ID
+   FROM ACCOUNT
+   WHERE MEM_ID = #{memId}
+   </insert>
+   
+   
+   <select id="selectAllergyList" resultType="AllergyVO">
+   SELECT 
+         ALL_ID,
+        ALL_NAME,
+        ALL_TYPE
+   FROM ALLERGY
+   </select>
+   
+   <select id="selectSytomsList" resultType="AllergySymtomVO">
+   SELECT
+         SYM_ID,
+         SYM_NAME
+   FROM ALLERGYSYMTOM
+   </select>
+   
+   <select id="idCheck" parameterType="MemberVO" resultType="MemberVO">
+	SELECT
+    	NVL(MAX(MEM_ID),'0') MEM_ID
+	FROM 
+    	MEMBER
+	WHERE 
+    	MEM_ID =#{memId}
+   </select>
+   
+   <select id="mailCheck" parameterType="MemberVO" resultType="MemberVO">
+	SELECT
+    	NVL(MAX(MEM_MAIL),'0') MEM_MAIL
+	FROM 
+    MEMBER
+	WHERE 
+    	MEM_MAIL =#{memMail}
+   </select>
+   
+
+   <!-- company  -->
+   <select id="selectCompanyForSignUp" parameterType="String" resultType="ComInfoVO">
+   SELECT
+       COM_NUM,
+       COM_NAME,
+       COM_ADDR
+   FROM 
+      COMINFO
+   WHERE 
+      COM_NUM = #{comNum}
+   </select>
+   
+   
+   <select id="selectCompany" parameterType="String" resultType="MemberVO">
+   SELECT
+         COM_NUM,   COM_NAME,   COM_ADDR,
+        MEM_NAME,   MEM_TEL,    A.MEM_ID,     MEM_MAIL
+   FROM
+         COMPANY B, MEMBER A
+   WHERE 
+        B.MEM_ID = A.MEM_ID
+        AND COM_NUM = #{comNum}
+   </select>
+   
+   
+   <update id="updateMember" parameterType="MemberVO">
+    UPDATE MEMBER	
+    SET
+        MEM_TEL =  	 #{memTel},
+        MEM_ADDR1 =  #{memAddr1},
+        MEM_ADDR2 =  #{memAddr2},
+        MEM_ZIP =    #{memZip},
+        MEM_MAIL =   #{memMail}
+        <if test="authorId == 'ROLE_EMP'">
+        	, MEM_NAME =   #{memName}
+        </if>
+    WHERE
+        MEM_ID =     #{memId}
+   </update>
+   
+   <select id="findId" parameterType="MemberVO" resultType="MemberVO">
+   SELECT
+   		A.MEM_ID
+	FROM
+    	MEMBER A LEFT OUTER JOIN COMPANY B ON (A.MEM_ID = B.MEM_ID)
+	WHERE
+    	MEM_NAME = #{memName}
+    	AND MEM_DELETE = 'N'
+    	AND MEM_MAIL = #{memMail}
+   </select>
+   
+   <select id="findPass" parameterType="MemberVO" resultType="MemberVO">
+   SELECT
+    	MEM_PASS
+	FROM
+    	MEMBER A LEFT OUTER JOIN ACCOUNT B ON (A.MEM_ID = B.MEM_ID)
+	WHERE
+    	A.MEM_ID = #{memId}
+    	AND MEM_DELETE = 'N'
+    	AND MEM_MAIL = #{memMail}
+   </select>
+   
+   <update id="updatePass" parameterType="AccountVO">
+   UPDATE ACCOUNT
+    SET
+        MEM_PASS = #{memPass}
+	WHERE
+    	MEM_ID = #{memId}
+   </update>
+   
+   <resultMap type="MemberVO" id="memAllMap" autoMapping="true">
+      <id property="memId" column="MEM_ID" />
+      <collection property="memAllList" column="MEM_ID" 
+      		   ofType="MemAllergyVO" autoMapping="true">
+      		   <association property="allergy" javaType="AllergyVO" autoMapping="true">
+      		   </association>
+      </collection>
+   </resultMap>
+   <select id="selectMemberAll" parameterType="MemberVO" resultMap="memAllMap">
+   		SELECT MEM_NAME, MEM_TEL, MEM_ADDR1, MEM_ADDR2, MEM_ZIP, MEM_MAIL, MEM_DELETE, MEM_GENDER, 
+		MEM_AGE, A.MEM_ID, B.MEM_PASS, C.AUTHOR_ID, D.*, REPLACE(E.ALL_NAME,'알레르기','') ALL_NAME
+		FROM ACCOUNT 
+		B LEFT OUTER JOIN MEMBER A ON (A.MEM_ID = B.MEM_ID) LEFT OUTER JOIN AUTHORITIES C ON (A.MEM_ID 
+		= C.MEM_ID) LEFT OUTER JOIN MEMALLERGY D ON (A.MEM_ID = D.MEM_ID) LEFT OUTER JOIN ALLERGY E 
+		ON (D.ALL_ID = E.ALL_ID) WHERE MEM_DELETE != 'Y' AND C.AUTHOR_ID='ROLE_MEM' AND A.MEM_ID = #{memId} 
+   </select>
+</mapper>

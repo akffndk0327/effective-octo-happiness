@@ -1,0 +1,199 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 17.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 17.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+ #InnerContainer{
+    width: 1382px;
+    margin-left: 214px;
+ }
+ 
+.filterTable{
+    margin-left: 111px;
+	width : 95%;
+}
+.filterTable input{
+	width : 120px;
+	height : 30px;
+}
+.titleTd{
+	padding-left: 38px;
+}
+.mainTable{
+	margin-left : 132px;
+	margin-top : 20px;
+	min-height : 250px;
+	width : 95%;
+	border-top : 1px solid #ddd;
+	border-bottom : 1px solid #ddd;
+}
+.mainTable td{
+	height : 50px;
+	vertical-align : middle;
+	border-top : 1px solid #ddd;
+	border-bottom : 1px solid #ddd;
+	font-weight: bold;
+    font-size: 20px;
+}
+.mainTable div {
+	font-weight: normal;
+	
+}
+.mainTable th{
+	height : 45px;
+}
+.oneTd{
+	width : 60%;
+	padding-left: 37px;
+}
+.blank{
+	width : 10%;
+}
+/* .blank2{ */
+/* 	width : 69%; */
+/* } */
+.blank2 {
+    width: 75%;
+}
+.blankCenter{
+	width: 71%;
+}
+.title{
+	width: 95%;
+    margin-left: -17px;
+    margin-top: 30px;
+    margin-bottom: -21px;
+	border-left : 8px solid #2F4F4F;
+	padding : 3px;
+	font-size : 25px;
+	font-weight : bold;
+	color : #077B5F;
+}
+.filterTable a, #search{
+	cursor : pointer;
+	font-size : 18px;
+}
+.filterTable a:hover{
+	background: #2F4F4F;
+	color: #fff;
+}
+#pagingArea{
+	text-align : center;
+	margin-top : 40px;
+	margin-bottom : 70px;
+}
+.btnCancel {
+    background: #2F4F4F;
+    color: #fff;
+    font-size: 17px;
+    border: 1px solid #2F4F4F;
+    padding: 3px;
+    cursor: pointer;
+    width: 115px;
+    height: 33px;
+}
+
+.btnRefund{
+	background: #fff;
+	color: #2F4F4F;
+	font-size: 18px;
+	border: 1px solid #2F4F4F;
+	padding : 1px;
+	cursor : pointer;
+	width : 115px;
+	height: 34px;
+}
+.a{
+	color:blue;
+	cursor : pointer;
+	text-decoration: underline;
+}
+.center{
+	text-align : center;
+    width: 110px;
+}
+.center2{
+	text-align : center;
+	width: 137px;
+}
+.noList{
+	text-align : center;
+	font-size : 18px;
+}
+.dtTable {
+    width: 100%;
+	min-height : 40px;
+}
+.dtTable td{
+	border : 0px;
+	min-height : 45px;
+}
+.prodName{
+	width: 370px;
+	padding-left: 17px;
+}
+.prodQty{
+	width: 47px;
+	text-align : left;
+}
+.prodPrice{
+	width : 15%;
+	text-align : right;
+}
+.long{
+	width : 350px;
+	padding-left: 17px;
+}
+.short{
+	width : 100px;
+	text-align : center;
+}
+.middle{
+	width: 91px;
+	text-align : right;
+	
+}
+#inputReason{
+	width : 300px;
+	height : 100px;
+}
+.modal-title{
+	font-size : 20px;
+	font-weight : bold;
+}
+.modal-dialog { 
+	width: 23%; height: 30%;
+}
+.btnGreen{
+	background: #2F4F4F;
+	color: #fff;
+	font-size: 17px;
+}
+.btnWhite{
+	background: #fff;
+	color: #2F4F4F;
+	font-size: 17px;
+	border: 1px solid #2F4F4F;
+}
+.noOrder{
+	text-align : center;
+}
+.status{
+	color : red;
+}
+
+#reasonContent{
+	font-size : 20px;
+	
+}

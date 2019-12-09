@@ -1,0 +1,17 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class AdpositionVO implements Serializable {
+	private String adpoId;
+	private String adpoName;
+	private String resId;
+	private String adId;
+	
+	private Resource2VO resource;
+}

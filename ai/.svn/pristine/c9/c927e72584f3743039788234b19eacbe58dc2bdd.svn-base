@@ -1,0 +1,66 @@
+package kr.or.ddit.advertise.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.AdvertiseVO;
+import kr.or.ddit.vo.AdvertiseVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+@Repository
+public interface IAdvertiseDAO {
+	/**
+	 * 페이징
+	 * @param pagingVO
+	 * @return
+	 */
+	public int selectAdCount(PagingInfoVO<AdvertiseVO> pagingVO);
+	/**
+	 * 목록조회
+	 * @param pagingVO
+	 * @return
+	 */
+	public List<AdvertiseVO> selectadAdList(PagingInfoVO<AdvertiseVO> pagingVO);
+	/**
+	 * 광고상세보기 
+	 * @param Advertise
+	 * @return
+	 */
+	public AdvertiseVO selectAd(AdvertiseVO advertise); //광고 상세보기
+	/**
+	 * 광고 등록
+	 * @param Advertise
+	 * @return
+	 */
+	public int insertAd(AdvertiseVO advertise);
+	/**
+	 * 광고 수정
+	 * @param Advertise
+	 * @return
+	 */
+	public int updateAd(AdvertiseVO advertise);
+	/**
+	 * 광고 조회수(클릭수)
+	 * @param Advertise
+	 * @return
+	 */
+	public int updateAdHit(AdvertiseVO advertise);
+	
+	//관리자 
+	/**
+	 * 페이징
+	 * @param pagingVO
+	 * @return
+	 */
+	public int selectAdminCount(PagingInfoVO<AdvertiseVO> pagingVO);
+	/**
+	 * 목록조회
+	 * @param pagingVO
+	 * @return
+	 */
+	public List<AdvertiseVO> selectadAdminList(PagingInfoVO<AdvertiseVO> pagingVO);
+	
+	
+	
+}

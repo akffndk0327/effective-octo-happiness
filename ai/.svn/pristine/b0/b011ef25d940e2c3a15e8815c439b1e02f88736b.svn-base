@@ -1,0 +1,336 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 6.      이유진      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+    
+    
+
+<div id="InnerContainer">
+<form id="surveyVO" name="surveyVO" action="${cPath }/survey/surveyInsert.do" method="post">
+
+	<table class="table table-bordered">
+		<tr>
+		<td>제목</td>
+			<td>
+			     <input type="text"  name="subName" class="form-control" placeholder="설문조사 제목" required>
+			</td>
+		</tr>
+		<tr>
+        <td>설문조사 기간</td>
+            <td>
+                 시작일<input type="date"  name="surIndate"  class="form-control" style="width: 250px;" required>
+                 종료일<input type="date"  name="surEnddate"  class="form-control" style="width: 250px;" required>
+            </td>
+        </tr>
+		<tr>
+        <td>목적</td>
+            <td>
+                 <input type="text"  name="surPurpose"  class="form-control" placeholder="설문조사 목적" required>
+            </td>
+        </tr>
+        <tr>
+        <td>머리글</td>
+            <td>
+                 <input type="textarea"  cols="40" rows="8" name="surLead" class="form-control" placeholder="설문조사 머리글" required>
+            </td>
+        </tr>
+        <tr>
+           <td>내용</td>
+            <td>
+                 <input type="text"  name="surContent"  class="form-control" placeholder="설문조사 내용" required>
+            </td>
+        </tr>
+        <tr>
+           <td>질문</td>
+            <td>
+            <div id="inputQuest"></div>
+                 <input type="button"  data-toggle="modal" data-target="#questionModal" class="btn btn-success" value="주관식">
+                 <input type="button"   data-toggle="modal" data-target="#exampleModal" class="btn btn-success" value="객관식">
+            </td>
+        </tr>
+        
+	</table>
+	
+
+	<div id="btn">
+	   <input type="submit" value="저장" class="btn btn-primary">
+	   <input type="button" value="뒤로가기" class="btn btn-secondary">
+	</div>
+</form>
+</div>
+
+<!-- 주관식 모달  -->
+<div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">주관식 질문 등록</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+       <form>
+        <table>
+            <tr>
+                <th>질문 입력 :</th>
+                <td>
+                    <input type="text" class="form-control Equest" required placeholder="질문을 입력해주세요">
+                </td>
+<!--                 <td> -->
+<!--                     <button id="addToken" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> -->
+<!--                       토큰 추가 -->
+<!--                     </button> -->
+                        
+<!--                 </td> -->
+            </tr>
+
+
+<!--             <tr> -->
+<!--                 <th>토큰 : </th> -->
+<!--                 <td> -->
+<!--                     <div id="token"></div> -->
+<!--                 </td> -->
+<!--             </tr> -->
+        </table>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary add">추가하기</button>
+        <button type="button" id="Tclose" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- 객관식 모달	 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">객관식 질문 등록</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+      <form>
+        <table>
+            <tr>
+                <th>질문 입력 :</th>
+                <td>
+                    <input type="text" class="form-control quest" required placeholder="질문을 입력해주세요">
+                </td>
+                <td>
+					<button id="addQuestion" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+					  문항 추가
+					</button>
+						
+                </td>
+            </tr>
+
+            <tr>
+                <th>답변 문항 : </th>
+                <td>
+                    <div id="eQuestion"></div>
+                </td>
+            </tr>
+        </table>
+      </form>
+      </div>
+      <div class="modal-footer">
+       <button type="button" class="btn btn-primary addTo">추가하기</button>
+        <button type="button" class="btn btn-default" id="close" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<script>
+   //객관식
+    var eQuestion=$('#eQuestion');
+    var addQuestion=$('#addQuestion');
+    //주관식
+    var token=$('#token');
+    var addToken=$('#addToken');
+    
+    var i=0;
+    var j=0;
+    
+    
+    //객관식 문항 추가를 눌렀을때
+    addQuestion.on("click",function(){
+    	eQuestion.append(' <div class="collapse" id="collapseExample">'+
+                '<img src="${pageContext.request.contextPath }/images/checkbox-blue.png" width="25px;">'+
+                '<input type="text" id="eInput" class="form-control eInput" placeholder="문항을 입력해주세요" required>'+
+                '<input type="text"  class="btn btn-warning  eCreate" value="등록" style="width: 100px;">'+
+            '</div>');
+    })
+    
+     
+    //객관식 문항 등록버튼
+   $(document).on("click",'.eCreate',function(){
+	    var eInput=$('.eInput').val();
+    	eQuestion.append(
+    	'<div class="answer">'+  
+        '&nbsp;&nbsp;<span class="a" style="font-size: 20px;">'+eInput+'</span>&nbsp;&nbsp;'+    
+        '<button type="button" class="btn btn-danger btn-sm eDelete">삭제</button>'+    
+        '</div>'	
+    	)
+    	var parent=$(this).closest("div");
+    	
+    	parent.remove();
+    })
+    
+    //객관식 삭제 버튼
+    $(document).on("click",'.eDelete',function(){
+    	$(this).closest("div").remove();
+    })
+    
+    //객관식 질문 등록 추가하기
+    $('.addTo').on("click",function(){
+    	var quest=$('.quest').val();
+
+    	const answer = [];
+        var contentDiv = document.getElementsByClassName("answer");
+
+        for(let i=0; i<contentDiv.length; i++){   
+        	answer.push(contentDiv[i].children[0].innerText);
+         }
+        
+        $('#inputQuest').append(
+        '<table>'+
+			'<tr><td>질문 : </td>'+
+			'<td class="tdQuest">'+quest+'</td></tr>'+
+			'<tr><td>답변 : </td>'+
+			'<td class="tdAnswer">'+answer+'</td></tr>'+
+			'<tr><td colspan="2"><input type="button" value="수정" class="btn btn-default btn-xs modiQuest">'+
+			'&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-default btn-xs deleteQuest"></td></tr>'+
+			'<input type="hidden" name="questionList['+i+'].questCont" value="'+quest+'">'+ //질문
+			'<input type="hidden" name="questionList['+i+'].questType" value="example">'+ //타입
+			'<input type="hidden" name="questionList['+i+'].exampleList[0].examCont" value="'+answer+'">'+ //대답
+			'</table><br>'	
+        );                  
+//         System.out.println(i+"번째 객관식 질문"+j+"번째"+question.get(i).getExampleList().get(j).getExamCont());
+
+        $('#exampleModal').find('form')[0].reset();
+        $('#exampleModal').find('#eQuestion').empty();
+        $('#exampleModal').modal('hide');
+        i++;
+    });
+    
+    //수정 눌렀을때
+    $(document).on("click",'.modiQuest',function(){
+    	 var tdQuest=$(this).closest('table').find('.tdQuest').text();
+    	 var tdAnswer=$(this).closest('table').find('.tdAnswer').text();
+    	 
+    	 const answer=tdAnswer.split(",");
+    	 
+    	 $('.quest').val(tdQuest);
+    	 for(var i=0; i<answer.length; i++){    		 
+    	 eQuestion.append(
+    		        '<div class="answer">'+  
+    		        '&nbsp;&nbsp;<span class="a" style="font-size: 20px;">'+answer[i]+'</span>&nbsp;&nbsp;'+    
+    		        '<button type="button" class="btn btn-danger btn-sm eDelete">삭제</button>'+    
+    		        '</div>'    
+    		        );
+    	 }
+    	 
+    	 $(this).attr("id","checkId");
+    	 $('#close').prepend('<button type="button" class="btn btn-primary modiTo">수정하기</button>');
+    	 $('.addTo').hide();
+    	 $('#exampleModal').modal('show');
+    })
+    
+ //수정등록
+     $(document).on("click",'.modiTo',function(){
+         var quest=$('.quest').val();
+
+         const answer = [];
+         var contentDiv = document.getElementsByClassName("answer");
+
+         for(let i=0; i<contentDiv.length; i++){   
+             answer.push(contentDiv[i].children[0].innerText);
+          }
+         $('#checkId').closest('table').find('.tdQuest').text(quest);
+         $('#checkId').closest('table').find('.tdAnswer').text(answer);
+         
+         $('#exampleModal').find('form')[0].reset();
+         $('#exampleModal').find('#eQuestion').empty();
+         
+         $('#checkId').attr("id","")
+         $('.modiTo').hide();
+         $('.addTo').show();
+     });
+    
+    //객관식 삭제 눌렀을때
+    $(document).on("click",'.deleteQuest',function(){
+    	$(this).closest("table").remove();
+    })
+    
+    ///객관식 끝
+    
+    //주관식 시작
+      //주관식 질문 추가하기
+    $('.add').on("click",function(){
+        var quest=$('.Equest').val();
+
+
+        $('#inputQuest').append(
+        '<table>'+
+            '<tr><td>질문 : </td>'+
+            '<td class="tdToken">'+quest+'</td></tr>'+
+            
+            '<input type="hidden" name="questionList['+i+'].questCont" value="'+quest+'">'+ //질문
+            '<input type="hidden" name="questionList['+i+'].questType" value="token">'+ //타입
+            
+            '<tr><td colspan="2"><input type="button" value="수정" class="btn btn-default btn-xs modiToken">'+
+            '&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-default btn-xs deleteToken"></td></tr>'+
+            '</table><br>'      
+        );
+        
+        $('#questionModal').find('form')[0].reset();
+        $('#questionModal').modal('hide');
+        i++;
+    });    
+    
+    //주관식 삭제
+    $(document).on("click",'.deleteToken',function(){
+        $(this).closest("table").remove();
+    })
+    
+    //주관식 수정 눌렀을때
+    $(document).on("click",'.modiToken',function(){
+         var tdToken=$(this).closest('table').find('.tdToken').text();
+         
+         
+         $('.Equest').val(tdToken);
+         
+         $(this).attr("id","TcheckId");
+         $('#Tclose').prepend('<button type="button" class="btn btn-primary TmodiTo">수정하기</button>');
+         $('.add').hide();
+         $('#questionModal').modal('show');
+    })
+    
+    //주관식 수정등록
+     $(document).on("click",'.TmodiTo',function(){
+         var quest=$('.Equest').val();
+
+
+         $('#TcheckId').closest('table').find('.tdToken').text(quest);
+         
+         $('#questionModal').find('form')[0].reset();
+         $('#questionModal').find('#eQuestion').empty();
+         
+         $('#TcheckId').attr("id","")
+         $('.TmodiTo').hide();
+         $('.add').show();
+     });
+
+</script>
+

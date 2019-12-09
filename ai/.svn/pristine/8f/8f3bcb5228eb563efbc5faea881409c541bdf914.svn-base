@@ -1,0 +1,27 @@
+package kr.or.ddit.order.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class OrderRetrieve {
+
+	//주문 리스트
+	@RequestMapping("/order/orderList.do")
+	public String selectOrderList() {
+		return "order/orderList";
+	}
+	//기업회원주문 리스트
+	@RequestMapping("/order/orderEmpList.do")
+	public String selectOrderEmpList() {
+		return "order/orderList";
+	}
+
+	
+	//주문 상세조회
+	@RequestMapping("/order/orderView.do")
+	public String selectOrder() {
+		return "order/orderView";
+	}
+	
+}

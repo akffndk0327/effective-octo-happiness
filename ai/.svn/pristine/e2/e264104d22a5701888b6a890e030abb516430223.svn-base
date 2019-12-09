@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.stopsellingfood.dao.IStopSellingDAO">
+	<sql id="searchFrag">
+		<where>
+			<if test="searchMap!=null">
+			 <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+			<choose>
+				<when test="'name'.equals(searchMap.searchType)">
+					PRDTNM LIKE '%'||#{searchMap.searchWord}||'%'
+				</when>
+				<when test="'check'.equals(searchMap.searchType)" >
+					BSSHNM LIKE '%'||#{searchMap.searchWord}||'%'
+				</when>
+				<otherwise>
+					PRDTNM LIKE '%'||#{searchMap.searchWord}||'%'
+					OR BSSHNM LIKE '%'||#{searchMap.searchWord}||'%'
+				</otherwise>
+			</choose>
+			</if>
+		   </if>
+		</where>
+	</sql>
+	
+	<select id="selectStopSellingCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*) FROM STOPSELLINGFOOD
+		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectStopSellingList" parameterType="PagingInfoVO" resultType="StopSellingFoodVO">
+		SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		          PRDTNM,BSSHNM,ADDR,
+                    PRCSCITYPOINT_TELNO,
+                    BRCDNO,FRMLCUNIT,
+                    MNFDT,RTRVLPLANDOC_RTRVLMTHD,
+                    DISTBTMLMT,PRDLST_TYPE,
+                    IMG_FILE_PATH,PRDLST_CD,
+                    CRET_DTM,RTRVLDSUSE_SEQ,
+                    RTRVLPRVNS,PRDLST_REPORT_NO,
+                    STOPSELL_ID
+		        FROM STOPSELLINGFOOD
+		        <include refid="searchFrag" />
+		    ) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}    
+	</select>
+
+	<select id="selectStopSelling" parameterType="StopSellingFoodVO" resultType="StopSellingFoodVO">
+		SELECT 
+		      PRDTNM,BSSHNM,ADDR,
+		      PRCSCITYPOINT_TELNO,
+		      BRCDNO,FRMLCUNIT,
+		      MNFDT,RTRVLPLANDOC_RTRVLMTHD,
+		      DISTBTMLMT,PRDLST_TYPE,
+		      IMG_FILE_PATH,PRDLST_CD,
+		      CRET_DTM,RTRVLDSUSE_SEQ,
+		      RTRVLPRVNS,PRDLST_REPORT_NO,
+		      STOPSELL_ID
+		   FROM STOPSELLINGFOOD    
+		WHERE STOPSELL_ID=#{stopsellId}
+	</select>
+	
+	<delete id="deleteStopSelling" parameterType="int">
+		DELETE FROM STOPSELLINGFOOD  WHERE STOPSELL_ID=#{stopsellId}
+	</delete>
+	
+	<insert id="createStopSelling" parameterType="StopSellingFoodVO">
+		<selectKey order="BEFORE" keyProperty="stopsellId" resultType="int">
+			SELECT NVL(MAX(STOPSELL_ID),0)+1 FROM STOPSELLINGFOOD
+		</selectKey>
+		INSERT INTO STOPSELLINGFOOD (
+		    PRDTNM,BSSHNM,MNFDT,
+		    RTRVLPLANDOC_RTRVLMTHD,
+		    IMG_FILE_PATH,
+		    RTRVLDSUSE_SEQ,RTRVLPRVNS,
+		    STOPSELL_ID
+		) VALUES (
+		    #{prdtnm},#{bsshnm},#{mnfdt},
+		    #{rtrvlplandocRtrvlmthd},
+		    #{imgFilePath},#{rtrvldsuseSeq},
+		    #{rtrvlprvns},#{stopsellId}
+		)
+	</insert>
+	
+	<update id="updateStopSelling" parameterType="StopSellingFoodVO">
+		UPDATE stopsellingfood
+		    SET
+		       prdtnm = #{prdtnm},
+		       bsshnm = #{bsshnm},
+		       mnfdt = #{mnfdt},
+		       img_file_path= #{imgFilePath},
+		       rtrvlprvns= #{rtrvldsuseSeq},
+		       rtrvlplandoc_rtrvlmthd=#{rtrvlplandocRtrvlmthd}
+		WHERE
+		   stopsell_id =#{stopsellId}
+	</update>
+</mapper>

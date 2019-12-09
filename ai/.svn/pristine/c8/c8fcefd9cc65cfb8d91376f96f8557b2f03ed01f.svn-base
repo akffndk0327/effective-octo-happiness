@@ -1,0 +1,19 @@
+package kr.or.ddit.cart.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class CartUpdate {
+
+	@RequestMapping("/cart/cartUpdate.do")
+	public String updateCart() {
+		return "cart/cartList";
+		
+	}
+	
+	@RequestMapping("/cart/cartDelete.do")
+	public String deleteCart() {
+		return "cart/cartList";
+	}
+}

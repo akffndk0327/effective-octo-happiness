@@ -1,0 +1,71 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 21.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 21.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+#accordion{
+	margin : auto;
+}
+.titleTable{
+	width : 70%;
+	padding-bottom : 10px;;
+	margin : auto;
+}
+
+.titleDiv{
+	height : 30px;
+	vertical-align : middle;
+}
+#accordion{
+	width : 70%;
+}
+.long{
+	
+}
+.middle{
+	width : 25%;
+}
+.short{
+	width : 5%;
+}
+.content{
+	width : 90%;
+	padding : 20px;
+}
+#btnInsert{
+    margin: 5px;
+    vertical-align: middle;
+    float: right;
+    color: #077B5F;
+    border: 1px solid #077B5F;
+    background: white;
+}
+.btnUpdate, .btnDelete{
+	cursor : pointer;
+}
+#pagingArea{
+	text-align : center;
+	margin-top : 50px;
+	margin-bottom : 70px;
+}
+.leftTd{
+	width : 90%;
+}
+.rightTd{
+	width : 10%;
+}
+
+hr{
+	margin : 10px;
+}

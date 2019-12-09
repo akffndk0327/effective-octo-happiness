@@ -1,0 +1,6 @@
+package kr.or.ddit.vo;
+
+public class AuthoritiesVO {
+	private String authorId;
+	private String memId;
+}

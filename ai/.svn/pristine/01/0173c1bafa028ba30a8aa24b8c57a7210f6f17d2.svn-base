@@ -1,0 +1,13 @@
+package kr.or.ddit.notice.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class NoticeUpdate {
+	@RequestMapping("/notice/noticeUpdate.do")
+	public String UpdateNotice() {
+		return "notice/noticeForm";
+	}
+	
+}

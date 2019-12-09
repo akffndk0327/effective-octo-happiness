@@ -1,0 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자          수정내용
+* 2019.11.08	박슬기	 css링크 수정, common css주석처리
+* 2019.11.10	최서희         bootstrap cnd 주소 삭제하고 플젝내부 파일로 변경
+* ----------  ---------  -----------------
+* 2019. 11. 1.   박주연      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${cPath}/css/main.css" />
+<link rel="stylesheet" type="text/css" href="${cPath}/css/header.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script type="text/javascript" src="${cPath}/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet"  href="${cPath }/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="${cPath}/toastmessage/css/jquery.toastmessage.css" />	
+<script type="text/javascript" src="${cPath}/toastmessage/jquery.toastmessage.js"></script>

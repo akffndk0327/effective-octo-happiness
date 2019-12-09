@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 8.    최서희     최초작성               -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.order.dao.IOrderDAO">
+	<select id="selectOrderId" parameterType="String" resultType="String">
+		SELECT MAX(ORDER_ID) AS ORDER_ID
+		FROM ORDER2
+		WHERE MEM_ID=#{memId}
+	</select>
+	
+	<select id="selectOrderIdList" parameterType="Order2VO" resultType="String">
+		SELECT DISTINCT B.ORDER_ID
+		FROM MEMBER A, ORDERDETAIL B, ORDER2 C
+		WHERE A.MEM_ID = C.MEM_ID
+		AND C.ORDER_ID = B.ORDER_ID
+		AND A.MEM_ID = #{memId}
+		AND B.PROD_ID = #{prodId}
+	</select>
+	
+	<select id="selectOrderCount" parameterType="PagingInfoVO" resultType="int">
+	
+	</select>
+
+
+	<select id="selectOrderList" parameterType="PagingInfoVO" resultType="Order2VO">
+	
+	</select>
+	
+	<select id="selectOrder" parameterType="String" resultType="Order2VO">
+	
+	</select>
+	
+	<insert id="insertOrder" parameterType="Order2VO">
+		<selectKey order="BEFORE" keyProperty="orderId" resultType="String">
+			SELECT TO_CHAR(SYSDATE,'YYMMDD')||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(ORDER_ID), 7)), 0)+1, 5, '0')
+			FROM ORDER2
+		</selectKey>
+		INSERT INTO ORDER2 (
+		    ORDER_ID,  ORDER_PRICE,   MEM_ID
+		) VALUES (
+		   #{orderId}, #{orderTotal}, #{memId}
+		)
+	</insert>
+	<insert id="insertOrderDetail" parameterType="Order2VO">
+		INSERT ALL
+		<foreach collection="orderDtList" item="dt">
+		INTO orderdetail (
+		    ORDER_ID, PROD_ID, ORDER_QTY
+		) VALUES (
+		   #{orderId}, #{dt.prodId}, #{dt.orderQty}
+		)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	<insert id="insertPayment" parameterType="Order2VO">
+		INSERT INTO PAYMENT (
+		    ORDER_ID, PAY_PRICE
+		) VALUES (
+			#{orderId}, #{totalPrice}
+		)
+	</insert>
+	
+	<update id="updateOrder" parameterType="Order2VO">
+	
+	</update>
+	
+	<delete id="deleteOrder" parameterType="String">
+	
+	</delete>
+	
+</mapper>

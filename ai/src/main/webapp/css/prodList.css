@@ -1,0 +1,125 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 5.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 5.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+#InnerContainer { 
+	width : 1500px;
+}
+.mainTable{
+	width: 76%;
+}
+h4{
+	font-size : 20px;
+}
+.align{
+	margin-left : 22px;
+}
+.prodName{
+	margin-left : 75px;
+	width : 200px;
+	height : 70px;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+#shop img {
+	width : 300px;
+	height : 300px;
+}
+
+.view-link{
+	width : 290px;
+}
+.products{
+	width : 350px;
+	height : 495px;
+}
+
+.box {
+	margin : 30px;
+}
+
+.pagination{
+	margin-top : 50px;
+	margin-left : 370px;
+	margin-bottom : 100px;
+}
+
+.img-placeholder img{
+	width : 100%;
+	height : 100%;
+}
+
+select{
+	width : 150px;
+	height : 30px;
+	padding-left : 10px;
+}
+
+.black{
+	height : 30px;	
+}
+
+#searchInput{
+	width : 250px;
+	height : 10px;
+	padding : 10px;
+}
+.btnSearchSend{
+	cursor : pointer;
+}
+.products-heading h2 {
+    margin: 0px 0 20px;
+    border-top: 5px solid #2F4F4F;
+    display: inline-block;
+}
+.noProd{
+	text-align : center;
+}
+
+
+.prodimg{
+	width:80px;
+	height:80px;
+}
+#topChartTable{
+	width: 100%;
+	font-size : 18px;
+}
+#topChartTable td{
+	padding : 5px;
+	font-size : 20px;
+}
+.imgdiv{
+	border : 1px solid #ddd;
+	width:85px;
+	height:85px;
+}
+
+#firstDiv{
+}
+
+#secondDiv{
+	border : 1px solid black;
+	padding : 5px;
+    width: 26%;
+    margin-left: 81%;
+    margin-top: -89%;
+    position: absolute;
+}
+
+footer {
+    margin-top: 45%;
+}
+

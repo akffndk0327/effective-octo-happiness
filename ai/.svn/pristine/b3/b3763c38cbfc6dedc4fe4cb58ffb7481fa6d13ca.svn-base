@@ -1,0 +1,7 @@
+package kr.or.ddit.vo;
+
+public class AdhitVO {
+	private int adHit;
+	private int adId;
+	private String adpoId;
+}

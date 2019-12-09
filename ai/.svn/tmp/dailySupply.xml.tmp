@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 수정자 수정내용 -->
+<!-- ========== ====== ============== -->
+<!-- 2019. 11. 19. 박주연 최초작성 -->
+<!-- Copyright (c) 2019 by DDIT All right reserved -->
+<mapper
+	namespace="kr.or.ddit.dailysupplies.dao.IDailysuppliesDAO">
+	<sql id="searchFrag">
+		<where>
+			<trim prefixOverrides=" AND ">
+				<if test="searchMap!=null">
+					<if
+						test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+						<choose>
+							<when test="'proname'.equals(searchMap.searchType)">
+								BIOCHE_NAME LIKE '%'|| #{searchMap.searchWord}||'%'
+							</when>
+							<when test="'company'.equals(searchMap.searchType)">
+								BIOCHE_COM LIKE '%'|| #{searchMap.searchWord}||'%'
+							</when>
+							<otherwise>
+								BIOCHE_NAME LIKE '%'|| #{searchMap.searchWord}||'%'
+								OR BIOCHE_COM LIKE '%'|| #{searchMap.searchWord}||'%'
+							</otherwise>
+						</choose>
+					</if>
+				</if>
+			</trim>
+		</where>
+	</sql>
+
+	<select id="selectDSCount" parameterType="PagingInfoVO"
+		resultType="int">
+		SELECT COUNT(*) FROM BIOCHEPRO
+	</select>
+
+	<select id="selectDSList" parameterType="PagingInfoVO" resultType="BioCheProVO">
+		SELECT B.*
+			FROM(
+				SELECT ROWNUM RNUM, A.*
+				FROM(
+					SELECT BIOCHE_ID, BIOCHE_NAME, BIOCHE_COM
+					FROM BIOCHEPRO
+					<include refid="searchFrag" />
+					ORDER BY BIOCHE_ID DESC
+				) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- <id property="bioCheId" column="BIOCHE_ID"/> 같은 거라고 인식해서 리스트1줄만 나올수있어서 
+		지워야함 -->
+	<resultMap type="BioCheProVO" id="dsMap" autoMapping="true">
+		<id property="bioCheId" column="BIOCHE_ID" />
+		<collection property="biocheList" ofType="BiochemisVO"
+			autoMapping="true">
+			<association property="chemicals" javaType="ChemicalsVO"
+				autoMapping="true">
+				<id column="CAS_ID" property="casId" />
+			</association>
+		</collection>
+	</resultMap>
+	<!-- 생활용품 상세보기 -->
+	<select id="selectDS" parameterType="BioCheProVO"
+		resultMap="dsMap">
+		SELECT
+		A.BIOCHE_ID, BIOCHE_NAME, BIOCHE_CONT, BIOCHE_COM,
+		BIOCHE_COM_ADDR,
+		BIOCHE_IMG , BIOCHE_PRECA,
+		B.CAS_ID, C.CHE_NAME_KO
+		FROM
+		BIOCHEPRO A, BIOCHEMIS B, CHEMICALS C
+		WHERE A.BIOCHE_ID =B.BIOCHE_ID
+		AND B.CAS_ID = C.CAS_ID
+		AND A.BIOCHE_ID = #{bioCheId}
+	</select>
+
+	<insert id="insertDS" parameterType="BioCheProVO">
+		INSERT ALL
+		INTO BIOCHEPRO (
+		BIOCHE_ID,BIOCHE_CONT,BIOCHE_COM,BIOCHE_COM_ADDR,
+		BIOCHE_PRECA,BIOCHE_NAME,BIOCHE_IMG)
+		VALUES
+		(#{bioCheId},#{bioCheCont},#{bioCheCom}
+		,#{bioCheComAddr},#{bioChePreca},#{bioCheName},#{bioCheImg,jdbcType=VARCHAR}
+		)
+		<foreach collection="biocheList" item="biochemi">
+			INTO BIOCHEMIS(
+			CAS_ID, BIOCHE_ID
+			)VALUES(#{biochemi.casId},#{biochemi.bioCheId})
+		</foreach>
+		select * from dual
+	</insert>
+
+	<update id="updateDS" parameterType="BioCheProVO">
+		UPDATE BIOCHEPRO
+		SET
+		BIOCHE_CONT = #{bioCheCont,jdbcType=VARCHAR},
+		BIOCHE_COM = #{bioCheCom,jdbcType=VARCHAR},
+		BIOCHE_COM_ADDR = #{bioCheComAddr,jdbcType=VARCHAR},
+		BIOCHE_PRECA = #{bioChePreca,jdbcType=VARCHAR},
+		BIOCHE_NAME = #{bioCheName,jdbcType=VARCHAR}
+		<if test="bioCheImg!=null">
+			, BIOCHE_IMG=#{bioCheImg}
+		</if>
+		WHERE
+		BIOCHE_ID = #{bioCheId,jdbcType=VARCHAR}
+	</update>
+
+<<<<<<< .mine
+	<update id="updateDS" parameterType="BioCheProVO" >
+	UPDATE BIOCHEPRO
+  	 SET
+       BIOCHE_CONT=#{bioCheCont},
+       BIOCHE_COM=#{bioCheCom},
+       BIOCHE_COM_ADDR=#{bioCheComAddr},
+	   BIOCHE_PRECA=#{bioChePreca},
+	   BIOCHE_NAME=#{bioCheName}
+	WHERE
+   		BIOCHE_ID = #{bioCheId}
+||||||| .r98946
+=======
+	<update id="updatebioche" parameterType="BioCheProVO">
+		UPDATE BIOCHEMIS
+		SET
+		CAS_ID=#{casId,jdbcType=VARCHAR},
+		WHERE
+		BIOCHE_ID = #{bioCheId,jdbcType=VARCHAR}
+>>>>>>> .r99498
+	</update>
+
+	<select id="selectMaxDSId" resultType="String">
+		SELECT MAX(BIOCHE_ID)
+		FROM
+		BIOCHEPRO
+	</select>
+
+	<delete id="deletebioche" parameterType="BioCheProVO">
+		DELETE
+		FROM BIOCHEMIS
+		WHERE
+		CAS_ID =#{casId}
+		AND BIOCHE_ID = #{bioCheId}
+	</delete>
+</mapper>

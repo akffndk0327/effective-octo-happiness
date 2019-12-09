@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 수정자 수정내용 -->
+<!-- -->
+<!-- ========== ====== ============== -->
+<!-- 2019. 11. 4 이유진 최초작성 -->
+<!-- Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.note.dao.INoteDAO">
+
+    <select id="countUnreadNotes" parameterType="String" resultType="int">
+		SELECT 
+		   count(*)
+		FROM NOTE
+		WHERE 
+		 RECIEVE_ID=#{recieveId}
+		 and delete_no='N'
+		 and read_no='N'
+    </select>
+    
+    <select id="selectSendNoteCount" parameterType="PagingInfoVO" resultType="int">
+        select count(*) from note where delete_no='N' and send_id=#{sendId}
+    </select>
+    
+   <select id="selectRecieveNoteCount" parameterType="PagingInfoVO" resultType="int">
+        select count(*) from note where delete_no='N' and recieve_id=#{recieveId}
+    </select>
+    
+    <select id="SendNotesList" parameterType="PagingInfoVO" resultType="NoteVO">
+		SELECT B.*
+		FROM(
+		  SELECT ROWNUM RNUM, A.*
+		FROM(
+			SELECT
+			note_no,send_id,recieve_id,
+			send_content,send_date,
+			read_no,delete_no
+			FROM NOTE
+			WHERE
+			send_id=#{sendId}
+		  ) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow} 
+		 
+    </select>
+    
+    <select id="RecieveNotesList" parameterType="PagingInfoVO" resultType="NoteVO">
+        SELECT B.*
+        FROM(
+            SELECT ROWNUM RNUM, A.*
+            FROM(
+            SELECT 
+                note_no,send_id,recieve_id,
+                send_content,send_date,
+                read_no,delete_no
+            FROM NOTE
+            WHERE 
+             RECIEVE_ID=#{recieveId}
+             and delete_no='N'
+            ) A
+        ) B
+        WHERE RNUM BETWEEN #{startRow} AND #{endRow} 
+    </select>
+    
+    <insert id="SendNote" parameterType="NoteVO">
+		INSERT INTO note (
+		    note_no,send_id,recieve_id,
+		    send_content,send_date,
+		    read_no,delete_no
+		) VALUES (
+		    note_seq.nextval,#{sendId},#{recieveId},
+		    #{sendContent},sysdate,
+		    'N','N'
+		)
+    </insert>
+    
+    <update id="DeleteNote" parameterType="NoteVO">
+		UPDATE note
+		    SET
+		        delete_no = 'Y'
+		WHERE
+		    note_no =#{noteNo}
+    </update>
+    
+    <update id="ReadNote" parameterType="NoteVO">
+		UPDATE note
+		    SET
+		        read_no = 'Y'
+		WHERE
+		    note_no =#{noteNo}
+    </update>
+    
+    <select id="selectNote" parameterType="NoteVO" resultType="NoteVO">
+        select 
+                note_no,send_id,recieve_id,
+                send_content,send_date,
+                read_no,delete_no
+        from note
+        where note_no=#{noteNo}
+    </select>
+    
+    <select id="selectCompany" resultType="String">
+        select mem_id from company
+    </select>
+    <select id="selectMember" resultType="String">
+        select mem_id from member
+    </select>
+
+</mapper>

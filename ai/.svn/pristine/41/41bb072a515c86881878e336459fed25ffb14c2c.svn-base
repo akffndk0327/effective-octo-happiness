@@ -1,0 +1,70 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                         수정자              수정내용
+* --------------  ---------  -----------------
+* 2019. 11. 6.      최서희              최초작성
+* 2019. 11. 16.	       최서희		폼 view 구성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<link rel="stylesheet" href="${cPath }/css/prodAdminForm.css">
+
+<div id="InnerContainer">
+<div>관리자 제품등록 승인</div>
+<h1>${prod.prodId}</h1>
+<table class="mainTable">
+	<thead>
+	<tr>
+		<td class="three" rowspan="5">
+			<img class="active prodImg" src="data:image/*;base64,${prod.prod_imageBase64 }" />
+			<div>
+				<input type="button" class="btn logo" value="Logo1" />
+				<input type="button" class="btn logo" value="Logo2" />
+			</div>
+		</td>
+		<td class="one" colspan="2" class="pre">
+			<img src="${cPath }/images/company.png"> ${prod.comName}( ${prod.memId } )
+		</td>
+	</tr>
+	<tr>
+		<td class="one">품목명</td>
+		<td class="two">${prod.lprodId}</td>
+	</tr>
+	<tr>
+		<td class="one">제품명</td>
+		<td class="two">${prod.prodName}</td>
+	</tr>
+	<tr>
+		<td class="one">가격</td>
+		<td class="two">${prod.prodPrice}</td>
+	</tr>
+	<tr>
+		<td class="one">배송비</td>
+		<td class="two">${prod.prodDelivery}</td>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td class="titleTd" colspan="2">
+			<div class="title"><sup><img src="${cPath }/images/chemical.png"></sup> 전 성분 : </div>
+		</td>
+		<td rowspan="2">
+			<div class="detailImg">
+				<img src="#">
+			</div>
+			<div class="down"><a>▼ Download</a></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="plusTd" colspan="2">
+		<input type="text" />
+		<input type="button" class="btn" value="검색" />
+		<img src="${cPath }/images/plus.png">
+		</td>
+	</tr>
+	</tbody>
+</table>
+<input type="submit" class="btn btnAi0" value="저장" />
+<input type="reset" class="btn btnAi1" value="취소" />
+</div>

@@ -1,0 +1,114 @@
+package kr.or.ddit.member.service;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+
+import kr.or.ddit.member.dao.IMemberDAO;
+import kr.or.ddit.vo.MemberVO;
+
+/*
+ * 데이터베이스의 사용자 신원정보와 권한 정보를 조회하기 위한 UserDetailService 구현체
+ */
+public class CustomUserDetailService extends JdbcDaoImpl {
+	// @Inject
+	// IMemberDAO memberDAO;
+	//
+	// @Override
+	// public UserDetails loadUserByUsername(String username) throws
+	// UsernameNotFoundException {
+	// MemberVO member = memberDAO.getAuthority(new MemberVO(username,null));
+	//// member.setMemPass(null);
+	// MemberVO savedMember = memberDAO.selectMember(member);
+	// return savedMember;
+	// }
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		String message = null;
+		List<UserDetails> users = loadUsersByUsername(username);
+		if (users.size() == 0) {
+			message = username + "에 해당하는 정보가 존재하지 않습니다.";
+			logger.debug(message);
+			throw new UsernameNotFoundException(message);
+		}
+		MemberVO user = (MemberVO) users.get(0);
+		Set<GrantedAuthority> dbAuthsSet = new HashSet<GrantedAuthority>();
+		if (getEnableAuthorities()) {
+			dbAuthsSet.addAll(loadUserAuthorities(user.getUsername()));
+		}
+		if (getEnableGroups()) {
+			dbAuthsSet.addAll(loadGroupAuthorities(user.getUsername()));
+		}
+		List<GrantedAuthority> dbAuths = new ArrayList<GrantedAuthority>(dbAuthsSet);
+		addCustomAuthorities(user.getUsername(), dbAuths);
+		if (dbAuths.size() == 0) {
+			message = username + "에 부여된 권한이 없습니다. ";
+			logger.debug(message);
+			throw new UsernameNotFoundException(message);
+		}
+		((MemberVO) user).setAuthorities(dbAuths);
+		return user;
+	}
+
+	/*
+	 * userByUsername 쿼리를 사용해 데이터베이스내의 사용자 정보를 조회하는 메서드
+	 */
+	@Override
+	protected List<UserDetails> loadUsersByUsername(String username) {
+		JdbcTemplate template = getJdbcTemplate();
+		return template.query(getUsersByUsernameQuery(), new String[] { username }, new RowMapper<UserDetails>() {
+			@Override
+			public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+				MemberVO userDetails = new MemberVO();
+				userDetails.setMemName(rs.getString("MEM_NAME"));
+//				userDetails.setMemTel(rs.getString("MEM_TEL"));
+//				userDetails.setMemAddr1(rs.getString("MEM_ADDR1"));
+//				userDetails.setMemAddr2(rs.getString("MEM_ADDR2"));
+//				userDetails.setMemZip(rs.getString("MEM_ZIP"));
+//				userDetails.setMemMail(rs.getString("MEM_MAIL"));
+				userDetails.setMemDelete(rs.getString("MEM_DELETE"));
+//				userDetails.setMemGender(rs.getString("MEM_GENDER"));
+//				userDetails.setMemAge(rs.getString("MEM_AGE"));
+				userDetails.setMemId(rs.getString("MEM_ID"));
+				userDetails.setMemPass(rs.getString("MEM_PASS"));
+				userDetails.setAdminName(rs.getString("ADMIN_NAME"));
+				userDetails.setAuthorities(AuthorityUtils.NO_AUTHORITIES);
+				
+				return userDetails;
+			}
+		});
+	}
+
+	/*
+	 * authoritiesByUsername 쿼리를 통해 사용자의 권한 정보를 조회하는 메소드
+	 */
+
+	@Override
+	protected List<GrantedAuthority> loadUserAuthorities(String username) {
+		JdbcTemplate template = getJdbcTemplate();
+		return template.query(getAuthoritiesByUsernameQuery(), new String[] { username },
+				new RowMapper<GrantedAuthority>() {
+					@Override
+					public GrantedAuthority mapRow(ResultSet rs, int rowNum) throws SQLException {
+						String role = rs.getString("AUTHOR_ID");
+						return new SimpleGrantedAuthority(role);
+					}
+				});
+	}
+
+}

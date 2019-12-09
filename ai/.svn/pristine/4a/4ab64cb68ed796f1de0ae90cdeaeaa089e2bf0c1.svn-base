@@ -1,0 +1,87 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 21.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 21.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+ 
+#InnerContainer{
+	min-height : 750px;
+    width:1500px;
+ }
+#InnerContainer nav{
+	margin-bottom : 110px;
+}
+#accordion{
+	margin : auto;
+}
+.titleTable{
+	width : 75%;
+	padding-bottom : 10px;
+	margin : auto;
+}
+
+.titleDiv{
+	height : 30px;
+	vertical-align : middle;
+}
+#accordion{
+	width : 75%;
+}
+.long{
+	width: 64%;
+    padding-left: 21px;
+}
+.middle{
+	width: 23%;
+}
+.short{
+	width : 6%;
+}
+.content{
+	width : 90%;
+	padding : 20px;
+}
+/* #btnInsert{ */
+/*     margin: 5px; */
+/*     vertical-align: middle; */
+/*     float: right; */
+/*     color: #2F4F4F; */
+/*     border: 1px solid #2F4F4F; */
+/*     background: white; */
+/* } */
+ .btnAi2{
+    margin-top: 42px;
+    margin-left : 184px;
+    margin-bottom: -51px;
+ }
+
+.btnUpdate, .btnDelete{
+	cursor : pointer;
+}
+#pagingArea{
+	text-align : center;
+	margin-top : 50px;
+	margin-bottom : 70px;
+}
+.leftTd{
+	width : 90%;
+}
+.rightTd{
+	width : 10%;
+}
+
+hr{
+	margin : 10px;
+	border-top: 1px solid #353535;
+}

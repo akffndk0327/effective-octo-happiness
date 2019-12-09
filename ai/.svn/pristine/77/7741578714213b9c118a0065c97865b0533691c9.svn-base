@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--						-->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 7.     박주연     최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.newsboard.dao.INewsboardDAO" >
+
+
+	<!-- 페이징 처리를 위한 count-->
+	<select id="selectBoardCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*) FROM NEWS
+	</select>
+	
+	<!-- news 전체 리스트 조회 -->
+	<select id="selectBoardList" parameterType="PagingInfoVO" resultType="NewsVO">
+		SELECT B.*
+		FROM(
+		     SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT NEWS_NO,  
+		        	   NEWS_TITLE,
+		        	   MEM_ID, 
+		        	   NEWS_HIT,
+		               TO_CHAR(NEWS_INDATE, 'YYYY-MM-DD') NEWS_INDATE      
+		        FROM   NEWS
+      
+		    ) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- news 상세 조회 -->
+	<select id="selectNews" parameterType="Integer" resultType="NewsVO">
+		SELECT
+		    NEWS_NO,
+		    NEWS_TITLE,
+		    NEWS_CONTENT,
+		    NEWS_INDATE,
+		    NEWS_HIT,
+		    MEM_ID
+		FROM
+		    NEWS
+		WHERE NEWS_NO = #{newsNo}
+	</select>
+	
+	<!-- news 조회수 카운트-->
+	<update id="updateNewsHit" parameterType="Integer" flushCache="false">
+		UPDATE NEWS
+		SET NEWS_HIT = NEWS_HIT + 1
+		WHERE NEWS_NO = ${newsNo}
+	</update>
+	
+	<update id="updateNews" parameterType="NewsVO">
+		UPDATE NEWS
+	    SET
+	        NEWS_TITLE = #{newsTitle},
+	        NEWS_CONTENT = #{newsContent}
+		WHERE
+		    NEWS_NO = #{newsNo}
+	 </update>
+	 
+	 <insert id="insertNews" parameterType="NewsVO">
+	 	INSERT INTO NEWS (NEWS_NO,NEWS_TITLE,NEWS_CONTENT,
+                  NEWS_INDATE,MEM_ID) 
+		VALUES (news_seq.nextval,#{newsTitle},#{newsContent},to_char(sysdate,'YYYY/MM/DD'),'admin')
+	 </insert>
+	 
+	<delete id="deleteNews" parameterType="int">
+   		DELETE FROM NEWS
+		WHERE
+		    NEWS_NO = #{newsNo}
+   </delete>
+
+	
+	
+</mapper>

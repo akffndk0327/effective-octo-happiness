@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일			 수정자 	   수정내용 -->
+<!-- =============  ======    ============== -->
+<!-- 2019. 11. 22.   박주연 	   최초작성 -->
+<!-- 2019. 11. 28.   최서희 	   알레르기 상세보기 -->
+<!-- Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.allergy.dao.IAllergyDAO">
+	<!-- 검색 -->
+	<sql id="searchFrag">
+		<if test="searchMap!=null">
+			<if	test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+				<choose>
+					<when test="'allname'.equals(searchMap.searchType)">
+						AND ALL_NAME LIKE '%'|| #{searchMap.searchWord}||'%'
+					</when>
+					<when test="'code'.equals(searchMap.searchType)">
+						AND ALL_ID LIKE '%'|| #{searchMap.searchWord}||'%'
+					</when>
+					<otherwise>
+						AND
+						( ALL_NAME LIKE '%'|| #{searchMap.searchWord}||'%'
+						OR ALL_ID LIKE '%'|| #{searchMap.searchWord}||'%'
+						)
+					</otherwise>
+				</choose>
+			</if>
+		</if>
+	</sql>
+
+	<!-- 페이징 처리를 위한 count -->
+	<select id="selectAllergyCount" parameterType="PagingInfoVO"
+		resultType="int">
+		SELECT COUNT(*) FROM ALLERGY
+	</select>
+
+	<!-- 전체 리스트 조회 -->
+	<select id="selectAllergyList" parameterType="PagingInfoVO"
+		resultType="AllergyVO">
+		SELECT B.*
+		FROM(
+		SELECT ROWNUM RNUM, A.*
+		FROM(
+		SELECT ALL_ID, ALL_NAME
+		FROM AllERGY
+		WHERE NOT ALL_TYPE ='식품'
+		AND NOT ALL_TYPE ='해당없음' 
+		<include refid="searchFrag" />
+		ORDER BY ALL_ID
+		) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectAllergy" parameterType="AllergyVO" resultType="AllergyVO">
+		SELECT
+		    ALL_ID,
+		    ALL_NAME,
+		    ALL_TYPE,
+		    ALL_THERAPY,
+		    ALL_PREVENT,
+		    ALL_IMG,
+		    ALL_CAUSE,
+		    ALL_SYMPTOM
+		FROM
+		    ALLERGY
+		WHERE ALL_ID=#{allId}
+	</select>
+	
+	<update id="updateAllergy" parameterType="AllergyVO">
+		UPDATE ALLERGY
+		SET
+		   ALL_THERAPY = #{allTherapy},
+		   ALL_PREVENT = #{allPrevent},
+		   ALL_CAUSE = #{allCause},
+		   ALL_SYMPTOM = #{allSymptom}
+		WHERE
+		    ALL_ID = #{allId}
+	</update>
+	
+	<insert id="insertAllergy" parameterType="AllergyVO">
+		  INSERT INTO ALLERGY (
+			    ALL_ID, ALL_NAME, ALL_TYPE, ALL_THERAPY,
+			    ALL_PREVENT,ALL_CAUSE,ALL_SYMPTOM
+			) VALUES (
+			    #{allId},#{allName},#{allType},#{allTherapy},
+			    #{allPrevent},#{allCause},#{allSymptom}
+			)
+	</insert>
+	
+	<delete id="removeAllergy" parameterType="AllergyVO">
+		DELETE FROM ALLERGY
+		WHERE
+    	ALL_ID = #{allId} 
+	</delete>
+	
+	<update id="updateSelectCount" parameterType="AllergyVO" >
+		UPDATE allergy
+		SET
+		   ALL_CNT = (SELECT NVL(MAX(ALL_CNT),0)+1 ALL_CNT FROM ALLERGY)
+		WHERE
+		    all_id = #{allId} 
+	</update>
+	
+	<select id="selectList" resultType="AllergyVO">
+		SELECT
+		    ALL_ID,
+		    ALL_NAME,
+		    ALL_TYPE,
+		    ALL_CNT
+		FROM
+		    ALLERGY
+	</select>
+	
+</mapper>

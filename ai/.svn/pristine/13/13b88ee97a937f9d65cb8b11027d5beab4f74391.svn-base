@@ -1,0 +1,252 @@
+package kr.or.ddit.prod.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.prod.service.IProdService;
+import kr.or.ddit.vo.LprodVO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.ProdRejectVO;
+import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.vo.ReviewVO;
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 4.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                     수정자               수정내용
+ * --------------  --------    ----------------------
+ * 2019. 11. 4.      최서희           최초작성
+ * 2019. 11. 6.		 최서희           리뷰 수정
+ * 2019. 11. 7.	 	 최서희           리뷰 비동기화
+ * 2019. 11. 10.	 최서희           제품 등록 기능 구현 
+ * 2019. 11. 15.     최서희          제품신청 반려 사유 조회
+ * Copyright (c) 2019 by DDIT All right reserved
+ * 
+ */
+@Controller
+public class ProdRetrieve {
+	@Inject IProdService service;
+	
+	
+	//제품 목록
+	@RequestMapping(value="/prod/prodList.do")
+	public String selectProdList(
+			@RequestParam(required = false) String searchType,
+			@RequestParam(required = false) String searchWord,
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage, 
+			Model model
+			) {
+		Map<String, Object> searchMap = new HashMap<>();
+		searchMap.put("searchType", searchType);
+		searchMap.put("searchWord", searchWord);
+		
+		PagingInfoVO<ProdVO> pagingVO = new PagingInfoVO<>(6, 5);
+		ProdVO searchVO = new ProdVO();
+		pagingVO.setSearchVO(searchVO);
+		pagingVO.setSearchMap(searchMap);
+		int totalRecord = service.retrieveProdCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		List<ProdVO> list = service.retrieveProdList(pagingVO);
+		pagingVO.setDataList(list);
+		model.addAttribute("pagingVO", pagingVO);
+		
+		List<LprodVO> lprodList = service.retrieveLprodAList();
+		model.addAttribute("lprodList", lprodList);
+		
+		return "prod/ProdList";
+		
+	}
+	
+	@RequestMapping(value="/prod/prodList.do", produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public PagingInfoVO<ProdVO> selectProdListAjax(
+			@RequestParam(required = false) String searchType,
+			@RequestParam(required = false) String searchWord,
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage, 
+			Model model) {
+		selectProdList(searchType, searchWord, currentPage, model);
+		return (PagingInfoVO<ProdVO>) model.asMap().get("pagingVO");
+	}
+
+	//판매제품 상세보기+리뷰
+	@RequestMapping(value="/prod/prodView.do")
+	public String selectProd(
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required=true) String what, Model model
+			) {
+		ProdVO prod = service.retrieveProd(what);
+		model.addAttribute("prod", prod);
+		
+		 PagingInfoVO<ReviewVO> pagingVO = new PagingInfoVO<>(3, 5);
+		 int totalRecord = service.retrieveReviewCount(what);
+		 pagingVO.setTotalRecord(totalRecord);
+		 pagingVO.setCurrentPage(currentPage);
+		 pagingVO.setPk(what);
+		 List<ReviewVO> list = service.retrieveReviewList(pagingVO);
+		 pagingVO.setDataList(list);
+		 model.addAttribute("pagingVO", pagingVO);
+		
+		return "prod/ProdView";
+		
+	}
+	
+	
+	//상품평 리스트 페이지 이동 비동기화
+	@RequestMapping(value="/review/reviewList.do", produces = MediaType.APPLICATION_JSON_VALUE, 
+			method=RequestMethod.POST)
+	@ResponseBody
+	public PagingInfoVO<ProdVO> selectReviewAjax(
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required=true) String what, Model model) {
+		PagingInfoVO<ReviewVO> pagingVO = new PagingInfoVO<>(3, 5);
+		int totalRecord = service.retrieveReviewCount(what);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		pagingVO.setPk(what);
+		List<ReviewVO> list = service.retrieveReviewList(pagingVO);
+		pagingVO.setDataList(list);
+		model.addAttribute("pagingVO", pagingVO);
+		return (PagingInfoVO<ProdVO>) model.asMap().get("pagingVO");
+	}
+	
+	
+	//기업회원 제품 조회
+	@RequestMapping(value="/prod/prodEmpList.do")
+	public String selectProdEmpList(
+			@RequestParam(required = false) String searchType,
+			@RequestParam(required = false) String searchWord,
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage, 
+			Authentication auth,
+			Model model
+			) {
+		String memId = auth.getName();
+		Map<String, Object> searchMap = new HashMap<>();
+		searchMap.put("searchType", searchType);
+		searchMap.put("searchWord", searchWord);
+		
+		PagingInfoVO<ProdVO> pagingVO = new PagingInfoVO<>(5, 5);
+		ProdVO searchVO = new ProdVO();
+		pagingVO.setSearchVO(searchVO);
+		pagingVO.setSearchMap(searchMap);
+		pagingVO.setPk(memId);
+		int totalRecord = service.retrieveProdAdminCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		List<ProdVO> list = service.retrieveProdAdminList(pagingVO);
+		pagingVO.setDataList(list);
+		model.addAttribute("pagingVO", pagingVO);
+		return "prod/prodEmpList";
+		
+	}
+	
+	@RequestMapping(value="/prod/prodEmpList.do", method=RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public PagingInfoVO<ProdVO> selectProdEmpListAjax(
+			@RequestParam(required = false) String searchType,
+			@RequestParam(required = false) String searchWord,
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage, 
+			Authentication auth,
+			Model model
+			) {
+		selectProdEmpList(searchType, searchWord, currentPage, auth, model);
+		return (PagingInfoVO<ProdVO>) model.asMap().get("pagingVO");
+	}
+	
+	//관리자 제품 조회
+	@RequestMapping(value="/prod/prodAdminList.do")
+	public String selectProdAdminList(
+			@RequestParam(required = false) String searchType,
+			@RequestParam(required = false) String searchWord,
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage, 
+			Model model
+			) {
+		Map<String, Object> searchMap = new HashMap<>();
+		searchMap.put("searchType", searchType);
+		searchMap.put("searchWord", searchWord);
+		
+		PagingInfoVO<ProdVO> pagingVO = new PagingInfoVO<>(10, 5);
+		ProdVO searchVO = new ProdVO();
+		pagingVO.setSearchVO(searchVO);
+		pagingVO.setSearchMap(searchMap);
+		int totalRecord = service.retrieveProdAdminCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		List<ProdVO> list = service.retrieveProdAdminList(pagingVO);
+		pagingVO.setDataList(list);
+		model.addAttribute("pagingVO", pagingVO);
+		
+		List<LprodVO> lprodList = service.retrieveLprodAList();
+		model.addAttribute("lprodList", lprodList);
+		return "prod/prodAdminList";
+		
+	}
+	
+	@RequestMapping(value="/prod/prodAdminList.do", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public PagingInfoVO<ProdVO> selectProdAdminListAjax(
+			@RequestParam(required = false) String searchType,
+			@RequestParam(required = false) String searchWord,
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage, 
+			Model model
+			) {
+		selectProdAdminList(searchType, searchWord, currentPage, model);
+		return (PagingInfoVO<ProdVO>) model.asMap().get("pagingVO");
+	}
+
+	
+	
+	//WACCP 인증 절차 소개 페이지 이동
+	@RequestMapping("/prod/prodIntro.do")
+	public String selectProdIntro() {
+		return "prod/prodIntroduce";
+	}
+	
+	//제품 대분류/소분류 리스트
+	@RequestMapping(value="/prod/getLprodAList.do", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public List<LprodVO> selectLprodBList() {
+		List<LprodVO> lprodAList = service.retrieveLprodAList();
+		return lprodAList;
+	}
+	
+	@RequestMapping(value="/prod/getLprodBList.do", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public List<LprodVO> selectLprodBList(
+			@RequestParam String lprodParent
+			) {
+		List<LprodVO> lprodBList = service.retrieveLprodBList(lprodParent);
+		return lprodBList;
+	}
+	
+	//등록신청 반려사유 조회
+	@RequestMapping(value="/prod/prodRejectView.do", method=RequestMethod.POST, 
+			produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ProdRejectVO selectProdReject(
+			@RequestParam String prodId,
+			Model model
+			) {
+		ProdRejectVO rejectVO = service.retrieveProdReject(prodId);
+		model.addAttribute("rejectVO", rejectVO);
+		return (ProdRejectVO) model.asMap().get("rejectVO");
+	}
+
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.refund.dao.IRefundDAO">
+
+	<!-- 환불신청 -->
+	<insert id="insertOrderRefund" parameterType="RefundVO">
+		INSERT INTO REFUND (
+	    ORDER_ID,  REFUND_REASON
+		) VALUES (
+	    #{orderId}, #{refundReason}
+		)
+	</insert>
+	
+	<!-- 환불 승인 -->
+	<update id="updateRefundPaystatus" parameterType="String">
+		UPDATE PAYMENT
+		SET PAY_STATUS = 'k0'
+		WHERE ORDER_ID = #{orderId}
+	</update>
+	<update id="updateRefundOrderstatus" parameterType="String">
+		UPDATE ORDER2
+		SET ORDER_STATUS = 'd0'
+		WHERE ORDER_ID = #{orderId}
+	</update>
+	<update id="updateRefundApprovalYes" parameterType="String">
+		UPDATE REFUND
+		SET REFUND_APPROVAL= 'a1'
+		WHERE ORDER_ID = #{orderId}
+	</update>
+	
+	<!-- 환불 거절 -->
+	<update id="updateRefundApprovalNo" parameterType="String">
+		UPDATE REFUND
+		SET REFUND_APPROVAL= 'a0'
+		WHERE ORDER_ID = #{orderId}
+	</update>
+	
+
+</mapper>

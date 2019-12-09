@@ -1,0 +1,55 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* 
+* ----------  ---------  -----------------
+* 2019. 11. 22.      이진희      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<style>
+.url{
+	color: green;
+}
+
+.name{
+	font-weight:bold;
+	font-size:25px;
+	cursor : pointer;
+	color : blue;
+	
+}
+ .name:hover{ 
+ 	text-decoration: underline; 
+} 
+.font{
+font-size:15px;
+}
+#InnerContainer{
+	border : 1px solid #ddd;
+	padding : 20px;
+}
+</style>
+<div id="InnerContainer">
+<h2 class="titleTopBar">검색하신 ' <em>${param.prdlstnm }</em>  &nbsp;&nbsp;' 의 검색결과 </h2>
+<hr color="#ddd" >
+<div id="result">
+	<c:forEach items="${list }" var="list">
+		<div id="${cPath}${list.resPattern}${list.prdlstreportno }" class="name">${list.prdlstnm }</div>
+		<div class="font"><a  class="url" href="${cPath}${list.resPattern}${list.prdlstreportno }">${cPath}${list.resPattern}${list.prdlstreportno }</a></div>
+		<div class="font cont" >${list.rawmtrl }</div><br><br>
+	</c:forEach>
+</div>
+</div> 
+<script>
+var result = $("#result");
+
+	result.on("click",".name",function(){
+		let url = $(this).prop("id");
+		location.href=url;
+	})
+</script>
+
+

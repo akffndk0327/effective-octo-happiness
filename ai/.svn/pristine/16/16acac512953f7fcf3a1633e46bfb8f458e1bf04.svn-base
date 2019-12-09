@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 수정자 수정내용 -->
+<!-- -->
+<!-- ========== ====== ============== -->
+<!-- 2019. 11. 4 이유진 최초작성 -->
+<!-- Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.survey.dao.ISurveyDAO">
+
+    <select id="getSurveyNextVal" resultType="Integer">
+        SELECT SURVEY_SEQ.NEXTVAL
+          FROM DUAL
+    </select>
+
+    <insert id="insertSurvey" parameterType="SurveyVO">
+        INSERT INTO survey (
+            sur_id,sub_name,sur_indate,sur_enddate,
+            sur_purpose,sur_content,sur_lead
+        ) VALUES (
+            #{surId},#{subName},#{surIndate},#{surEnddate},
+            #{surPurpose},#{surContent},#{surLead}
+        )
+    </insert>
+
+    <select id="getSurveyId" resultType="int">
+        select max(sur_id) from survey
+    </select>
+
+    <select id="getQuestionNextVal" resultType="Integer">
+        SELECT QUESTION_SEQ.NEXTVAL
+          FROM DUAL
+    </select>
+
+    <insert id="insertQuestion" parameterType="QuestionVO">
+        INSERT INTO question (
+            quest_id,quest_cont,
+            quest_type,survey_id
+        ) VALUES (
+            #{questId},#{questCont},
+            #{questType},#{surveyId}
+        )
+    </insert>
+
+    <select id="getQuestion" resultType="int">
+        select max(quest_id) from question
+    </select>
+
+   <insert id="insertExample" parameterType="ExampleVO">
+        INSERT INTO example (
+            exam_id,exam_cont,
+            question_id
+        ) VALUES (
+          EXAMPLE_SEQ.NEXTVAL,#{examCont},
+          #{questionId}
+        )
+    </insert>
+
+
+
+    <select id="selectSurveyList" resultType="SurveyVO" parameterType="PagingInfoVO">
+        SELECT B.*
+          FROM ( SELECT ROWNUM RNUM, A.*
+                  FROM (
+                  SELECT
+                    SUR_ID, SUB_NAME, SUR_PURPOSE, SUR_CONTENT, SUR_LEAD, SUR_USE,
+                        TO_CHAR(SUR_INDATE, 'YYYY-MM-DD') as SUR_INDATE,
+                        TO_CHAR(SUR_ENDDATE, 'YYYY-MM-DD') as SUR_ENDDATE
+                    FROM SURVEY
+                   WHERE SUR_USE is null
+                   ORDER BY SUR_INDATE DESC
+                 ) A
+               ) B
+         WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+
+    <select id="selectSurveyCount" resultType="int"
+        parameterType="SurveyVO">
+        SELECT COUNT(*)
+        FROM survey
+    </select>
+
+    <resultMap type="SurveyVO" id="resultSurvey" autoMapping="true">
+        <id property="surId" column="SUR_ID"/>
+        <collection property="questionList" ofType="QuestionVO" autoMapping="true">
+            <id property="questId" column="QUEST_ID"/>
+            <collection property="exampleList" ofType="ExampleVO" autoMapping="true">
+                 <id property="examId" column="EXAM_ID"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectSurvey" resultMap="resultSurvey" parameterType="String">
+        select
+            SUR_ID, SUB_NAME,SUR_INDATE,SUR_ENDDATE, SUR_PURPOSE, SUR_CONTENT, SUR_LEAD,
+            QUEST_ID, QUEST_CONT, QUEST_TYPE,SURVEY_ID
+            ,EXAM_ID, EXAM_CONT,QUESTION_ID
+        FROM SURVEY A,
+        QUESTION B LEFT OUTER JOIN EXAMPLE C   ON B.QUEST_ID=C.QUESTION_ID
+        WHERE A.SUR_ID=B.SURVEY_ID
+         AND A.SUR_ID=#{surId}
+                  order by QUEST_ID,exam_id
+    </select>
+
+    <insert id="insertSurveyResult" parameterType="SurveyResultVO">
+        INSERT INTO surveyresult (
+            sur_id,quest_id,
+            result_id
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(tokenResult)">
+              ,token_result
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(examId)">
+              ,exam_id
+            </if>
+        ) VALUES (
+              #{surId}, #{questId},
+            RESULT_SEQ.nextval
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(tokenResult)">
+              ,#{tokenResult}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(examId)">
+              ,#{examId}
+            </if>
+        )
+    </insert>
+
+    <resultMap type="SurveyResultVO" id="resultSurveyResultVO">
+
+
+<result property="exampleResult" column="exampleResult" />
+<result property="tokenResult"   column="TOKEN_RESULT" />
+<result property="examId"        column="EXAM_ID"      />
+<result property="questId"       column="QUEST_ID"     />
+<result property="qeustionId"    column="QEUSTION_ID"  />
+<result property="surId"         column="SUR_ID"       />
+<result property="resultId"      column="RESULT_ID"    />
+    </resultMap>
+
+    <resultMap type="SurveyResultVO" id="surveyResultMap" extends="resultSurveyResultVO">
+        <association property="surveyVO" autoMapping="true"/>
+        <association property="questionVO" autoMapping="true"/>
+        <association property="examVO" autoMapping="true"/>
+
+<!--         <collection property="examList" column="QUESTION_ID" ofType="ExampleVO" select="selectExample"/> -->
+    </resultMap>
+
+    <select id="selectSurveyResponse" resultMap="surveyResultMap" parameterType="integer">
+        SELECT A.SUR_ID, SUB_NAME, SUR_ENDDATE, SUR_INDATE,
+          B.QUEST_ID, QUEST_CONT, QUEST_TYPE, B.QUEST_ID AS QUESTION_ID,
+          EXAM_ID, TOKEN_RESULT,RESULT_ID,
+          CASE WHEN EXAM_ID IS NOT NULL
+          THEN (SELECT EXAM_CONT  FROM EXAMPLE D WHERE C.EXAM_ID=D.EXAM_ID) END as EXAM_CONT
+        FROM SURVEY A, QUESTION B,SURVEYRESULT C
+        WHERE A.SUR_ID=B.SURVEY_ID
+         AND A.SUR_ID=C.SUR_ID
+         AND B.QUEST_ID=C.QUEST_ID
+         AND A.SUR_ID=#{surId}
+        ORDER BY QUEST_ID
+    </select>
+
+    <select id="selectExample" resultType="ExampleVO">
+        SELECT B.QUEST_ID
+     , B.QUEST_CONT
+     , B.QUEST_TYPE
+     , C.EXAM_ID
+     , C.EXAM_CONT
+     , C.QUESTION_ID
+  FROM SURVEY A, QUESTION B, EXAMPLE C
+ WHERE A.SUR_ID = B.SURVEY_ID
+   AND B.QUEST_ID = C.QUESTION_ID(+)
+   AND A.SUR_ID =#{surId}
+  ORDER BY EXAM_ID
+    </select>
+
+    <delete id="deleteSurvey" parameterType="SurveyVO">
+        DELETE FROM survey
+        WHERE
+            sur_id = #{surId}
+    </delete>
+</mapper>

@@ -1,0 +1,75 @@
+package kr.or.ddit.vo;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of = "adId")
+public class AdvertiseVO implements Serializable {
+
+	public AdvertiseVO(int adId) {
+		this.adId = adId;
+	}
+
+	private int rnum;
+	private int adId;
+	private String adTitle;
+
+	private String adApprove; // 승인
+	private String adTerm; // 기간
+	private String adUse; // 사용여부
+	private String adIndate; // 작성날짜
+	private String adLink; // 광고이동 링크
+	private String memId;
+	private String adRep;
+	private List<AdreplyVO> adreply;
+	private String authorId;
+	private CodeVO code;
+	
+	private AdhitVO adhit;
+	
+//	private AdattatchVO adattSavename
+	private AdpositionVO adposition;
+	private List<AdattatchVO> adattatchList;
+	private Resource2VO resource2;
+
+	//첨부파일 넣을려고?
+	@JsonIgnore
+	private MultipartFile[] adfile;
+	public void setAdfile(MultipartFile[] adfile) throws IOException {
+		this.adfile = adfile;
+		if(adfile==null || adfile.length==0) return;
+		adattatchList = new ArrayList<>();
+		for(MultipartFile tmp : adfile) {
+			//  비어있는 파일 필터링
+			if(tmp.getSize()<=0) continue;
+			adattatchList.add(new AdattatchVO(tmp));
+		}
+		
+	}
+	
+//	@JsonIgnore
+//	private byte[] ad_img;
+//	@JsonIgnore
+//	public String getAd_imageBase64() {
+//		if(ad_img==null) return null;
+//		return Base64.getEncoder().encodeToString(ad_img);
+//	}
+//	
+
+	private String delAdAttaches;
+
+	private String attNoStart;
+}

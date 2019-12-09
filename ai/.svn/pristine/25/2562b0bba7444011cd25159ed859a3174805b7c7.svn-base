@@ -1,0 +1,6 @@
+package kr.or.ddit.vo;
+
+public class ExampleVO {
+	private String examId;
+	private String examCont;
+}

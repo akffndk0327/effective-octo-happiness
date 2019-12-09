@@ -1,0 +1,251 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자       수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 6.    허민지      최초작성
+* 2019. 11. 11.   최서희	   총 매출현황 차트
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<style>
+/*  #cxt, #cxt2, #cxt3 {  */
+/*  	float: left;  */
+/*  }  */
+#circle1, #circle2, #circle3 {
+	float:left;
+}
+
+</style>
+
+<div id="InnerContainer">
+	<div class="container">
+		<div class="row" id="chart" >
+			<div style="width: 60%;">
+				<canvas id="canvas" height="100"></canvas>
+			</div>
+<!-- 			<div style="width: 40%;"> -->
+<!-- 			</div> -->
+			
+			<div id="circle1" style="width:30%;">
+				<canvas id="cxt" height="150"></canvas>
+			</div>
+			<div id="circle2" style="width:30%;">
+				<canvas id="cxt2" height="150"></canvas>
+			</div>
+			<div id="circle3" style="width:30%;">
+				<canvas id="cxt3" height="150"></canvas>
+			</div>
+				<canvas id="cxt4" height="300"></canvas>
+				<canvas id="cxt5" height="300"></canvas>
+
+			
+			<div style="width: 20%;">
+				<canvas id="cxt6" height="300"></canvas>
+			</div>
+
+			<input name="jan" type="hidden" value="${jan}" /> 
+			<input name="feb" type="hidden" value="${feb}" /> 
+			<input name="mar" type="hidden"	value="${mar}" /> 
+			<input name="apr" type="hidden" value="${apr}" />
+			<input name="may" type="hidden" value="${may}" /> 
+			<input name="jun" type="hidden" value="${jun}" /> 
+			<input name="jul" type="hidden"	value="${jul}" /> 
+			<input name="aug" type="hidden" value="${aug}" />
+			<input name="sep" type="hidden" value="${sep}" /> 
+			<input name="oct" type="hidden" value="${oct}" /> 
+			<input name="nov" type="hidden"	value="${nov}" /> 
+			<input name="dec" type="hidden" value="${dec}" />
+
+			<input name="WindowChrome" type="hidden" value="${WindowChrome}" />
+			<input name="LinuxChrome" type="hidden" value="${LinuxChrome}" />
+			<input name="TheOthersChrome" type="hidden" value="${TheOthersChrome}" />
+			<input name="WindowFireFox" type="hidden" value="${WindowFireFox}" />
+			<input name="LinuxFireFox" type="hidden" value="${LinuxFireFox}" />
+			<input name="TheOthersFireFox" type="hidden" value="${TheOthersFireFox}" />
+			<input name="WindowExp" type="hidden" value="${WindowExp}" />
+			<input name="LinuxExp" type="hidden" value="${LinuxExp}" />
+			<input name="TheOthersExp" type="hidden" value="${TheOthersExp}" />
+			<input name="WindowEtc" type="hidden" value="${WindowEtc}" />
+			<input name="LinuxEtc" type="hidden" value="${LinuxEtc}" />
+			<input name="TheOthersEtc" type="hidden" value="${TheOthersEtc}" />
+			
+			
+		</div>
+
+	</div>
+</div>
+<!-- InnerContiner 끝  -->
+<script type="text/javascript">
+			var jan = $("[name='jan']").val();
+			var feb = $("[name='feb']").val();
+			var mar = $("[name='mar']").val();
+			var apr = $("[name='apr']").val();
+			var may = $("[name='may']").val();
+			var jun = $("[name='jun']").val();
+			var jul = $("[name='jul']").val();
+			var aug = $("[name='aug']").val();
+			var sep = $("[name='sep']").val();
+			var oct = $("[name='oct']").val();
+			var nov = $("[name='nov']").val();
+			var dec = $("[name='dec']").val();
+			
+			
+			
+
+			new Chart(document.getElementById("canvas"), {
+				type : 'line',
+				data : {
+					labels : [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월",
+							"9월", "10월", "11월", "12월" ],
+					datasets : [
+							{
+								label : '2019',
+								data : [ jan, feb, mar, apr, may, jun, jul,
+										aug, sep, oct, nov, dec ],
+								borderColor : "rgb(191,160,237)",
+								fill : false
+							}, ]
+				},
+				options : {
+					responsive : true,
+					title : {
+						text : '2019년 월별 매출 현황',
+						display : true
+					},
+					scales : {
+						xAxes : [ {
+							display : true,
+							scaleLabel : {
+								display : true,
+								labelString : 'Month'
+							},
+							ticks : {
+								autoSkip : false
+							}
+						} ],
+						yAxes : [ {
+							display : true,
+							scaleLabel : {
+								display : true,
+								labelString : '원'
+							},
+							ticks : {
+								suggestedMin : 0,
+							}
+						} ]
+					}
+				}
+			});
+			
+		var WindowChrome = $("[name='WindowChrome']").val();
+		var LinuxChrome = $("[name='LinuxChrome']").val();
+		var TheOthersChrome = $("[name='TheOthersChrome']").val();
+		var WindowFireFox = $("[name='WindowFireFox']").val();
+		var LinuxFireFox = $("[name='LinuxFireFox']").val();
+		var TheOthersFireFox = $("[name='TheOthersFireFox']").val();
+		var WindowExp = $("[name='WindowExp']").val();
+		var LinuxExp = $("[name='LinuxExp']").val();
+		var TheOthersExp = $("[name='TheOthersExp']").val();
+		var WindowEtc = $("[name='WindowEtc']").val();
+		var LinuxEtc = $("[name='LinuxEtc']").val();
+		var TheOthersEtc = $("[name='TheOthersEtc']").val();
+		
+		
+		var data = {
+				labels:[
+					"크롬",
+					"파이어폭스",
+					"익스플로러",
+					"기타브라우저"
+				],
+				datasets:[{
+					data:[WindowChrome,WindowFireFox,WindowExp,WindowEtc],
+					backgroundColor:[
+						"#EB0000",
+						"#FF8C0A",
+						"#FFD200",
+						"#369F36"
+					]
+				
+				}]
+			};
+
+			 new Chart(document.getElementById("cxt"),{
+				type : 'doughnut',
+				data : data,
+				options : {
+					title: {
+			        	text: 'Windows',
+			            display: true,
+			            fontSize: 20
+			        }
+				}
+			});
+			 
+			var data3 = {
+					labels:[
+						"크롬",
+						"파이어폭스",
+						"익스플로러",
+						"기타브라우저"
+					],
+					datasets:[{
+						data:[LinuxChrome,LinuxFireFox,LinuxExp,LinuxEtc],
+						backgroundColor:[
+							"#EB0000",
+							"#FF8C0A",
+							"#FFD200",
+							"#369F36"
+							]
+						
+						}]
+					};
+
+					 new Chart(document.getElementById("cxt3"),{
+						type : 'doughnut',
+						data : data3,
+						options : {
+							title: {
+					        	text: 'Linux',
+					            display: true,
+					            fontSize: 20
+					        }
+						}
+					});
+					 
+		var data2 = {
+				labels:[
+					"크롬",
+					"파이어폭스",
+					"익스플로러",
+					"기타브라우저"
+				],
+				datasets:[{
+					data:[TheOthersChrome,TheOthersFireFox,TheOthersExp,TheOthersEtc],
+					backgroundColor:[
+						"#EB0000",
+						"#FF8C0A",
+						"#FFD200",
+						"#369F36"
+						]
+					
+					}]
+				};
+
+				 new Chart(document.getElementById("cxt2"),{
+					type : 'doughnut',
+					data : data2,
+					options : {
+						title: {
+				        	text: '기타OS',
+				            display: true,
+				            fontSize: 20
+				        }
+					}
+				});		
+		
+			
+		</script>

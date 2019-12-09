@@ -1,0 +1,83 @@
+package kr.or.ddit.dailysupplies.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.BioCheProVO;
+import kr.or.ddit.vo.BiochemisVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+/**
+ * @author 박주연
+ * @since 2019. 11. 20.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                      	        수정자			               수정내용
+ * --------------   -----------    ----------------------
+ * 2019. 11. 20.        박주연		 		최초작성
+ * 2019.11.21                          박주연      			  insertchemical 메소드 생성 
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Repository
+public interface IDailysuppliesDAO {
+	/**
+	 * 페이징
+	 * @param pagingVO
+	 * @return
+	 */
+	public int selectDSCount(PagingInfoVO<BioCheProVO> pagingVO);
+	/**
+	 * 목록조회
+	 * @param pagingVO
+	 * @return
+	 */
+	public List<BioCheProVO> selectDSList(PagingInfoVO<BioCheProVO> pagingVO);
+	/**
+	 * 생활용품상세보기 
+	 * @param dsPro
+	 * @return
+	 */
+	public BioCheProVO selectDS(BioCheProVO dsPro); //생활용품 상세보기
+	/**
+	 * 생활용품 등록
+	 * @param dsPro
+	 * @return
+	 */
+	public int insertDS(BioCheProVO dsPro);
+	/**
+	 * 생활용품 수정
+	 * @param dsPro
+	 * @return
+	 */
+	public int updateDS(BioCheProVO dsPro);
+	
+	/**
+	 * 화학성분 리스트
+	 * @param biochemi
+	 */
+	public List<BiochemisVO> biocheList(BiochemisVO dsPro);
+	
+	/**
+	 * Insert를 하기 위한 생활용품 maxValue
+	 */
+	public String selectMaxDSId();
+	
+	/**
+	 * 수정할때 화학물질 삭제 햇을때 
+	 * @param dsPro
+	 * @return
+	 */
+	public List<BiochemisVO> deletebioche(BiochemisVO dsPro);
+	/**
+	 * 수정할때 화학물질 업데이트 
+	 * @param dsPro
+	 * @return
+	 */
+	public List<BiochemisVO> updatebioche(BiochemisVO dsPro);
+	
+	
+}

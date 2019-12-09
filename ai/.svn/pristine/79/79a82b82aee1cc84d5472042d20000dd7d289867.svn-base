@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일      		  	수정자     		수정내용               -->
+<!--                  								-->
+<!--  =============    ======    ==============        -->
+<!--  2019. 11. 10.     박주연                    최초작성               -->
+<!--  2019. 11. 11.		박주연		 목록 조회 		 -->
+<!--  2019. 11. 12		박주연	상세보기, 작성 뷰 구현     -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.advertise.dao.IAdvertiseDAO">
+<select id="selectAdCount" parameterType="PagingInfoVO" resultType="int" >
+	SELECT COUNT(*) FROM ADVERTISE
+</select>
+<select id="selectadAdList" parameterType="PagingInfoVO" resultType="AdvertiseVO">
+	 SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		            AD_ID, AD_TITLE, MEM_ID, TO_CHAR(AD_INDATE,'YYYY/mm/dd'), AD_TERM, AD_APPROVE
+		        FROM ADVERTISE
+		        where MEM_ID =#{pk}
+		    ) A
+		) B
+	WHERE RNUM BETWEEN #{startRow} AND #{endRow} 
+
+</select>
+<!-- <resultMap type="" id=""> -->
+	
+<!-- </resultMap> -->
+<select id="selectAd" parameterType="AdvertiseVO" resultType="AdvertiseVO">
+	SELECT 
+		AD_ID, AD_TITLE, MEM_ID, AD_APPROVE, TO_CHAR(AD_INDATE,'YYYY/mm/dd') AD_INDATE, 
+		TO_CHAR(AD_term,'YYYY/mm/dd') AD_TERM, AD_LINK
+	
+	FROM ADVERTISE
+	WHERE AD_ID = #{adId}
+</select>
+
+<insert id ="insertAd" parameterType="int">
+	INSERT INTO advertise (
+    ad_id,    ad_title,    ad_approve, ad_term,
+    ad_use,   ad_indate,    ad_link,    mem_id
+) VALUES (
+    ad_seq.nextval,
+    #{adTitle},
+    '대기',
+    to_date(add_months(${ad_indate},1),'YYYY/mm/dd'),
+    '',
+    to_date('${ad_indate)','YYYY/mm/dd'),
+    'https://localhost.ai/',
+    'giup02'
+);
+</insert>
+
+<update id="updateAd" parameterType="int">
+	
+</update>
+
+
+
+</mapper>

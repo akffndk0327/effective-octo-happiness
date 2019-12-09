@@ -1,0 +1,81 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 7.      박주연      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+ <div class="InnerContainer">
+<h1>광고 상세보기 </h1>
+	<table border="0" cellpadding="0" cellspacing="0" class="Write">
+		<tbody>
+			<tr>
+			 	<td>
+			 		번호
+			 	</td>
+			 	<td>${advertise.rnum }</td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td><span class="Bold">${advertise.adTitle }<span></td>
+			</tr>
+			<tr>
+				<th>성 명</th>
+				<td>${advertise.memId }</td>
+			</tr>
+			<tr>
+				<th>승인상태</th>
+				<td>${advertise.adApprove }
+					<input type="button" class="btn btnAi0" value="승인"> 승인
+					<input type="button" class="btn btnAi1" value="반려"> 반려
+				</td>
+			</tr>
+			<tr>
+				<th>광고 시작 날짜</th>
+				<td>${advertise.adIndate }</td>
+			</tr>
+			<tr>
+				<th>광고 종료 날짜</th>
+				<td>${advertise.adTerm}</td>
+			</tr>
+			<tr>
+				<th>이동 URL</th>
+				<td>${advertise.adLink }</td>
+			</tr>
+			<tr>
+				<th>게시 위치</th>
+				<td>
+					<div id="location">${Adposition.adpoName }</div>
+				</td>
+			</tr>
+			<tr>
+				<th>첨부파일</th>
+				<td>${adattView.adattSavename }</td>
+			</tr>
+		</tr>
+		</tbody>
+	</table>
+	<div>
+		<th>댓글</th>
+		<td>
+		<textfiled id="adreply">
+		
+		</textfiled>
+		</td>
+	</div>
+
+<input type="button" class="btn btnAi2"> 등록
+<input type="button" class="btn btnAi1"> 취소
+</div>
+<script>
+	var approve = ${".btnAi0"};
+	var cancle = ${".btnAi0"};
+	var adreply = ${"#adreply"};
+	cancle.on("click",function(){
+		adreply.
+		
+	})
+</script>

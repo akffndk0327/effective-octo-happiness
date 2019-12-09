@@ -1,0 +1,16 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class AdhitVO implements Serializable {
+	private int adHit;
+	private int adId;
+	private String adpoId;
+	
+	private AdpositionVO adposition ; 
+}

@@ -1,0 +1,57 @@
+package kr.or.ddit.survey.controller;
+
+import java.util.Iterator;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.survey.service.ISurveyService;
+import kr.or.ddit.vo.ExampleVO;
+import kr.or.ddit.vo.QuestionVO;
+import kr.or.ddit.vo.SurveyResultVO;
+import kr.or.ddit.vo.SurveyVO;
+
+@Controller
+public class SurveyInsertController {
+
+	@Inject
+	ISurveyService service;
+
+	@RequestMapping(value = "survey/surveyInsert.do", method = RequestMethod.GET)
+	public String surveyView() {
+		return "survey/surveyForm";
+	}
+
+	@RequestMapping(value = "survey/surveyInsert.do", method = RequestMethod.POST)
+	public String surveyInsert(@ModelAttribute SurveyVO surveyVO) {
+		// survey insert
+//		String surlead=surveyVO.getSurLead();
+//		surlead.replace("\\n", "<br>");
+//		surveyVO.setSurLead(surlead);
+		ServiceResult result = service.insertSurvey(surveyVO);
+		return "redirect:/survey/surveyList.do";
+	}
+	
+	@RequestMapping(value = "survey/surveyReponse.do", method = RequestMethod.POST)
+	public String surveyResponse(@ModelAttribute SurveyResultVO SurveyResultVO) {
+		// survey insert
+		
+		List<SurveyResultVO> list=SurveyResultVO.getList();
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+		}
+		
+		service.insertSurveyResult(SurveyResultVO);
+
+		return "survey/surveyResp";
+	}
+	
+	
+}

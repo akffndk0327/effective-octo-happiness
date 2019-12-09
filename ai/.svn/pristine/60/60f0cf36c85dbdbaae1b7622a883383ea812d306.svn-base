@@ -1,0 +1,68 @@
+package kr.or.ddit.member.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.AllergyVO;
+import kr.or.ddit.vo.MemberVO;
+
+/**
+ * @author 허민지
+ * @since 2019. 11. 5.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                     수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 5.      허민지       최초작성
+ * 2019. 11. 9.      허민지	insertMember, insertAccount, insertAuthorities 추가
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+
+@Repository
+public interface IMemberDAO {
+
+	/**
+	 * 회원 상세 조회
+	 * @param member 조회할 회원에 대한 조건을 가진 VO
+	 * @return 조건에 맞는 회원이 없는 경우, null 반환
+	 */
+	public MemberVO selectMember(MemberVO member);
+	
+	
+	/**
+	 * @param member
+	 * @return 등록성공(>0), 실패(<=0)
+	 */
+	public int insertAccount(MemberVO member);
+	
+	/**
+	 * 신규등록
+	 * member table
+	 * @param member
+	 * @return 등록성공 (>0), 실패(<=0)
+	 */
+	public int insertMember(MemberVO member);
+	
+	/**
+	 * 회원가입시 받을 알러지 정보
+	 * @return
+	 */
+	public List<String> selectAllergyList();
+	
+	/**
+	 * 회원가입시 입력받을 알러지 리스트
+	 * @return
+	 */
+	public List<String> selectSytomsList();
+	
+	/** 회원가입시 받은 알러지 정보를 테이블에 insert
+	 * @param member
+	 * @return
+	 */
+	public int insertMemAllergy(MemberVO member);
+	
+}

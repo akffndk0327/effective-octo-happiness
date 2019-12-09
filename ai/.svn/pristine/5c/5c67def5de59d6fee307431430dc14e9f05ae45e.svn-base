@@ -1,0 +1,25 @@
+package kr.or.ddit.food.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/food")
+public class FoodViewController {
+	
+	@RequestMapping("foodCategory.do")
+	public String category() {
+		return "food/foodCategoryList";
+	}
+	
+	@RequestMapping("foodList.do")
+	public String foodList() {
+		return "food/foodList";
+	}
+	
+	@RequestMapping("foodView.do")
+	public String foodView() {
+		return "food/foodView";
+	}
+
+}

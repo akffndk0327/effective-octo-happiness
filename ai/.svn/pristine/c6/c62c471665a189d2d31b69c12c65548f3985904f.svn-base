@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 수정자 수정내용 -->
+<!-- -->
+<!-- ========== ====== ============== -->
+<!-- 2019. 11. 18. 박주연 최초작성 -->
+<!-- Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.advertise.dao.IAdAttatchDAO">
+	<insert id="insertAttatches" parameterType="AdvertiseVO">
+		<selectKey order="BEFORE" resultType="String" keyProperty="attNoStart">
+			SELECT 'ad'||(substr(MAX(ADATT_ID),3)+1) as ADATT_ID FROM ADATTATCH
+		</selectKey>
+		
+		INSERT
+		<foreach collection="adattatchList" item="attach">
+		INTO ADATTATCH (
+			ADATT_ID, ADATT_SAVENAME, ADATT_NAME,
+			ADATT_FILESIZE, ADATT_FILETYPE, ADATT_FANCY, AD_ID
+		) VALUES (
+			#{attNoStart}, #{attach.adattSavename}, #{attach.adattName},
+			#{attach.adattFilesize}, #{attach.adattFiletype},
+			#{attach.adattFancy}, (select max(AD_ID) from advertise)
+		)
+			</foreach>
+	</insert>
+
+	<select id="selectAttatch" parameterType="int"
+		resultType="AdattatchVO">
+		SELECT
+		ADATT_ID, ADATT_SAVENAME, ADATT_NAME,
+		ADATT_FILESIZE, ADATT_FILETYPE, ADATT_FANCY, AD_ID
+		FROM ADATTATCH
+		WHERE AD_ID =#{AD_ID}
+	</select>
+	<delete id="deleteAttatches" parameterType="AdvertiseVO">
+		DELETE FROM ADATTATCH
+		WHERE ADATT_ID=#{adattId}
+		<if test="delAttaches!=null and delAttaches.length gt 0">
+			AND adatt_id IN
+			<foreach collection="delAttaches" item="delNo" open="("
+				close=")" separator=",">
+				#{delNo}
+			</foreach>
+		</if>
+	</delete>
+</mapper>

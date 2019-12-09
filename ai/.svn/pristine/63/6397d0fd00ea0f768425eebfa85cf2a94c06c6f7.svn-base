@@ -1,0 +1,74 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 		수정자      		수정내용
+* --------------  ---------  -----------------
+* 2019. 11. 6.      허민지      		최초작성
+* 2019. 11. 7.  	허민지      마이페이지 메뉴들 Memleft로 이사
+* 2019. 11. 11	          박주연	마이페이지 left 생성함. 
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+ <style>
+.Memleft {
+	width:215px;
+	height: 700px;
+	background: #FAFAFA;
+	font-size: 22px;
+	padding: 7px;
+	display:inline-block;
+	float:left;
+}
+
+.MemContents {
+    float: left;
+    display: inline-block;
+    background: lightgray;
+    width: 1165px;
+    height: 800px;
+    padding : 7px;
+   }
+
+ul {
+	list-style: none;
+}
+
+li {
+	list-style: none;
+}
+
+.Memleft a {
+	color: black;
+}
+
+#memTitle {
+	font-size: 26px;
+	font-weight: bold;
+}
+
+.Memleft ul li a:link, :visited, :hover {
+	color: black;
+	text-decoration: none;
+}
+</style>
+<div id="InnerContainer">
+	<div class="Memleft">
+		<li id="memTitle">마이페이지</li>
+		<ul>
+			<li><a href="${cPath }">회원정보수정</a></li>
+			<li><a href="${cPath }">알러지 외 추가정보수정</a></li>
+			<li><a href="${cPath }">내가 작성한 글 관리</a></li>
+			<li><a href="${cPath }">나의 댓글 관리</a></li>
+			<li><a href="${cPath }">장바구니</a></li>
+			<li><a href="${cPath }">주문내역</a></li>
+			<li><a href="${cPath }">찜한 레시피</a></li>
+		</ul>
+	</div>
+	<div class="MemContents">
+		dfasfadsfsadfdsfsad<br>afdsfafadsfasdfsadfsaf dfasfadsfsadfdsfsad<br>afdsfafadsfasdfsadfsaf
+		dfasfadsfsadfdsfsad<br>afdsfafadsfasdfsadfsaf dfasfadsfsadfdsfsad<br>afdsfafadsfasdfsadfsaf\
+		dfasfadsfsadfdsfsad<br>afdsfafadsfasdfsadfsaf
+	</div>
+
+</div>

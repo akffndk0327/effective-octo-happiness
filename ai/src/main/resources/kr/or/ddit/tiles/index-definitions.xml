@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 			수정자 	수정내용 -->
+<!-- 2019. 11. 6 	허민지 	index 페이지 추가-->
+<!-- 2019. 11. 6 	박주연 	15번째 줄 layer.jsp -> template.jsp로 수정  추가, 
+							definition name: index 추가-->
+<!-- 2019. 11. 6    허민지      mypage 추가 -->
+<!-- 2019. 11. 6    허민지      member 추가 -->
+<!-- 2019. 11. 6    최서희      Tiles 문제 해결 -->
+<!-- ========== ====== ============== -->
+<!-- 2019. 11. 4 	최서희 	최초작성 -->
+<!-- Copyright (c) ${year} by DDIT All right reserved -->
+<tiles-definitions>
+   <!-- 추상클래스같이 완벽하지 않은 super definition을 만들어서 자식이 상속하여 완성해서 사용 -->
+   <!-- actor별로 추상클래스 만들어서 상속받아 사용하면 됨 -->
+   <definition name="super" template="/WEB-INF/views/layer.jsp">
+      <put-attribute name="preScript" value="/includee/preScript.jsp"/>
+      <put-attribute name="topMenu" value="/includee/header.jsp"/>
+<!-- 	  <put-attribute name="left" value="/includee/left.jsp" /> -->
+      <put-attribute name="footer" value="/includee/footer.jsp"/>
+   </definition>
+   
+   <definition name="index" extends="super">
+	  <put-attribute name="contents" value="/WEB-INF/views/index.jsp" />
+<!--         <put-attribute name="left" value="/includee/left.jsp" /> -->
+   </definition>
+</tiles-definitions>

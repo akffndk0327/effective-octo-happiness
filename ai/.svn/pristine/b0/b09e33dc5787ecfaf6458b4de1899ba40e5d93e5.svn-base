@@ -1,0 +1,170 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 12.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 12.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+.prodImg{
+	width : 100px;
+	height : 100px;
+}
+#cartMainTable{
+	min-height : 250px;
+}
+.t{
+	width : 70%;
+	height : auto;
+	font-size : 18px;
+	text-align : center;
+	margin : auto;
+	border-collapse: collapse;
+
+}
+.prodName{
+	font-size : 20px;
+	font-weight : bold;
+	text-align : left;
+	padding-left : 10px;
+}
+.td2 p{
+	font-size : 15px;
+	color : #5D5D5D;
+	text-align : left;
+	padding-left : 10px;
+}
+tr{
+	width : 100%;
+}
+th{
+	border-top: 1px solid #8C8C8C;
+	border-bottom: 1px solid #8C8C8C;
+	height : 35px;
+	text-align : center;
+}
+td{
+	padding : 10px;
+}
+.cartBox{
+	border : 1px solid #8C8C8C;
+	width : 70%;
+	height : auto;
+	text-align : center;
+	margin : 10px;
+	margin-left : auto;
+	margin-right : auto;
+	border-collapse: collapse;
+}
+
+.td1{
+	width : 15%;
+}
+.td2{
+	width : 45%;
+	padding-left : 20px;
+	text-align : left;
+}
+.td3{
+	width : 10%;
+}
+.td4{
+	width : 7%;
+}
+[name='cartQty']{
+	width : 50px;
+	height : 35px;
+	text-align : center;
+}
+.t3{
+	width : 70%;
+	height : auto;
+	margin : auto;
+	
+}
+.t3 p{
+	margin-top : 20px;
+	margin-bottom : 20px;
+}
+.t4 p{
+	font-size : 15px;
+}
+
+.t4{
+	width : 70%;
+	height : auto;
+	font-size : 20px;
+	margin-left : 187px;
+	margin-bottom : 80px;
+	border-collapse: collapse;
+	border-top : 2px solid #077B5F;
+	border-bottom : 2px solid #077B5F;
+	
+}
+.resultTh{
+	width : 500px;
+	padding : 15px;
+	height : 100px;
+	background-color : #077B5F;
+	color : white;
+	font-size : 17px;
+}
+.resultTh div{
+	text-align : left;
+}
+.resultPrice{
+	width : 180px;
+	background-color : #077B5F;
+	color : white;
+	text-align : right;
+	font-size : 17px;
+}
+.resultTd{
+	width : 300px;
+}
+.resultTd div{
+	margin-left : 38px;
+	
+}
+.btnpay{
+	width :	150px;
+	height : 100px;
+	margin : 2px;
+	margin-left :60px;
+	font-size : 23px;
+	background-color : white;
+	border : 1px solid #077B5F;
+	color : #077B5F;
+	cursor: pointer;
+}
+
+.resultPriceTitle{
+	font-size : 23px;
+	font-wiehgt : bold;
+}
+
+.btnDelCart{
+	cursor : pointer;
+}
+.title{
+	width : 100%;
+	margin-top : 30px;
+	margin-bottom : 30px;
+	border-left : 8px solid #2F4F4F;
+	padding : 3px;
+	font-size : 25px;
+	font-weight : bold;
+	color : #077B5F;
+}
+.oneTd{
+	width : 60%;
+	text-align : left;
+}

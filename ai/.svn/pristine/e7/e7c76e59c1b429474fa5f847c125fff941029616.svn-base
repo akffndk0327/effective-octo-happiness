@@ -1,0 +1,16 @@
+package kr.or.ddit.newsboard.dao;
+
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.NewsAttatchVO;
+import kr.or.ddit.vo.NewsVO;
+
+@Repository
+public interface INewsAttatchDAO {
+	public int insertAttatches(NewsVO news);
+	public NewsAttatchVO selectAttatch(int att_no);
+	// 추가
+	public int updateDowncount(int att_no);
+	
+	public int deleteAttatches(NewsVO news);
+}

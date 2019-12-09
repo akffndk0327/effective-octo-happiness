@@ -1,0 +1,132 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 12.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 12.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+.prodImg{
+	width : 100px;
+	height : 100px;
+}
+.t{
+	width : 70%;
+	height : auto;
+	font-size : 18px;
+	text-align : center;
+	margin-left : 80px;
+	border-collapse: collapse;
+
+}
+.prodName{
+	font-size : 25px;
+	text-align : left;
+}
+.td2 p{
+	font-size : 15px;
+	color : #5D5D5D;
+	text-align : left;
+}
+tr{
+	width : 100%;
+}
+th{
+	border-top: 1px solid #8C8C8C;
+	border-bottom: 1px solid #8C8C8C;
+	height : 35px;
+}
+td{
+	padding : 10px;
+}
+.cartBox{
+	border : 1px solid #8C8C8C;
+	width : 70%;
+	height : auto;
+	text-align : center;
+	margin : 10px;
+	margin-left : 80px;
+	border-collapse: collapse;
+}
+
+.td1{
+	width : 12%;
+}
+.td2{
+	width : 47%;
+	text-align : left;
+}
+.td3{
+	width : 10%;
+}
+[name='cartQty']{
+	width : 50px;
+	height : 35px;
+	text-align : center;
+}
+.t3{
+	width : 70%;
+	height : auto;
+	font-size : 20px;
+	margin-left : 80px;
+	
+}
+
+.t4{
+	width : 70%;
+	height : auto;
+	font-size : 20px;
+	margin-left : 80px;
+	border-collapse: collapse;
+	border-top : 2px solid #077B5F;
+	border-bottom : 2px solid #077B5F;
+	
+}
+.resultTh{
+	width : 500px;
+	padding : 20px;
+	background-color : #077B5F;
+/* 	border : 1px solid #077B5F; */
+	color : white;
+	
+}
+.resultPrice{
+	width : 180px;
+	background-color : #077B5F;
+	color : white;
+	text-align : right;
+}
+.resultTd{
+	width : 300px;
+}
+.resultTd div{
+	margin-left : 38px;
+	
+}
+.btnpay{
+	width : 250px;
+	height : 85px;
+	margin : 2px;
+	margin-left :60px;
+	font-size : 26px;
+	background-color : white;
+	border : 1px solid #077B5F;
+	color : #077B5F;
+	cursor: pointer;
+}
+
+.resultPriceTitle{
+	font-size : 35px;
+}
+
+.btnDelCart{
+	cursor : pointer;
+}

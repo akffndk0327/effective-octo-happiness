@@ -1,0 +1,103 @@
+package kr.or.ddit.dailysupplies.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.dailysupplies.dao.IDailysuppliesDAO;
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.exception.CommonException;
+import kr.or.ddit.vo.BioCheProVO;
+import kr.or.ddit.vo.BiochemisVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+/**
+ * @author 박주연
+ * @since 2019. 11. 19.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                                        수정자		     수정내용
+ * -------------    ---------  -------------
+ * 2019. 11. 19.   	     박주연		     최초작성
+ * 2019. 11. 20.  	     박주연		   화학물질 리스트 출력 
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Service
+public class DailySupplyServiceImpl implements IDailySupplyService{
+	@Inject
+	IDailysuppliesDAO dsDAO;
+	
+	
+	@Override
+	public int retrieveDSCount(PagingInfoVO<BioCheProVO> pagingVO) {
+		return dsDAO.selectDSCount(pagingVO);
+	}
+
+	@Override
+	public List<BioCheProVO> retrieveDSList(PagingInfoVO<BioCheProVO> pagingVO) {
+		return dsDAO.selectDSList(pagingVO);
+	}
+
+	@Override
+	public BioCheProVO retrieveDS(BioCheProVO dsPro) {
+		BioCheProVO saveDSprod = dsDAO.selectDS(dsPro);
+		if(saveDSprod == null)  throw new CommonException(saveDSprod.getBioCheId()+", 해당 글이 없음.");
+		return saveDSprod;
+	}
+
+	@Override
+	public ServiceResult insertDS(BioCheProVO dsPro) {
+		String dsId = dsDAO.selectMaxDSId();
+		dsId = dsId.substring(3);//id에서 앞에 3개 땜
+		int nid = Integer.parseInt(dsId)+1; //숫자로 만듬
+		dsId = nid+""; //문자열로 변환 
+		while(dsId.length()!=5) {
+			dsId = "0"+dsId;
+		}
+		dsId = "CHE"+dsId;
+		dsPro.setBioCheId(dsId); //che00063이 됨.
+		int cnt = dsDAO.insertDS(dsPro); //인서트 
+		ServiceResult result= null;
+		if(cnt>0) result = ServiceResult.OK;
+		else result = ServiceResult.FAILED;
+		return result;
+	}
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult modifyDS(BioCheProVO dsPro) {
+		BioCheProVO saveDSprod = retrieveDS(dsPro);
+		ServiceResult result = null;
+		if(saveDSprod.getBioCheId().equals(dsPro.getBioCheId())) {
+			int cnt = dsDAO.updateDS(dsPro);
+			if(cnt>0) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public List<BiochemisVO> biocheList(BiochemisVO biochemi) {
+		return dsDAO.biocheList(biochemi);
+	}
+	
+	
+	@Override
+	public String retrieveMaxDSId() {
+		return dsDAO.selectMaxDSId();
+	}
+
+
+	
+
+
+}

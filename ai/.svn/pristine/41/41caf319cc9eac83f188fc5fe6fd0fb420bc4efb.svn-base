@@ -1,0 +1,10 @@
+package kr.or.ddit.survey.controller;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class SurveyResultController {
+	public void surveyResult() {
+		
+	}
+}

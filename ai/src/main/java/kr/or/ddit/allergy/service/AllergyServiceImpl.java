@@ -1,0 +1,111 @@
+package kr.or.ddit.allergy.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.allergy.dao.IAllergyDAO;
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.exception.CommonException;
+import kr.or.ddit.vo.AllergyVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+/**
+ * 
+ * @author 박주연
+ * @since 2019. 11. 6.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 6.    박주연		 최초작성
+ * 2019.11.22               박주연		리스트 출력 
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Service
+public class AllergyServiceImpl implements IAllergyService {
+	@Inject
+	IAllergyDAO alldao;
+
+
+	@Override
+	public int retrieveAllergyCount(PagingInfoVO<AllergyVO> pagingVO) {
+		return alldao.selectAllergyCount(pagingVO);
+	}
+
+	@Override
+	public List<AllergyVO> retrieveAllergyList(PagingInfoVO<AllergyVO> pagingVO) {
+		return alldao.selectAllergyList(pagingVO);
+	}
+
+	@Transactional
+	@Override
+	public AllergyVO retrieveAllergy(AllergyVO allergy) {
+		AllergyVO saveAllergy = alldao.selectAllergy(allergy);
+		alldao.updateSelectCount(saveAllergy);
+		if(saveAllergy == null)  throw new CommonException(saveAllergy.getAllId()+", 해당 글이 없음.");
+		return saveAllergy;
+	}
+
+	@Override
+	public ServiceResult insertAllergy(AllergyVO allergy) {
+		int cnt = alldao.insertAllergy(allergy);
+		ServiceResult result= null;
+		if(cnt>0) result = ServiceResult.OK;
+		else result = ServiceResult.FAILED;
+		return result;
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult modifyAllergy(AllergyVO allergy) {
+		AllergyVO saveAllergy = retrieveAllergy(allergy);
+		ServiceResult result = null;
+		if(saveAllergy.getAllId().equals(allergy.getAllId())) {
+			int cnt = alldao.updateAllergy(allergy);
+			if(cnt>0) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult updateAllergyHit(String allId) {
+		int cnt = alldao.updateAllergyHit(new AllergyVO(allId));
+		ServiceResult result = null;
+		if(cnt>0) result = ServiceResult.OK;
+		else result = ServiceResult.FAILED;
+		return result;
+	}
+
+	@Override
+	public ServiceResult removeAllergy(AllergyVO allergy) {
+		AllergyVO saveAllergy = retrieveAllergy(allergy);
+		int cnt = alldao.removeAllergy(allergy);
+		ServiceResult result= null;
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public List<AllergyVO> selectList() {
+		return alldao.selectList();
+	}
+	
+	
+
+}

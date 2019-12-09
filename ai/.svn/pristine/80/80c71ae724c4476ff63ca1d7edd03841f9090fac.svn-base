@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용     -->
+<!--  2019.11.13	박슬기	하루식단 수정-->
+<!--  2019.11.11	박슬기	상세조회, update수정	-->
+<!--  2019.11.10	박슬기  상세조회 수정 -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 7.     박슬기     최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.diet.dao.IDietDAO">
+
+
+	<!-- 전체 출력 list-->
+	<select id="selectDietList" parameterType="PagingInfoVO" resultType="MonthlyVO">
+		 SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		            to_char(MONTHLY_INDATE,'YYYY.MM.DD') MONTHLY_INDATE,
+                    MEM_ID,
+                    MONTHLY_ID,
+                    MONTHLY_USE,
+                    MONTHLY_TITLE,
+                    MON_PASS
+		        FROM MONTHLY
+				ORDER BY MONTHLY_INDATE DESC
+		    ) A
+		) B
+	WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- 페이징 처리를 위한 count-->
+	<select id="selectDietCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*)
+		FROM MONTHLY
+	</select>
+	
+	<!-- 식단 상세보기 -->
+	<select id="selectDiet" parameterType="String" resultType="OnedayVO">
+		SELECT
+		    ONEDAY_ID,
+		    ONEDAY.MENU_ID,
+		    MENU.MENU_NAME,
+		    MONTHLY_TITLE,
+		    ONEDAY.MONTHLY_ID
+		FROM
+		    ONEDAY ,MENU, MONTHLY
+		where MONTHLY.MONTHLY_ID = #{monthlyId}
+		and ONEDAY.MENU_ID = MENU.MENU_ID
+        and MONTHLY.MONTHLY_ID = ONEDAY.MONTHLY_ID
+		order BY ONEDAY_ID,MENU_ID DESC
+	</select>
+	
+	<!-- 메뉴 전체 리스트 -->
+	<select id="selectMenuList" resultType="menuVO">
+		SELECT
+		    MENU_ID,
+		    MENU_NAME,
+		    SEASON,
+		    MENU_WEIGHT
+		FROM
+		    MENU
+		ORDER BY MENU_ID
+	</select>
+	
+	<!-- 멤버별 알레르기 유발 성분을 포함한 list -->
+	<select id="selectAllergyMenuList" parameterType="String" resultType="MenuAllergyVO">
+		SELECT DISTINCT MENU_ID
+		FROM MENUALLERGY
+		WHERE ALL_ID IN(SELECT
+		                   ALL_ID
+		                FROM
+		                    MEMALLERGY
+		                WHERE MEM_ID = #{memId})
+		ORDER BY MENU_ID
+	</select>
+	
+	<!-- 식단 게시글 수정-->
+	<update id="updateMonthly" parameterType="MonthlyVO">
+		UPDATE MONTHLY
+		
+	    SET MONTHLY_USE = #{monthlyUse},
+	        MONTHLY_TITLE = #{monthlyTitle}
+	    <if test='monthlyUse == "N"'>
+	    	,MON_PASS = #{monPass}
+	    </if>    
+		WHERE MONTHLY_ID = #{monthlyId}
+	</update>
+	
+	<!-- 식단 수정-->
+	<update id="updateOneday" parameterType="OnedayVO">
+		UPDATE ONEDAY
+	    SET MENU_ID = #{afterMenu}
+		WHERE ONEDAY_ID = #{onedayId}
+		AND   MENU_ID = #{menuId}
+	</update>
+	
+	<!-- 식단게시글 추가-->
+	<insert id="insertMonthly" parameterType="MonthlyVO">
+		INSERT INTO MONTHLY (
+    			MONTHLY_INDATE,MONTHLY_ID,MEM_ID,
+    			MONTHLY_USE,MONTHLY_TITLE,MON_PASS) 
+		VALUES (sysdate, (select 'M'||lpad(substr(max(monthly_id),2)+1,4,0) from monthly), #{memId} , #{monthlyUse} ,#{monthlyTitle}
+				<if test='monthlyUse=="N"'>
+					,#{monPass}
+				</if>
+				<if test='monthlyUse=="Y"'>
+					,''
+				</if>
+			)
+	</insert>
+
+
+	<!-- 식단 추가 -->
+	<insert id="insertOneday" parameterType="OnedayVO">
+		
+		INSERT INTO ONEDAY 
+			(ONEDAY_ID,MENU_ID,MONTHLY_ID) 
+		VALUES 
+			(#{onedayId}, #{menuId}, (SELECT 'M'||LPAD(SUBSTR(MAX(MONTHLY_ID),2),4,0)FROM MONTHLY))
+	</insert>
+	
+	<!-- 식단 게시글 삭제 -->
+	<delete id="deleteDiet" parameterType="String">
+		DELETE FROM MONTHLY
+		WHERE MONTHLY_ID = #{monthlyId}
+	</delete>
+	
+	
+	<select id="selectMemAllergyMenuList" parameterType="String" resultType="MenuAllergyVO">
+		SELECT DISTINCT
+		    AG.SYM_STRENGTH "allergySym.symStrength",
+		    ME.MENU_ID,
+		    ME.ALL_ID
+		FROM ALLERGYSYMTOM AG, MEMALLERGY MA, MENUALLERGY ME, 
+		                 (SELECT MA.ALL_ID
+			               FROM MEMALLERGY MA
+			               WHERE MA.MEM_ID = #{memId}) A
+		WHERE MA.ALL_ID = ME.ALL_ID
+		AND   AG.SYM_ID = MA.SYM_ID
+		AND   MA.ALL_ID = A.ALL_ID
+		AND   MA.MEM_ID = #{memId}
+		ORDER BY  ME.MENU_ID
+	</select>
+	
+	
+	<!-- 반찬 회원별 사용빈도수 -->
+	<select id="selectCountBan" parameterType="String" resultType="MenuVO">
+		SELECT
+		    menu_id,
+		    count(menu_id) as count
+		FROM
+		    oneday, monthly
+		where mem_id = #{memId}
+		and monthly.monthly_id = oneday.monthly_id
+		and menu_id like 'B%'
+		group by menu_id
+		order by count(menu_id) desc
+	</select>
+	
+	<!-- 국 회원별 사용빈도수 -->
+	<select id="selectCountGook" parameterType="String" resultType="MenuVO">
+		SELECT
+		    menu_id,
+		    count(menu_id) as count
+		FROM
+		    oneday, monthly
+		where mem_id = #{memId}
+		and monthly.monthly_id = oneday.monthly_id
+		and menu_id like 'G%'
+		group by menu_id
+		order by count(menu_id) desc
+	</select>
+	
+	<!-- 밥 회원별 사용빈도수 -->
+	<select id="selectCountRice" parameterType="String" resultType="MenuVO">
+		SELECT
+		    menu_id,
+		    count(menu_id) as count
+		FROM
+		    oneday, monthly
+		where mem_id = #{memId}
+		and monthly.monthly_id = oneday.monthly_id
+		and menu_id like 'R%'
+		group by menu_id
+		order by count(menu_id) desc
+	</select>
+	
+	<!-- 김치 회원별 사용빈도수 -->
+	<select id="selectCountKim" parameterType="String" resultType="MenuVO">
+		SELECT
+		    menu_id,
+		    count(menu_id) as count
+		FROM
+		    oneday, monthly
+		where mem_id = #{memId}
+		and monthly.monthly_id = oneday.monthly_id
+		and menu_id like 'K%'
+		group by menu_id
+		order by count(menu_id) desc
+	</select>
+	
+	
+	<select id="selectMaxOnedayId" resultType="String">
+		SELECT MAX(ONEDAY_ID)
+		FROM ONEDAY
+	</select>
+</mapper>

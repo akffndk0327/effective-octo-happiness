@@ -1,0 +1,22 @@
+package kr.or.ddit.order.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class OrderUpdate {
+
+	//결제 환불
+	@RequestMapping("/order/orderUpdate.do")
+	public String updateOrder() {
+		
+		return "order/orderList";
+	}
+
+	
+	//주문 취소
+	@RequestMapping("/order/orderDelete.do")
+	public String deleteOrder() {
+		return "order/orderList";
+	}
+}

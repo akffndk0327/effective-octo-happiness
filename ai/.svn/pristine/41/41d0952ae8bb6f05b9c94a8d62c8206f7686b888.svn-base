@@ -1,0 +1,103 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 20.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 20.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+#InnerContainer{
+	min-height : 750px;	
+}
+ .titleTopBar{
+ 	margin-left : 90px;
+ }
+
+ .mainTable{
+ 	width : 85%;
+ 	margin : auto;
+ 	border : 1px solid #ddd;
+ }
+ .mainTable th{
+ 	background : #90c322;
+ 	color : white;
+ }
+ .mainTable td{
+ 	cursor : pointer;
+ 	
+ }
+ .mainTable .th{
+ 	border-top : 2px solid #ddd;
+ 	border-bottom : 2px solid #ddd;
+ 	padding : 10px;
+ 	font-size : 15px;
+ 	text-align : center;
+ }
+ .short{
+	width : 8%; 
+ }
+ .middle{
+ 	width : 15%;
+ 	height : 30px;
+ 	padding-left : 30px;
+ }
+ .indate{
+ 	padding-left : 350px;
+ 	
+ }
+ .topTd{
+ 	background : 	#EAEAEA;
+ }
+ .mainTable .td{
+ 	border-top : 1px solid #ddd;
+ 	border-bottom : 1px solid #ddd;
+ 	padding : 10px;
+ 	font-size : 13px;
+ 	text-align : center;
+ }
+ .boardTitleTh{
+	border-top : 2px solid #ddd;
+ 	border-bottom : 2px solid #ddd;
+ 	padding : 10px;
+ 	font-size : 18px;
+ 	text-align : center;
+ 	padding-left : 20px;
+ }
+ .boardTitleTd{
+ 	border-top : 1px solid #ddd;
+ 	border-bottom : 1px solid #ddd;
+ 	padding : 10px;
+ 	font-size : 13px;
+ 	text-align : left;
+ 	padding-left : 20px;
+ }
+ #pagingArea{
+ 	text-align : center;
+ 	margin-top : 30px;
+ 	margin-bottom : 70px;
+ }
+ 
+ .content{
+ 	height : 400px;
+ 	border-top : 1px solid #ddd;
+ 	font-size : 18px;
+ 	padding : 50px;
+ 	vertical-align : top;
+ 	overflow : auto;
+ }
+ 
+ .btnAi1 {
+	margin-right : 100px;
+ }
+ .btnAi0, .btnAi1{
+ 	margin-top : 20px;
+ 	margin-bottom : 70px;
+ }

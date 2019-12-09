@@ -1,0 +1,302 @@
+package kr.or.ddit.weather.controller;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import kr.or.ddit.vo.AirGuessVO;
+import kr.or.ddit.vo.AirpollutionVO;
+import kr.or.ddit.vo.PollutionListVO;
+
+@Controller
+public class AirpollutionRetrieveController {
+
+	List<Object>[] nowair;
+	List<PollutionListVO> avgair;
+	List<AirGuessVO> airguess;
+
+	private List<Object>[] getNowair()
+			throws UnsupportedEncodingException, IOException, SAXException, ParserConfigurationException {
+		if (nowair == null) {
+			nowair = getCtprvnRltmMesureDnsty();
+		}
+		return nowair;
+	}
+
+	private List<PollutionListVO> getAvgair() throws UnsupportedEncodingException, IOException, SAXException, ParserConfigurationException {
+		if (avgair == null) {
+			avgair = getCtprvnMesureLIst();
+		}
+		return avgair;
+	}
+
+	private List<AirGuessVO> getAirguess() throws UnsupportedEncodingException, IOException, SAXException, ParserConfigurationException {
+		Date today = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("YYYY-MM-dd");
+		if (airguess == null) {
+			airguess = getMinuDustFrcstDspth(date.format(today));
+		}
+		return airguess;
+	}
+
+	@RequestMapping(value = "weather/weatherPollution.do", method = RequestMethod.GET)
+	public String getLocation(Model model) throws IOException, SAXException, ParserConfigurationException {
+//		model.addAttribute("nowair", getNowair());
+		model.addAttribute("avgair", getAvgair());
+		model.addAttribute("airguess", getAirguess());
+
+		return "weather/weatherLocation";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "weather/weatherPollution.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String airpollution(@RequestParam(value = "addr[]") List<String> addr, Model model)
+			throws IOException, SAXException, ParserConfigurationException {
+		return "weather/weatherPollutionView";
+	}
+
+	private static String getTagValue(String tag, Element eElement) {
+		NodeList nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+		Node nValue = (Node) nlList.item(0);
+		if (nValue == null)
+			return null;
+		return nValue.getNodeValue();
+	}
+
+	// 실시간 지역별 정보
+	public String[] sido = new String[] { "서울", "부산", "대구", "인천", "광주", "대전", "울산", "경기", "강원", "충북", "충남", "전북", "전남",
+			"경북", "경남", "제주", "세종" };
+
+	private List<Object>[] getCtprvnRltmMesureDnsty()
+			throws UnsupportedEncodingException, IOException, SAXException, ParserConfigurationException {
+		List<Object> array[] = new List[17];
+		for (int i = 0; i < sido.length; i++) {
+			String PHARM_URL = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
+					+ "?sidoName=" + sido[i] + "&pageNo=1&numOfRows=2"
+					+ "&ServiceKey=NsN80t%2B8GCNBP9zXheakhD1KUFemZ%2FdBGwkHi0E73VrdEFOx19GfRga7ogJVdHHEBuN27DgL6ViwWvlCwzvlag%3D%3D"
+					+ "&ver=1.3";
+
+			URL obj = new URL(PHARM_URL);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			con.setDoOutput(true);
+			con.setRequestMethod("GET");
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+			String line;
+			String resultLine = "";
+			while ((line = in.readLine()) != null) {
+				resultLine += line;
+			}
+
+			in.close();
+
+			Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+					.parse(new ByteArrayInputStream(resultLine.getBytes()));
+
+			xml.getDocumentElement().normalize();
+			XPath xpath = XPathFactory.newInstance().newXPath();
+
+			NodeList nList = xml.getElementsByTagName("item");
+			System.out.println("1 파싱할 리스트 수 : " + nList.getLength()); // 파싱할 리스트 수 : 5 <= 이건 없어도 돼! 데이터 갯수 체크하는거
+
+			List<Object> newlist = new ArrayList<>();
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					AirpollutionVO vo = new AirpollutionVO();
+					Element eElement = (Element) nNode;
+
+					vo.setSido(sido[i]);
+					vo.setMangName(getTagValue("mangName", eElement));
+					vo.setStationName(getTagValue("stationName", eElement));
+					vo.setDataTime(getTagValue("dataTime", eElement));
+					vo.setPm10Value(getTagValue("pm10Value", eElement));// 미세먼지 10시 농도
+					vo.setPm25Value(getTagValue("pm25Value", eElement));// 미세먼지 25시 농도
+					vo.setPm10Grade(getTagValue("pm10Grade", eElement));// 미세먼지 10시 24시간 등급자료
+					vo.setPm10Grade1h(getTagValue("pm10Grade1h", eElement));// 미세먼지 10시 1시간 등급자료
+					vo.setPm10Grade(getTagValue("pm25Grade", eElement));// 미세먼지 25시 24시간 등급자료
+					vo.setPm25Grade1h(getTagValue("pm25Grade1h", eElement));// 미세먼지 25시 1시간 등급자료
+					vo.setSo2Value(getTagValue("so2Value", eElement)); // 아황산가스 농도
+					vo.setSo2Grade(getTagValue("so2Grade", eElement)); // 아황산가스 지수
+					vo.setCoValue(getTagValue("coValue", eElement)); // 일산화탄소 농도
+					vo.setCoGrade(getTagValue("coGrade", eElement)); // 일산화탄소 지수
+					vo.setO3Value(getTagValue("o3Value", eElement));// 오존농도
+					vo.setO3Grade(getTagValue("o3Grade", eElement));// 오존지수
+					vo.setNo2Value(getTagValue("no2Value", eElement));// 이산화질소 농도
+					vo.setNo2Grade(getTagValue("no2Grade", eElement));// 이산화질소 지수
+					vo.setKhaiValue(getTagValue("khaiValue", eElement));// 통합대기환경수치
+					vo.setKhaiGrade(getTagValue("khaiGrade", eElement));// 통합대기환경지수
+					newlist.add(vo);
+				}
+				array[i] = newlist;
+			}
+		}
+
+//		for (int i = 0; i < array.length; i++) { // 데이터 확인용 출력문구
+//			for (int j = 0; j < array[i].size(); j++) {
+//				System.out.println(array[i].get(j));
+//			}
+//		}
+
+		return array;
+
+	}
+
+	//
+	private static List<PollutionListVO> getCtprvnMesureLIst()
+			throws UnsupportedEncodingException, IOException, SAXException, ParserConfigurationException {
+		String PHARM_URL = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureLIst"
+				+ "?itemCode=PM10" 
+				+ "&dataGubun=DAILY" 
+				+ "&searchCondition=MONTH" 
+				+ "&pageNo=1" 
+				+ "&numOfRows=3"
+				+ "&ServiceKey=NsN80t%2B8GCNBP9zXheakhD1KUFemZ%2FdBGwkHi0E73VrdEFOx19GfRga7ogJVdHHEBuN27DgL6ViwWvlCwzvlag%3D%3D";
+
+		URL obj = new URL(PHARM_URL);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con.setDoOutput(true);
+		con.setRequestMethod("GET");
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+		String line;
+		String resultLine = "";
+		while ((line = in.readLine()) != null) {
+			resultLine += line;
+		}
+
+		in.close();
+
+		Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+				.parse(new ByteArrayInputStream(resultLine.getBytes()));
+
+		xml.getDocumentElement().normalize();
+		XPath xpath = XPathFactory.newInstance().newXPath();
+
+		NodeList nList = xml.getElementsByTagName("item");
+		System.out.println("2 파싱할 리스트 수 : " + nList.getLength()); // 파싱할 리스트 수 : 5 <= 이건 없어도 돼! 데이터 갯수 체크하는거
+
+		List<PollutionListVO> Pollutionlist = new ArrayList<>();
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nNode = nList.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				PollutionListVO vo = new PollutionListVO();
+				Element eElement = (Element) nNode;
+
+				vo.setDataTime(getTagValue("dataTime", eElement));
+				vo.setItemCode(getTagValue("itemCode", eElement));
+				vo.setDataGubun(getTagValue("dataGubun", eElement));
+				vo.setSeoul(getTagValue("seoul", eElement));
+				vo.setBusan(getTagValue("busan", eElement));
+				vo.setDaegu(getTagValue("daegu", eElement));
+				vo.setIncheon(getTagValue("incheon", eElement));
+				vo.setGwangju(getTagValue("gwangju", eElement));
+				vo.setDaejeon(getTagValue("daejeon", eElement));
+				vo.setUlsan(getTagValue("ulsan", eElement));
+				vo.setGyeonggi(getTagValue("gyeonggi", eElement));
+				vo.setGangwon(getTagValue("gangwon", eElement));
+				vo.setChungbuk(getTagValue("chungbuk", eElement));
+				vo.setChungnam(getTagValue("chungnam", eElement));
+				vo.setJeonnam(getTagValue("jeonnam", eElement));
+				vo.setJeonbuk(getTagValue("jeonbuk", eElement));
+				vo.setGyeongbuk(getTagValue("gyeongbuk", eElement));
+				vo.setGyeongnam(getTagValue("gyeongnam", eElement));
+				vo.setJeju(getTagValue("jeju", eElement));
+				vo.setSejong(getTagValue("sejong", eElement));
+
+				Pollutionlist.add(vo);
+			}
+		}
+
+		for (int i = 0; i < Pollutionlist.size(); i++) { // 데이터 확인용 출력문구
+				System.out.println(Pollutionlist.get(i));
+		}
+
+		return Pollutionlist;
+
+	}
+
+	private static List<AirGuessVO> getMinuDustFrcstDspth(String date)
+			throws UnsupportedEncodingException, IOException, SAXException, ParserConfigurationException {
+		String PHARM_URL = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMinuDustFrcstDspth"
+				+ "?searchDate=" + date
+				+"&InformCode=PM10"
+				+ "&ServiceKey=NsN80t%2B8GCNBP9zXheakhD1KUFemZ%2FdBGwkHi0E73VrdEFOx19GfRga7ogJVdHHEBuN27DgL6ViwWvlCwzvlag%3D%3D";
+
+		URL obj = new URL(PHARM_URL);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con.setDoOutput(true);
+		con.setRequestMethod("GET");
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+		String line;
+		String resultLine = "";
+		while ((line = in.readLine()) != null) {
+			resultLine += line;
+		}
+
+		in.close();
+
+		Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+				.parse(new ByteArrayInputStream(resultLine.getBytes()));
+
+		xml.getDocumentElement().normalize();
+		XPath xpath = XPathFactory.newInstance().newXPath();
+
+		NodeList nList = xml.getElementsByTagName("item");
+		System.out.println("3 파싱할 리스트 수 : " + nList.getLength()); // 파싱할 리스트 수 : 5 <= 이건 없어도 돼! 데이터 갯수 체크하는거
+
+		List<AirGuessVO> Guesslist = new ArrayList<>();
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nNode = nList.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				AirGuessVO vo = new AirGuessVO();
+				Element eElement = (Element) nNode;
+
+				vo.setDataTime(getTagValue("dataTime", eElement));
+				vo.setInformCode(getTagValue("informCode", eElement));
+				vo.setInformOverall(getTagValue("informOverall", eElement));
+				vo.setInformCause(getTagValue("informCause", eElement));
+				vo.setInformGrade(getTagValue("informGrade", eElement).split(","));
+				vo.setInformData(getTagValue("informData", eElement));
+				Guesslist.add(vo);
+			}
+		}
+
+		for (int i = 0; i < Guesslist.size(); i++) { // 데이터 확인용 출력문구
+			System.out.println(Guesslist.get(i));
+			if (i%2==0) {
+				Guesslist.remove(i);
+			}
+		}
+		return Guesslist;
+
+	}
+}

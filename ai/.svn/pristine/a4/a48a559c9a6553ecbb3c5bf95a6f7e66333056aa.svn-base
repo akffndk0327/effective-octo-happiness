@@ -1,0 +1,29 @@
+package kr.or.ddit.advertise.dao;
+
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.AdattatchVO;
+import kr.or.ddit.vo.AdvertiseVO;
+
+@Repository
+public interface IAdAttatchDAO {
+	/**
+	 * 첨부파일 등록
+	 * @param ad
+	 * @return
+	 */
+	public int insertAttatches(AdvertiseVO ad);
+	/**
+	 * 첨부파일 선택 
+	 * @param att_no
+	 * @return
+	 */
+	public AdattatchVO selectAttatch(int att_no);
+
+	/**
+	 * 첨부파일 삭제
+	 * @param board
+	 * @return
+	 */
+	public int deleteAttatches(AdvertiseVO board);
+}

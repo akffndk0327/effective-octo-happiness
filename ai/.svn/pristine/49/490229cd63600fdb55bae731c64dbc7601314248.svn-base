@@ -1,0 +1,6 @@
+package kr.or.ddit.vo;
+
+public class AccountVO {
+	private String memId;
+	private String memPass;
+}

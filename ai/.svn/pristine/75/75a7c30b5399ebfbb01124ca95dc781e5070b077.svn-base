@@ -1,0 +1,82 @@
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 박주연
+ * @since ${date}
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019.11.1      박주연       최초작성
+ * Copyright (c) ${year} by DDIT All right reserved
+ * </pre>
+ */
+@charset "UTF-8";
+
+@font-face{
+font-family:BMHANNAAir_ttf;
+src:local(※), 
+   url('/ai/font/BMHANNAAir_ttf.ttf') format('truetype');
+}
+
+*{
+	font-family : BMHANNAAir_ttf;
+}
+
+
+#header {
+	z-index:2;
+	background: white;
+	width: 100%;
+	position: relative
+}
+
+#MemleftMenu {
+	float: left;
+	width: 13%;
+	height: 600px;
+	background-color: #576454;
+	margin-left: 120px;
+	margin-top: 15px;
+}
+
+#InnerContainer{
+	z-index:1;
+	width: 1380px;
+/*     height: 800px; */
+	height : auto;
+   	margin: 0 auto;
+    background-color: #FAFAFA;
+}
+
+/* #footer { */
+/* 	z-index:0; */
+/* 	float: left; */
+/* 	width: 100%; */
+/* 	height: 200px; */
+/* 	background-color: #576454; */
+/* 	position: relative; */
+/* 	padding: 28px; */
+/* 	margin: 34px 0 0 0; */
+/* 	text-align : center; */
+/* 	color: #bcc1bb; */
+/* 	text-shadow: 0 1px 0 #273424; */
+/* } */
+
+/* #copyright { */
+/* 	margin: 34px 0 0 0; */
+/* 	text-align: center; */
+/* 	color: #909090; */
+/* 	font-size : 25px; */
+/* 	text-shadow: 0 1px 0 #ffffff; */
+/* } */
+
+/* #copyright a { */
+/* 	color: #909090; */
+/* } */
+
+.error {
+	color: red;
+}

@@ -1,0 +1,15 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class MenuVO implements Serializable{
+	private String menuId;
+	private String season;
+	private String menuName;
+	private int menuWeight;
+}

@@ -1,0 +1,136 @@
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 박주연
+ * @since ${date}
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ *	2019.11.20	박슬기		footer margin-top 0으로 수정
+ * --------     --------    ----------------------
+ * 2019.11.1      박주연       최초작성
+ * Copyright (c) ${year} by DDIT All right reserved
+ * </pre>
+ */
+@charset "UTF-8";
+
+/* @font-face{ */
+/* font-family:BMHANNAAir_ttf; */
+/* src:local(※),  */
+/*    url('/ai/font/BMHANNAAir_ttf.ttf') format('truetype'); */
+/* } */
+
+@font-face {
+	font-family: 'Eoe_Zno_L';
+	src:
+		url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/Eoe_Zno_L.woff')
+		format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+	*{
+	font-family: 'Eoe_Zno_L';
+	font-weight: bold;
+	}
+
+/* #header { */
+/* 	z-index:2; */
+/* 	background: white; */
+/* 	width: 100%; */
+/* 	position: relative */
+/* } */
+
+.adleft{
+	width: 120px;
+    height: 400px;
+/*     border: 1px solid black; */
+    float: left;
+    margin-left: 65px;
+    margin-top: 88px;
+}
+
+
+#MemleftMenu {
+	float: left;
+	width: 13%;
+	height: 600px;
+	background-color: #576454;
+	margin-left: 120px;
+	margin-top: 15px;
+}
+
+#InnerContainer{
+	z-index:1;
+	width: 1200px;
+/*     height: 800px; */
+	min-height : 700px;
+   	margin: 0 auto;
+}
+
+
+/*	 Footer Start
+    ==================================================*/
+
+footer {
+	width: 100%;
+	background: #383838;
+	color: #fff;
+	margin-top: 40px;
+}
+footer .block {
+	color: #B6B6B6;
+}
+
+footer .block p i {
+	color: #dedede;
+	margin-right: 10px;
+	background: #555;
+	width: 24px;
+	line-height: 24px;
+	text-align: center;
+}
+footer .block h4 {
+	margin-bottom: 20px;
+	color: #fff;
+}
+
+footer .block .logo img {
+	text-align: left;
+	display: block;
+}
+footer .block .media-object {
+	border:1px solid #747474;
+	padding: 2px;
+	height: 75px;
+}
+
+footer .block .media>.pull-left {
+	margin-bottom: 10px;
+}
+footer .block span {
+	color: #fff;
+}
+.footer-bottom {
+	width: 100%;
+	margin-top: 70px;
+	border-top: 1px solid #2C2C2C;
+	box-shadow: 0 -1px 0 #575656;
+	padding-top: 10px;
+}
+.copyright-text {
+	margin-top: 12px;
+	color: #B6B6B6;
+}
+.copyright-text a {
+	color: darkslategray;
+}
+.copyright-text a:hover {
+	text-decoration: underline;
+}
+
+
+.error {
+	color: red;
+}

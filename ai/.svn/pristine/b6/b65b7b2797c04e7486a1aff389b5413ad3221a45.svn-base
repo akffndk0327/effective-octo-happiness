@@ -1,0 +1,8 @@
+package kr.or.ddit.vo;
+
+public class MemAllergyVO {
+	private String symRecital;
+	private String memId;
+	private String allId;
+	private String symId;
+}

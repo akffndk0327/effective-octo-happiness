@@ -1,0 +1,32 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 이진희
+ * @since 2019. 11. 7.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * 
+ * --------     --------    ----------------------
+ * 2019. 11. 7.      이진희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+img{
+	width:300px;
+	height:300px;
+}
+
+th{
+	text-align:center;
+	
+}
+ 
+table{
+	margin-top:50px;
+} 
+
+

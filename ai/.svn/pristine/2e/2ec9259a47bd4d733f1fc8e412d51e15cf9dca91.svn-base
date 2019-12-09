@@ -1,0 +1,74 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 6.      이유진      최초작성
+* 2019. 11. 11.      이유진      
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+<style>
+#InnerContainer {
+	height: auto;
+}
+
+#air {
+	height: 300px;
+	overflow: auto;
+}
+
+.air {
+	background-color: #dcdcdc;
+	border: 2px solid black;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+</style>
+<div id="InnerContainer">
+    <input type="button" id="show" value="현재 위치로 확인"/>
+    
+    
+    <h3>오늘의 미세먼지 예보 관련 안내사항</h3>
+    <div id="air">
+        <c:forEach items="${airguess }" var="air" varStatus="i">
+
+        <div class="air">
+            <h5>*  ${air.dataTime }</h5>
+            <h5>*  미세먼지예보</h5>
+            <span>${air.informOverall }<br>${air.informCause }</span><br><br>
+            
+            <h6>*  전국 미세먼지 현황</h6>
+            <c:forEach items="${air.informGrade }" varStatus="v">
+            <c:if test="${v.index%5 eq 0 }"><br></c:if>
+                <span>${air.informGrade[v.index] }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </c:forEach>
+           </div><br><br>
+        </c:forEach>
+   </div>
+   
+   <script>
+   var myBarChart = new Chart(document.getElementById("myChart"), {
+	    type: 'bar',
+	    data: {
+	        datasets: [{
+	            barPercentage: 0.5,
+	            barThickness: 6,
+	            maxBarThickness: 8,
+	            minBarLength: 2,
+	            data: [10, 20, 30, 40, 50, 60, 70]
+	        }]
+	    }
+   //,options: options
+	});
+   
+   </script>
+   
+   <h3>시도별 대기오염 일주일 평균정보 조회</h3>
+   <div>
+         <canvas id="myChart" width="400" height="400"></canvas>
+   </div>
+</div>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.search.dao.ISearchDAO">
+	
+	<select id="selectAllList" parameterType="String" resultType="AllVO">
+	<if test="prdlstnm != null">
+		SELECT B.RES_PATTERN,AA.*
+		FROM RESOURCE2 B,  
+		(SELECT TO_CHAR(PRDLSTREPORTNO) PRDLSTREPORTNO,'HACCP' TYPE,PRDLSTNM,DBMS_LOB.SUBSTR(RAWMTRL,100,1) RAWMTRL FROM HACCP WHERE PRDLSTNM LIKE '%'||#{prdlstnm}||'%'
+					UNION 
+		SELECT  BIOCHE_ID,'BIOCHEPRO',BIOCHE_NAME,BIOCHE_CONT FROM BIOCHEPRO WHERE BIOCHE_NAME LIKE '%'||#{prdlstnm}||'%'
+					UNION
+		SELECT PROD_ID,'PROD',PROD_NAME,PROD_CONT FROM PROD WHERE PROD_NAME LIKE '%'||#{prdlstnm}||'%'
+					UNION
+		SELECT ALL_ID,'ALLERGY',ALL_NAME,DBMS_LOB.SUBSTR(ALL_SYMPTOM,100,1) ALL_SYMPTOM  FROM ALLERGY WHERE ALL_NAME LIKE '%'||#{prdlstnm}||'%') AA
+		WHERE AA.TYPE = B.RES_PARENT
+	</if>	
+	</select>
+	
+	<select id="selectURL" resultType="Resource2VO">
+		select res_parent,res_pattern from resource2 
+	</select>
+
+</mapper>

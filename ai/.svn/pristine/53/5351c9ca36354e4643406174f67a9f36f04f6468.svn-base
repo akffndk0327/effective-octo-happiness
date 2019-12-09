@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]           -->
+<!--  수정일        		    수정자	       수정내용                     -->
+<!--  =============   ======    ==================  -->
+<!--  2019. 11. 8.     최서희         최초작성                    -->
+<!--  2019. 11. 19.    최서희   	  환불 신청 내역 조회 추가   -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.order.dao.IOrderDAO">
+	<select id="selectOrderId" parameterType="String" resultType="String">
+		SELECT MAX(ORDER_ID) AS ORDER_ID
+		FROM ORDER2
+		WHERE MEM_ID=#{memId}
+	</select>
+	
+	<select id="selectOrderIdList" parameterType="Order2VO" resultType="String">
+		SELECT DISTINCT B.ORDER_ID
+		FROM MEMBER A, ORDERDETAIL B, ORDER2 C
+		WHERE A.MEM_ID = C.MEM_ID
+		AND C.ORDER_ID = B.ORDER_ID
+		AND A.MEM_ID = #{memId}
+		AND B.PROD_ID = #{prodId}
+	</select>
+	
+	<select id="selectOrderCount" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM ORDER2
+		WHERE MEM_ID = #{pk}
+	</select>
+
+	<resultMap type="Order2VO" id="orderMap" autoMapping="true">
+		<id column="ORDER_ID" property="orderId"/>
+		<association property="prod" javaType="ProdVO" autoMapping="true">
+			<id column="PROD_ID" property="prodId"/>
+		</association>
+		<association property="payVO" javaType="PaymentVO" autoMapping="true">
+			<id column="ORDER_ID" property="orderId"/>
+		</association>
+		<association property="refund" javaType="RefundVO" autoMapping="true">
+		</association>
+	</resultMap>
+	<select id="selectOrderList" parameterType="PagingInfoVO" resultMap="orderMap">
+		SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		    	SELECT AA.*,
+                (SELECT PROD_NAME
+                    FROM PROD A, ORDER2 B, ORDERDETAIL C
+                    WHERE A.PROD_ID = C.PROD_ID
+                    AND B.ORDER_ID = C.ORDER_ID
+                    AND B.ORDER_ID = AA.ORDER_ID
+                    AND ROWNUM = 1) PROD_NAME
+                FROM (
+                SELECT DISTINCT O.ORDER_ID,
+                        P.PAY_PRICE,
+                        TO_CHAR(O.ORDER_DATE, 'YYYY-MM-DD') AS ORDER_DATE,
+                        P.CODE_NAME AS PAY_STATUS_NAME,
+                        O.CODE_NAME AS ORDER_STATUS_NAME,
+                        Q.PLUS, O.ORDER_STATUS,
+                        R.REFUND_DATE, R.REFUND_REASON, R.REFUND_APPROVAL
+                FROM (SELECT ORDER_ID, ORDER_DATE, CODE_NAME, ORDER_STATUS
+                        FROM ORDER2 INNER JOIN CODE ON (ORDER_STATUS = CODE_ID)
+                        WHERE MEM_ID =  #{pk}) O,
+                      (
+                      SELECT B.ORDER_ID, PAY_PRICE, CODE_NAME
+                        FROM PAYMENT A , ORDER2 B, CODE C
+                        WHERE A.ORDER_ID = B.ORDER_ID
+                        AND A.PAY_STATUS = C.CODE_ID
+                        AND B.MEM_ID = #{pk}
+                      ) P,
+                      (
+                      SELECT B.ORDER_ID, COUNT(*)-1 AS PLUS
+                        FROM ORDER2 A, ORDERDETAIL B, PROD C
+                        WHERE A.ORDER_ID = B.ORDER_ID
+                        AND B.PROD_ID = C.PROD_ID
+                        AND A.MEM_ID = #{pk}
+                        GROUP BY B.ORDER_ID
+                      ) Q,
+                      (
+                      SELECT A.ORDER_ID, REFUND_DATE, REFUND_REASON, REFUND_APPROVAL
+                      FROM ORDER2 A, REFUND B
+                      WHERE A.ORDER_ID = B.ORDER_ID(+)
+                      AND A.MEM_ID = #{pk}
+                      ) R,            
+                      ORDERDETAIL A, PROD B
+                WHERE O.ORDER_ID = P.ORDER_ID
+                AND O.ORDER_ID = Q.ORDER_ID
+                AND O.ORDER_ID = A.ORDER_ID
+                AND A.PROD_ID = B.PROD_ID
+                AND A.ORDER_ID = R.ORDER_ID
+                ) AA
+                ORDER BY 1 DESC
+		    ) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectOrderEmpCount" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM ORDER2 A, ORDERDETAIL B, PROD C
+		WHERE A.ORDER_ID = B.ORDER_ID
+        AND B.PROD_ID = C.PROD_ID        
+        AND C.MEM_ID = #{pk}
+	</select>
+	
+	<resultMap type="Order2VO" id="orderEmpMap" autoMapping="true">
+		<id column="ORDER_ID" property="orderId"/>
+		<association property="payVO" javaType="PaymentVO" autoMapping="true">
+			<id column="ORDER_ID" property="orderId"/>
+		</association>
+		<association property="refund" javaType="RefundVO" autoMapping="true">
+		</association>
+		<collection property="orderDtList" ofType="OrderDetailVO" autoMapping="true">
+			<association property="prodVO" javaType="ProdVO" autoMapping="true">
+				<id column="PROD_ID" property="prodId"/>
+			</association>
+		</collection>
+	</resultMap>
+	<select id="selectOrderEmpList"  parameterType="PagingInfoVO" resultMap="orderEmpMap">
+		 SELECT B.*
+		FROM(
+			SELECT ROWNUM RNUM, A.*
+			FROM(
+				SELECT DISTINCT C.ORDER_ID,  B.PROD_NAME,
+				        ORDER_QTY, C.ORDER_STATUS,
+				        B.PROD_PRICE, B.PROD_DELIVERY,
+				        C.ORDER_DATE, P.PAY_STATUS,
+				        P.CODE_NAME AS PAY_STATUS_NAME,
+				        O.CODE_NAME AS ORDER_STATUS_NAME,
+                        R.REFUND_DATE, R.REFUND_REASON, R.REFUND_APPROVAL
+				FROM (
+					  SELECT ORDER2.ORDER_ID, CODE_NAME
+				      FROM ORDER2 INNER JOIN CODE ON (ORDER_STATUS = CODE_ID), 
+	                           ORDERDETAIL B, PROD C
+				      WHERE ORDER2.ORDER_ID = B.ORDER_ID
+	                     AND B.PROD_ID = C.PROD_ID
+	                     AND C.MEM_ID =  #{pk}
+				      ) O,
+				      (
+				      SELECT B.ORDER_ID, CODE_NAME, PAY_STATUS
+				      FROM PAYMENT A , ORDER2 B, CODE C, ORDERDETAIL D, PROD E
+				      WHERE A.ORDER_ID = B.ORDER_ID
+				      AND A.PAY_STATUS = C.CODE_ID
+	                     AND B.ORDER_ID = D.ORDER_ID
+	                     AND D.PROD_ID = E.PROD_ID
+				      AND E.MEM_ID = #{pk}
+				      ) P,
+                       (
+                      SELECT A.ORDER_ID, REFUND_DATE, REFUND_REASON, REFUND_APPROVAL
+                      FROM ORDER2 A, REFUND B, ORDERDETAIL C, PROD D
+                      WHERE A.ORDER_ID = B.ORDER_ID(+)
+                      AND A.ORDER_ID = C.ORDER_ID
+                      AND C.PROD_ID = D.PROD_ID
+                      AND D.MEM_ID = #{pk}
+                      ) R,   
+				     ORDERDETAIL A, PROD B, ORDER2 C
+				WHERE O.ORDER_ID = P.ORDER_ID
+				AND O.ORDER_ID = A.ORDER_ID
+				AND A.PROD_ID = B.PROD_ID
+				AND A.ORDER_ID = C.ORDER_ID
+                 AND C.ORDER_ID = R.ORDER_ID
+	            AND B.MEM_ID = #{pk}
+				ORDER BY 1 DESC ) A
+			) B           
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	
+	</select>
+	
+	<resultMap type="Order2VO" id="orderViewMap" autoMapping="true">
+		<id column="ORDER_ID" property="orderId"/>
+		<collection property="orderDtList" ofType="OrderDetailVO" autoMapping="true">
+			<association property="prodVO" javaType="ProdVO" autoMapping="true">
+				<id column="PROD_ID" property="prodId"/>
+				<association property="company" javaType="CompanyVO" autoMapping="true">
+					<id column="MEM_ID" property="memId"/>
+				</association>
+			</association>
+		</collection>
+	</resultMap>
+	<select id="selectOrder" parameterType="String" resultMap="orderViewMap">
+		SELECT
+		    A.ORDER_ID, A.ORDER_DATE , 
+		    B.PROD_ID,  B.PROD_NAME, B.PROD_PRICE, B.PROD_DELIVERY,
+		    C.COM_NAME, D.ORDER_QTY, PROD_PRICE,
+		    (PROD_PRICE*ORDER_QTY) AS ORDER_PRICE,
+		    (PROD_PRICE*ORDER_QTY)+PROD_DELIVERY AS PAY_PRICE,
+		    (SELECT SUM((PROD_PRICE*ORDER_QTY)+PROD_DELIVERY)
+		       FROM  ORDER2 A, ORDERDETAIL D, PROD B, COMPANY C
+		      WHERE A.ORDER_ID = D.ORDER_ID
+		        AND D.PROD_ID = B.PROD_ID
+		        AND B.MEM_ID = C.MEM_ID
+		        AND A.ORDER_ID = #{orderId}) AS TOTAL_PRICE,
+		    (SELECT SUM(PROD_PRICE*ORDER_QTY) 
+		       FROM  ORDER2 A, ORDERDETAIL D, PROD B, COMPANY C
+		      WHERE A.ORDER_ID = D.ORDER_ID
+		       AND D.PROD_ID = B.PROD_ID
+		        AND B.MEM_ID = C.MEM_ID
+		         AND A.ORDER_ID = #{orderId}) AS ORDER_TOTAL
+		 FROM  ORDER2 A, PROD B, COMPANY C, ORDERDETAIL D
+		 WHERE A.ORDER_ID = D.ORDER_ID
+		   AND D.PROD_ID = B.PROD_ID
+		   AND B.MEM_ID = C.MEM_ID
+		   AND A.ORDER_ID = #{orderId}
+		 ORDER BY 3 DESC
+	</select>
+	
+</mapper>

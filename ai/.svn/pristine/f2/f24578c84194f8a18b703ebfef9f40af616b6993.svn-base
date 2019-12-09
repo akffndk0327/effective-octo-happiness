@@ -1,0 +1,22 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of="menuId")
+public class MenuVO implements Serializable{
+	private String menuId;
+	private String season;
+	private String menuName;
+	private int menuWeight;
+	private String check ="false";
+
+
+}

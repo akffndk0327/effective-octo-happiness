@@ -1,0 +1,9 @@
+package kr.or.ddit.vo;
+
+public class AdreplyVO {
+	private String adreplyId;
+	private String adreplyDate;
+	private String adreplyCont;
+	private int adId;
+	private String memId;
+}

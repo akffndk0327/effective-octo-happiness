@@ -1,0 +1,40 @@
+package kr.or.ddit.mypage.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mypage.dao.IAdminMypageDAO;
+import kr.or.ddit.vo.CompanyVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+@Service
+public class AdminMypageServiceImpl implements IAdminMypageService {
+
+	@Inject
+	IAdminMypageDAO adminDAO;
+	
+	@Override
+	public List<MemberVO> retrieveMemberList(PagingInfoVO<MemberVO> pagingVO) {
+		return adminDAO.selectMemberList(pagingVO);
+	}
+
+	@Override
+	public MemberVO retrieveMember(MemberVO member) {
+		return adminDAO.selectMember(member);
+	}
+
+	@Override
+	public List<CompanyVO> retrieveCompanyList(PagingInfoVO<CompanyVO> pagingVO) {
+		return adminDAO.selectCompanyList(pagingVO);
+	}
+
+	@Override
+	public int retrieveMemberCount(PagingInfoVO<MemberVO> pagingVO) {
+		return adminDAO.selectMemberCount(pagingVO);
+	}
+
+}

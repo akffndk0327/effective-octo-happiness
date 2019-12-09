@@ -1,0 +1,9 @@
+package kr.or.ddit.vo;
+
+public class AdminVO {
+	private String adminNum;
+	private String adminTel;
+	private String adminAddr;
+	private String adminName;
+	private String memId;
+}

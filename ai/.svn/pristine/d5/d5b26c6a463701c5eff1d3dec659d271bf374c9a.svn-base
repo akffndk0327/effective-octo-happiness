@@ -1,0 +1,93 @@
+package kr.or.ddit.order.dao;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.mybatis.spring.SqlSessionTemplate;
+
+import kr.or.ddit.vo.Order2VO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 7.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------        --------    ----------------------
+ * 2019. 11. 7.     최서희            최초작성
+ * 2019. 11. 10.    최서희            주문결제 기능 구현
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+public class OrderDAOImpl implements IOrderDAO{
+	@Inject
+	SqlSessionTemplate sqlSession;
+	
+	@Override
+	public List<String> selectOrderIdList(Order2VO order) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		return mapper.selectOrderIdList(order);
+	}
+
+	@Override
+	public int selectOrderCount(PagingInfoVO<Order2VO> pagingVO) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		return mapper.selectOrderCount(pagingVO);
+	}
+
+	@Override
+	public List<Order2VO> selectOrderList(PagingInfoVO<Order2VO> pagingVO) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		return mapper.selectOrderList(pagingVO);
+	}
+
+	@Override
+	public Order2VO selectOrder(String orderId) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		return mapper.selectOrder(orderId);
+	}
+
+	@Override
+	public int insertOrder(Order2VO order) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		int cnt = mapper.insertOrder(order);
+		sqlSession.commit();
+		return cnt;
+	}
+
+	@Override
+	public int insertOrderDetail(Order2VO order) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		int cnt = mapper.insertOrderDetail(order);
+		return cnt;
+	}
+	
+	@Override
+	public int insertPayment(Order2VO order) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		int cnt = mapper.insertPayment(order);
+		return cnt;
+	}
+	
+	@Override
+	public int updateOrder(Order2VO order) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		int cnt = mapper.updateOrder(order);
+		sqlSession.commit();
+		return cnt;
+	}
+
+	@Override
+	public int deleteOrder(String orderId) {
+		IOrderDAO mapper = sqlSession.getMapper(IOrderDAO.class);
+		int cnt = mapper.deleteOrder(orderId);
+		sqlSession.commit();
+		return cnt;
+	}
+
+
+}

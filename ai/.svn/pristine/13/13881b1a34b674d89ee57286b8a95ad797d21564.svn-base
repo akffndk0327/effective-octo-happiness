@@ -1,0 +1,131 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 최서희
+ * @since 2019. 11. 17.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 17.      최서희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+.filterTable{
+	width : 100%;
+}
+.filterTable input{
+	width : 120px;
+	height : 30px;
+}
+.mainTable{
+	margin : auto;
+	margin-top : 20px;
+	min-height : 250px;
+	width : 100%;
+	border-top : 1px solid #ddd;
+	border-bottom : 1px solid #ddd;
+}
+.mainTable td{
+	min-height : 50px;
+	vertical-align : middle;
+	border-top : 1px solid #ddd;
+	border-bottom : 1px solid #ddd;
+}
+.mainTable th{
+	height : 45px;
+}
+.oneTd{
+	width : 60%;
+}
+.blank{
+	width : 10%;
+}
+.blankCenter{
+	width : 50%;
+}
+.title{
+	width : 100%;
+	margin-top : 30px;
+	margin-bottom : 30px;
+	border-left : 8px solid #90c322;
+	padding : 3px;
+	font-size : 25px;
+	font-weight : bold;
+	color : #077B5F;
+}
+.filterTable a, #search{
+	cursor : pointer;
+	font-size : 15px;
+}
+.filterTable a:hover{
+	background: #90c322;
+	color: #fff;
+}
+
+#pagingArea{
+	text-align : center;
+	margin-top : 40px;
+	margin-bottom : 70px;
+}
+.btn{
+	background: #90c322;
+	color: #fff;
+	font-size: 14px;
+	border: 1px solid #90c322;
+	padding : 1px;
+	cursor : pointer;
+	width : 100px;
+}
+.btn:hover{
+	background: #fff;
+	color: #90c322;
+	font-size: 14px;
+	border: 1px solid #90c322;
+}
+.a{
+	color:blue;
+	cursor : pointer;
+	text-decoration: underline;
+}
+.center{
+	text-align : center;
+}
+.noList{
+	text-align : center;
+	font-size : 18px;
+}
+.dtTable {
+	width : 100%;
+	min-height : 40px;
+}
+.dtTable td{
+	border : 0px;
+	min-height : 45px;
+}
+.prodName{
+	width : 63%;
+}
+.prodQty{
+	width : 13%;
+	text-align : center;
+}
+.prodPrice{
+	width : 20%;
+	text-align : right;
+}
+.long{
+	width : 350px;
+}
+.short{
+	width : 100px;
+	text-align : center;
+}
+.middle{
+	width : 100px;
+	text-align : right;
+	
+}

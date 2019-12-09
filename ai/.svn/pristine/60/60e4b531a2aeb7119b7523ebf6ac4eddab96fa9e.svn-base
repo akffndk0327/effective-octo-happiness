@@ -1,0 +1,100 @@
+package kr.or.ddit.mypage.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mypage.dao.IAdminMypageDAO;
+import kr.or.ddit.vo.CompanyVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+@Service
+public class AdminMypageServiceImpl implements IAdminMypageService {
+
+	@Inject
+	IAdminMypageDAO adminDAO;
+	
+	@Override
+	public List<MemberVO> retrieveMemberList(PagingInfoVO<MemberVO> pagingVO) {
+		return adminDAO.selectMemberList(pagingVO);
+	}
+
+	@Override
+	public MemberVO retrieveMember(MemberVO member) {
+		return adminDAO.selectMember(member);
+	}
+
+	@Override
+	public List<CompanyVO> retrieveCompanyList(PagingInfoVO<CompanyVO> pagingVO) {
+		return adminDAO.selectCompanyList(pagingVO);
+	}
+
+	@Override
+	public int retrieveMemberCount(PagingInfoVO<MemberVO> pagingVO) {
+		return adminDAO.selectMemberCount(pagingVO);
+	}
+
+	@Override
+	public int selectWindowChrome() {
+		return adminDAO.selectWindowChrome();
+	}
+
+	@Override
+	public int selectLinuxChrome() {
+		return adminDAO.selectLinuxChrome();
+	}
+
+	@Override
+	public int selectTheOthersChrome() {
+		return adminDAO.selectTheOthersChrome();
+	}
+
+	@Override
+	public int selectWindowFireFox() {
+		return adminDAO.selectWindowFireFox();
+	}
+
+	@Override
+	public int selectLinuxFireFox() {
+		return adminDAO.selectLinuxFireFox();
+	}
+
+	@Override
+	public int selectTheOthersFireFox() {
+		return adminDAO.selectTheOthersFireFox();
+	}
+
+	@Override
+	public int selectWindowExp() {
+		return adminDAO.selectWindowExp();
+	}
+
+	@Override
+	public int selectLinuxExp() {
+		return adminDAO.selectLinuxExp();
+	}
+
+	@Override
+	public int selectTheOthersExp() {
+		return adminDAO.selectTheOthersExp();
+	}
+
+	@Override
+	public int selectWindowEtc() {
+		return adminDAO.selectWindowEtc();
+	}
+
+	@Override
+	public int selectLinuxEtc() {
+		return adminDAO.selectLinuxEtc();
+	}
+
+	@Override
+	public int selectTheOthersEtc() {
+		return adminDAO.selectTheOthersEtc();
+	}
+
+}

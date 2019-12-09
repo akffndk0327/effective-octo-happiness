@@ -1,0 +1,17 @@
+package kr.or.ddit.survey.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class SurveyInsertController {
+	@RequestMapping("survey/surveyInsert.do")
+	public String surveyInsert() {
+		return "survey/surveyForm";
+	}
+	
+	@RequestMapping("survey/surveyResponse.do")
+	public String surveyResponse() {
+		return "survey/surveyList.do";
+	}
+}

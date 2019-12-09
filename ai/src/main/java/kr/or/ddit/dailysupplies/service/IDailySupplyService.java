@@ -1,0 +1,54 @@
+package kr.or.ddit.dailysupplies.service;
+
+import java.util.List;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.vo.BioCheProVO;
+import kr.or.ddit.vo.BiochemisVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+public interface IDailySupplyService {
+	/**
+	 * 페이징
+	 * @param pagingVO
+	 * @return
+	 */
+	public int retrieveDSCount(PagingInfoVO<BioCheProVO> pagingVO);
+	/**
+	 * 목록조회
+	 * @param pagingVO
+	 * @return
+	 */
+	public List<BioCheProVO> retrieveDSList(PagingInfoVO<BioCheProVO> pagingVO);
+	/**
+	 * 생활용품상세보기 
+	 * @param news
+	 * @return
+	 */
+	public BioCheProVO retrieveDS(BioCheProVO dsPro); //생활용품 상세보기
+	/**
+	 * 생활용품 등록
+	 * @param news
+	 * @return
+	 */
+	public ServiceResult insertDS(BioCheProVO dsPro);
+	/**
+	 * 생활용품 수정
+	 * @param news
+	 * @return
+	 */
+	public ServiceResult modifyDS(BioCheProVO dsPro);
+	
+	/**
+	 * 화학성분 리스트
+	 * @param biochemi
+	 */
+	public List<BiochemisVO> biocheList(BiochemisVO biochemi);
+	
+	/**
+	 * Insert를 하기 위한 생활용품 maxValue
+	 */
+	public String retrieveMaxDSId();
+	
+	
+}

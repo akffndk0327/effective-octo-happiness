@@ -1,0 +1,19 @@
+package kr.or.ddit.member.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.CallEvent;
+import com.nexmo.client.voice.VoiceName;
+import com.nexmo.client.voice.ncco.Ncco;
+import com.nexmo.client.voice.ncco.TalkAction;
+
+@Controller
+@RequestMapping("/ars/verify.do")
+public class ARSController {
+		
+	
+}

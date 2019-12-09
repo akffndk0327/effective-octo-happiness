@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--                  -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 10.     박주연     최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.advertise.dao.IAdvertiseDAO">
+<select id="selectAdCount" parameterType="PagingInfoVO" resultType="int" >
+	SELECT COUNT(*) FROM ADVERTISE
+</select>
+<select id="selectadAdList" parameterType="PagingInfoVO" resultType="AdvertiseVO">
+	 SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		            AD_ID, AD_TITLE, MEM_ID, AD_INDATE, AD_TERM, AD_APPROVE
+		        FROM ADVERTISE
+		    ) A
+		) B
+	WHERE RNUM BETWEEN #{startRow} AND #{endRow} AND MEM_ID=#{memId}
+</select>
+<select id="selectAd" parameterType="AdvertiseVO" resultType="AdvertiseVO">
+	SELECT 
+		AD_TITLE, MEM_ID, AD_INDATE
+	FROM ADVERTISE
+	WHERE MEM_ID=${memId}
+
+</select>
+
+<insert id ="insertAd" parameterType="int">
+
+</insert>
+
+<update id="updateAd" parameterType="int">
+	
+</update>
+
+
+
+</mapper>

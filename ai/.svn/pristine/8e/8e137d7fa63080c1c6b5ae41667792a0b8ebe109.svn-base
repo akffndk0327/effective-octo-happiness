@@ -1,0 +1,349 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 7.      박주연      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<!-- Datepicker 한국어로 변환 -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/datepicker-ko.js"></script>
+
+<div id="InnerContainer">
+	<h2>[내가 신청한 광고]</h2>
+	<h3>${advertise.adTitle }</h3>
+	<c:set var="adView" value="${advertiseVO.dataList }">
+		<table border="0" cellpadding="0" cellspacing="0" class="Write">
+			<caption>신청자 정보</caption>
+			<colgroup>
+				<col width="20%">
+				<col width="">
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row">제목</th>
+					<td><span class="Bold"><span></td>
+				</tr>
+				<tr>
+					<th scope="row">행사명</th>
+					<td><span class="Bold">제23회 학술대회</span></td>
+				</tr>
+				<tr>
+					<th scope="row">* 회사명</th>
+					<td><div class="FloatLeft">
+							<select name="CompanyName" autofocus="" id="CompanyName"
+								onchange="setCompanyName();">
+								<option value="">선택</option>
+								<option value="BMS">BMS</option>
+								<option value="CJ헬스케어">CJ헬스케어</option>
+								<option value="CMG제약">CMG제약</option>
+								<option value="GSK">GSK</option>
+								<option value="GE헬스케어 코리아">GE헬스케어 코리아</option>
+								<option value="HDX">HDX</option>
+								<option value="JW중외신약">JW중외신약</option>
+								<option value="JW중외제약">JW중외제약</option>
+								<option value="KMS제약">KMS제약</option>
+								<option value="LG생명과학">LG생명과학</option>
+								<option value="LG화학">LG화학</option>
+								<option value="MSD">MSD</option>
+								<option value="SG헬스케어">SG헬스케어</option>
+								<option value="SK바이오사이언스">SK바이오사이언스</option>
+								<option value="SK케미칼">SK케미칼</option>
+								<option value="가본의학서적">가본의학서적</option>
+								<option value="건일제약">건일제약</option>
+								<option value="경동제약">경동제약</option>
+								<option value="고려제약">고려제약</option>
+								<option value="광동제약">광동제약</option>
+								<option value="국제약품">국제약품</option>
+								<option value="근화제약">근화제약</option>
+								<option value="길리어드">길리어드</option>
+								<option value="넥스팜코리아">넥스팜코리아</option>
+								<option value="노바티스">노바티스</option>
+								<option value="노보노디스크">노보노디스크</option>
+								<option value="녹십자">녹십자</option>
+								<option value="다림양행">다림양행</option>
+								<option value="대우제약">대우제약</option>
+								<option value="대웅제약">대웅제약</option>
+								<option value="대원제약">대원제약</option>
+								<option value="대한뉴팜">대한뉴팜</option>
+								<option value="대한의학서적">대한의학서적</option>
+								<option value="대화제약">대화제약</option>
+								<option value="도시바">도시바</option>
+								<option value="도체오">도체오</option>
+								<option value="동광제약">동광제약</option>
+								<option value="동국제약">동국제약</option>
+								<option value="동아ST">동아ST</option>
+								<option value="동아ST(의료기기)">동아ST(의료기기)</option>
+								<option value="동화약품">동화약품</option>
+								<option value="릴리">릴리</option>
+								<option value="머크">머크</option>
+								<option value="메디안북">메디안북</option>
+								<option value="메디코리아">메디코리아</option>
+								<option value="메디코아">메디코아</option>
+								<option value="메디피아">메디피아</option>
+								<option value="명문제약">명문제약</option>
+								<option value="명인제약">명인제약</option>
+								<option value="바이넥스">바이넥스</option>
+								<option value="바이엘코리아">바이엘코리아</option>
+								<option value="보람제약">보람제약</option>
+								<option value="보령제약">보령제약</option>
+								<option value="부광약품">부광약품</option>
+								<option value="브라코이미징코리아">브라코이미징코리아</option>
+								<option value="사노피아벤티스">사노피아벤티스</option>
+								<option value="삼성메디슨">삼성메디슨</option>
+								<option value="삼아제약">삼아제약</option>
+								<option value="삼익제약">삼익제약</option>
+								<option value="삼일제약">삼일제약</option>
+								<option value="삼진제약">삼진제약</option>
+								<option value="삼천당제약">삼천당제약</option>
+								<option value="삼호이에스티">삼호이에스티</option>
+								<option value="서울제약">서울제약</option>
+								<option value="소노엠">소노엠</option>
+								<option value="송림메디칼">송림메디칼</option>
+								<option value="수산씨엠씨">수산씨엠씨</option>
+								<option value="신기사">신기사</option>
+								<option value="신풍제약">신풍제약</option>
+								<option value="셀트리온제약">셀트리온제약</option>
+								<option value="씨젠의료재단">씨젠의료재단</option>
+								<option value="아스텔라스">아스텔라스</option>
+								<option value="아스트라제네카">아스트라제네카</option>
+								<option value="아주약품">아주약품</option>
+								<option value="안국약품">안국약품</option>
+								<option value="알리코제약">알리코제약</option>
+								<option value="알보젠코리아">알보젠코리아</option>
+								<option value="알피니언">알피니언</option>
+								<option value="애보트">애보트</option>
+								<option value="얀센">얀센</option>
+								<option value="에스엔에이치">에스엔에이치</option>
+								<option value="에크미메디칼">에크미메디칼</option>
+								<option value="에프앤디넷">에프앤디넷</option>
+								<option value="엔도웍스">엔도웍스</option>
+								<option value="엔도메딕스">엔도메딕스</option>
+								<option value="엘자산관리본부">엘자산관리본부</option>
+								<option value="엠씨씨">엠씨씨</option>
+								<option value="영진약품">영진약품</option>
+								<option value="오스테오시스">오스테오시스</option>
+								<option value="올림푸스한국">올림푸스한국</option>
+								<option value="울트라코리아">울트라코리아</option>
+								<option value="원익">원익</option>
+								<option value="위더스제약">위더스제약</option>
+								<option value="윈인터내셔널:유럽초음파">윈인터내셔널:유럽초음파</option>
+								<option value="유니메드제약">유니메드제약</option>
+								<option value="유영제약">유영제약</option>
+								<option value="유유제약">유유제약</option>
+								<option value="유한양행">유한양행</option>
+								<option value="이브메디칼">이브메디칼</option>
+								<option value="이연제약">이연제약</option>
+								<option value="인벤티브헬스코리아">인벤티브헬스코리아</option>
+								<option value="인솔주식회사">인솔주식회사</option>
+								<option value="인포피아">인포피아</option>
+								<option value="일동제약">일동제약</option>
+								<option value="일성신약">일성신약</option>
+								<option value="일양약품">일양약품</option>
+								<option value="일화제약">일화제약</option>
+								<option value="자이언트스타">자이언트스타</option>
+								<option value="제일약품">제일약품</option>
+								<option value="조양메디칼 인터스트리">조양메디칼 인터스트리</option>
+								<option value="조인메디칼">조인메디칼</option>
+								<option value="종근당">종근당</option>
+								<option value="진양제약">진양제약</option>
+								<option value="코비디엔:세진메디칼">코비디엔:세진메디칼</option>
+								<option value="코오롱제약">코오롱제약</option>
+								<option value="태준제약">태준제약</option>
+								<option value="파마킹">파마킹</option>
+								<option value="퍼슨">퍼슨</option>
+								<option value="포유메디">포유메디</option>
+								<option value="페링제약">페링제약</option>
+								<option value="펜탁스메디컬">펜탁스메디컬</option>
+								<option value="필립스">필립스</option>
+								<option value="하나제약">하나제약</option>
+								<option value="한국다케다제약">한국다케다제약</option>
+								<option value="한국로슈">한국로슈</option>
+								<option value="한국로슈진단">한국로슈진단</option>
+								<option value="한국먼디파마">한국먼디파마</option>
+								<option value="한국메나리니">한국메나리니</option>
+								<option value="한국세르비에">한국세르비에</option>
+								<option value="한국슈넬">한국슈넬</option>
+								<option value="한국에자이">한국에자이</option>
+								<option value="한국유나이티드제약">한국유나이티드제약</option>
+								<option value="한국의학서적">한국의학서적</option>
+								<option value="한국콜마">한국콜마</option>
+								<option value="한국파마">한국파마</option>
+								<option value="한국팜비오">한국팜비오</option>
+								<option value="한국프라임제약">한국프라임제약</option>
+								<option value="한국화이자제약">한국화이자제약</option>
+								<option value="한독약품">한독약품</option>
+								<option value="한독테바">한독테바</option>
+								<option value="한림제약">한림제약</option>
+								<option value="한림MS">한림MS</option>
+								<option value="한미약품">한미약품</option>
+								<option value="한올바이오파마">한올바이오파마</option>
+								<option value="한화제약">한화제약</option>
+								<option value="환인제약">환인제약</option>
+								<option value="현대약품">현대약품</option>
+								<option value="휴온스">휴온스</option>
+								<option value="히타치아로카메디칼한국">히타치아로카메디칼한국</option>
+								<option value="힐세리온">힐세리온</option>
+								<option value="기타">기타</option>
+							</select>
+						</div>
+						<div id="CNEtc" class="FloatLeft" style="display: none;">
+							&nbsp;&nbsp; 기타 : <input type="text" class="INP100"
+								name="CompanyNameEtc">
+						</div> &nbsp;※ 편의상 회사명에 '주식회사', '(주)' 등은 제외하였습니다.</td>
+				</tr>
+				<tr>
+					<th scope="row">* 성 명</th>
+					<td><input type="text" name="Name" value="" class="INP100"></td>
+				</tr>
+				<tr>
+					<th scope="row">* 패스워드</th>
+					<td><input type="Password" name="Password" value=""
+						class="INP100"></td>
+				</tr>
+				<tr>
+					<th scope="row">추천인</th>
+					<td><input type="text" class="INP100" name="ChuCheon">
+						※ 추천하신 이사님의 성함을 기입부탁드립니다.</td>
+				</tr>
+				<tr>
+					<th scope="row">* 핸드폰번호</th>
+					<td><select name="Handphone1">
+							<option value="">선택</option>
+							<option value="010">010</option>
+							<option value="011">011</option>
+							<option value="016">016</option>
+							<option value="017">017</option>
+							<option value="018">018</option>
+							<option value="019">019</option>
+					</select> - <input type="text" class="INP50" maxlength="4" name="Handphone2">
+						- <input type="text" class="INP50" maxlength="4" name="Handphone3"></td>
+				</tr>
+				<tr>
+					<th scope="row">* 전화번호</th>
+					<td><select name="Tel1">
+							<option value="">선택</option>
+							<option value="02">02</option>
+							<option value="031">031</option>
+							<option value="032">032</option>
+							<option value="033">033</option>
+							<option value="041">041</option>
+							<option value="042">042</option>
+							<option value="043">043</option>
+							<option value="051">051</option>
+							<option value="052">052</option>
+							<option value="053">053</option>
+							<option value="054">054</option>
+							<option value="055">055</option>
+							<option value="061">061</option>
+							<option value="062">062</option>
+							<option value="063">063</option>
+							<option value="064">064</option>
+							<option value="070">070</option>
+					</select> - <input type="text" class="INP50" maxlength="4" name="Tel2">
+						- <input type="text" class="INP50" maxlength="4" name="Tel3"></td>
+				</tr>
+				<tr>
+					<th scope="row">팩스번호</th>
+					<td><select name="Fax1">
+							<option value="" selected="">선택</option>
+							<option value="02">02</option>
+							<option value="031">031</option>
+							<option value="032">032</option>
+							<option value="033">033</option>
+							<option value="041">041</option>
+							<option value="042">042</option>
+							<option value="043">043</option>
+							<option value="051">051</option>
+							<option value="052">052</option>
+							<option value="053">053</option>
+							<option value="054">054</option>
+							<option value="055">055</option>
+							<option value="061">061</option>
+							<option value="062">062</option>
+							<option value="063">063</option>
+							<option value="064">064</option>
+							<option value="0505">0505</option>
+					</select> - <input type="text" class="INP50" name="Fax2" maxlength="4">
+						- <input type="text" class="INP50" name="Fax3" maxlength="4"></td>
+				</tr>
+				<tr>
+					<th scope="row">* 이메일</th>
+					<td><input name="EmailA" type="text" class="INP100" value=""
+						style="ime-mode: disabled"> @ <input name="EmailB"
+						type="text" class="INP150" id="email_1" value=""
+						style="ime-mode: disabled"> <select name="record_email"
+						id="record_email" onchange="EmailValue(this.value)">
+							<option value="">직접 입력</option>
+							<option value="daum.net">daum.net</option>
+							<option value="gmail.com">gmail.com</option>
+							<option value="hanmail.net">hanmail.net</option>
+							<option value="hotmail.com">hotmail.com</option>
+							<option value="nate.com">nate.com</option>
+							<option value="naver.com">naver.com</option>
+							<option value="paran.com">paran.com</option>
+							<option value="yahoo.co.kr">yahoo.co.kr</option>
+					</select></td>
+				</tr>
+				<tr>
+					<th scope="row">* 주 소</th>
+					<td>
+						<p class="Bottom3">
+							<input name="post" type="text" readonly="" class="INP100">
+							<img src="/3.0/images/member/member_join_icon_zip.png" alt="필수입력"
+								width="76" height="22" onclick="Addr('1'); return false;"
+								style="cursor: pointer;">
+						</p>
+						<p class="Bottom3">
+							<input name="address" type="text" class="INP200">
+						</p>
+						<p>
+							<input name="address2" type="text" class="INP200">
+						</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<table border="1px soild black">
+			<tr>
+				<td>제목</td>
+				<td>${advertise.adTitle }</td>
+				<td>작성자</td>
+				<td>${advertise.memId }</td>
+			</tr>
+			<!-- 			<tr> -->
+			<!-- 			</tr> -->
+			<tr>
+				<td>광고 시작 날짜</td>
+				<td>${advertise.adIndate }</td>
+			</tr>
+			<tr>
+				<td>광고 종료 날짜</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>이동 URL</td>
+				<td>${advertise.adLink }</td>
+			</tr>
+			<tr>
+				<td>위치</td>
+				<td>
+					<div id="location"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>첨부파일</td>
+				<td>${adattatchList.adattSavename }</td>
+			</tr>
+		</table>
+</div>
+

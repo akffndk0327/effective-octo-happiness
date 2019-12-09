@@ -1,0 +1,65 @@
+ let weight = 5,   // change me
+        width = 800,
+        height = 500;
+
+
+//    let fill = d3.scale.category20();
+    d3.json(cPath+"/memMypage/memAllergyList.do").then(function(data){
+		console.log(data);
+		
+		showCloud(data);
+	});
+
+    function showCloud (data){
+    	 d3.layout.cloud().size([width, height]).words(data)
+         .rotate(0)
+         .font("Impact")
+         .fontSize(function(d) { return 23; })
+         .on("end", draw)
+         .start();
+
+       function draw(words) {
+//       	let zoom = d3.behavior.zoom();
+           d3.select("#allergyPosition").append("svg")
+             .attr("width", width)
+             .attr("height", height)
+           .append("g")
+             .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
+           .selectAll("text")
+             .data(words) 
+           .enter().append("text")
+             .style("font-size", function(d) { 
+            	 let weight = d.allergy.allergySymtom.symStrength;
+                 
+                 return (weight? weight*23:0) + "px"; })
+
+             .style("font-family", "Impact")
+//             .style("color", "red")
+             .attr("class", "allInfo")
+             .style("fill", function(d){
+//            	 console.log(d);
+            	 return d.allergy.allergySymtom.symColor})
+             .attr("text-anchor", "middle")
+             .attr("transform", function(d) {
+               return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+             })
+           .text(function(d) { return d.allergy.allName +'-'+d.allergy.allergySymtom.symName; })
+           .on("click", function(d){
+        	    let thisOne = $(this);
+	    		$.ajax({
+	    			url : cPath+"/memMypage/memAllergyDelete.do",
+	    			method : "post",
+	    			data : {"memId" : d.memId,
+	    					"allId" : d.allergy.allId},
+	    			dataType : "json",
+	    			success : function(resp) {
+	    				thisOne.remove();
+	    			},
+	    			error : function(xhr) {
+	    				console.log(xhr.status);
+	    			}
+	    		});
+           });
+       }
+    }
+    

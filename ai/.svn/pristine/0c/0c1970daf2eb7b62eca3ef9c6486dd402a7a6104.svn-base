@@ -1,0 +1,96 @@
+package kr.or.ddit.advertise.controller;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kr.or.ddit.advertise.service.IAdvertiseService;
+import kr.or.ddit.vo.AdvertiseVO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.ProdVO;
+
+@Controller
+@RequestMapping("/advertise")
+public class AdvertiseRetrieveController {
+	@Inject
+	IAdvertiseService service;
+	
+	@Inject
+	WebApplicationContext container;
+	ServletContext application;
+
+	@PostConstruct
+	public void init() {
+		application = container.getServletContext();
+	}
+	
+	@RequestMapping("adList.do")
+	public String AdvertiseList( 
+		@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
+		@RequestParam(required=true) String what, Model model
+			) {
+		System.err.println(what);
+		PagingInfoVO<AdvertiseVO> pagingVO = new PagingInfoVO<AdvertiseVO>(10, 5);
+		int totalRecord = service.retrieveAdCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		pagingVO.setPk(what);
+		List<AdvertiseVO> list = service.retrieveAdList(pagingVO);
+		pagingVO.setDataList(list);
+		model.addAttribute("pagingVO", pagingVO);
+		
+		return "advertise/adList";
+
+	}
+	
+	@RequestMapping(value="adList.do", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public PagingInfoVO<AdvertiseVO> selectadListAjax(
+			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage, 
+			@RequestParam(required=true) String what,
+			Model model) {
+		AdvertiseList(currentPage, what, model);
+		return (PagingInfoVO<AdvertiseVO>) model.asMap().get("pagingVO");
+	}
+	
+	
+	
+	@RequestMapping("adView.do")
+	public String AdvertiseView(  
+			@RequestParam(required=true) int adNo, 
+			Model model	) {
+		AdvertiseVO advertise = service.retrieveAd(new AdvertiseVO (adNo));
+		model.addAttribute("advertise",advertise);
+		return "advertise/adView";
+	}
+	
+	//관리자
+	@RequestMapping("adViewAdmin.do")
+	public String AdminAdView(
+			@RequestParam(required=true) int what,
+			Model model	){
+		AdvertiseVO advertise = service.retrieveAd(new AdvertiseVO(what));
+		model.addAttribute("advertise",advertise);
+		
+		return "advertise/adViewAdmin";
+	}
+	
+}

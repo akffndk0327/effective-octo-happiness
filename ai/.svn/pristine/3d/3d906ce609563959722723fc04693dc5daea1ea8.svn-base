@@ -1,0 +1,41 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 6.   허민지      최초작성
+* 2019. 11. 7.   허민지      로그인 상태 제거
+* 2019. 11. 11	 박주연	css 수정 
+* 2019. 11. 12	박주연	메인슬라이드 구현
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<link rel="stylesheet" href="${cPath }/css/index.css">
+<script src="${cPath }/js/index.js"></script>
+<style>
+#InnerContainer {
+	height: 800px;
+}
+
+img {
+	width: 100%;
+	height: 100%
+}
+</style>
+
+<div id="InnerContainer">
+	<div id="slider">
+		<a href="#" class="control_next">></a> 
+		<a href="#" class="control_prev"> < </a>
+		<ul>
+			<li><img src="${cPath }/images/peng.jpg" class="mainImage"/></li>
+			<li><img src="${cPath }/images/peng1.jpg"/></li>
+			<li><img src="${cPath }/images/peng3.jpg"/></li>
+			<li><img src="${cPath }/images/peng4.jpg"/></li>
+		</ul>
+	</div>
+		<div class="slider_option">
+			<input type="checkbox" id="checkbox"> 
+		</div>
+
+</div>

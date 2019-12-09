@@ -1,0 +1,89 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 6.      이유진      최초작성
+* 2019. 11. 14.      이유진      상세보기 수정
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+    
+    
+<div id="InnerContainer">
+<h3>${survey.subName }</h3>
+<table class="table">
+<!--     <tr class="Default"> -->
+<%--         <td><h6>${survey.surPurpose }<br>${survey.surContent }</td> --%>
+<!--     </tr> -->
+
+    
+    <tr class="Default">
+        <td><h6>${survey.surLead }</h6><td>
+    </tr>
+    
+<form id="SurveyResultVO" name="SurveyResultVO" action="${cPath }/survey/surveyReponse.do" method="post">
+    <c:forEach items="${survey.questionList }" var="question" varStatus="v">
+    
+	    <tr class="success"> <!-- 질문 -->
+	        <td><h6>*&nbsp;&nbsp;&nbsp; ${question.questCont   }</h6>
+	           <input type="hidden" name="list[${v.index}].questId" value="${question.questId }">
+	           <input type="hidden" name="list[${v.index}].surId" value="${question.surveyId }">
+	           
+	    <c:if test="${question.questType eq 'token'}"> <!-- 주관식일때 -->
+	           <input type="text" name="list[${v.index}].tokenResult" required class="form-control"></td>
+	       </tr>
+	    </c:if>
+	    
+	    <c:if test="${question.questType eq 'example'}"> <!-- 객관식일때-->
+	            <p class="radio-group" style="font-size: 17px;">
+		            <c:forEach items="${question.exampleList }" var="example"> <!-- 답변 for문 -->
+		                <input type="radio"  value="${example.examId }" name="${example.questionId }" required /> ${example.examCont}<br>
+		            </c:forEach>
+		                <input type="hidden" name="list[${v.index}].examId" class="example">
+	            </p>
+             </td>
+           </tr>
+        </c:if>
+        
+         
+    </c:forEach>
+</table>
+    <input type="button" class="btn btnAi0" value="확인" id="gogo">
+    <input type="button" class="btn btnAi1" value="취소" onclick="history.back();">
+<%--     <c:if test="">  --%>
+        <input type="button" class="btn btnAi1" value="삭제" id="delete">
+        <input type="button" class="btn btnAi1" value="수정" id="modi">
+<%--     </c:if> --%>
+
+<%--     <c:if test="">  --%>
+            <c:url value="/survey/surveyResult.do" var="ResultURL">
+                <c:param name="sur" value="${survey.surId}" />
+            </c:url>
+            <input type="button" class="btn btnAi1" value="통계보기" onclick="location.href='${ResultURL}';">
+<%--     </c:if> --%>
+</form>    
+
+</div>
+
+<script>
+      $('#gogo').on("click",function(){
+	
+	    var radio_name = [];//array
+		var raido_name_val = {};//object
+		var radio = $("input[type=radio]"); //라디오 정보를 가져옵니다.
+		console.log(radio);
+		
+		
+		$.each(radio, function (key, value) { // input radio의 name 값을 가져옵니다.
+			if($(value).prop("checked")){
+				$(this).siblings('.example').val($(this).val());
+			}
+		});
+
+	    $('#SurveyResultVO').submit();
+
+      })
+</script>

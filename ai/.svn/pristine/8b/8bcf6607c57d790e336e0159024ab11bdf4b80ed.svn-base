@@ -1,0 +1,110 @@
+package kr.or.ddit.member.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.poi.util.StringUtil;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.member.dao.IMemberDAO;
+import kr.or.ddit.vo.AllergyVO;
+import kr.or.ddit.vo.ComInfoVO;
+import kr.or.ddit.vo.CompanyVO;
+import kr.or.ddit.vo.MemberVO;
+
+/**
+ * @author 허민지
+ * @since 2019. 11. 9.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 5.      허민지       최초작성
+ * 2019. 11. 9       허민지       create 추가
+ * 2019. 11
+ * 2019. 11. 12.     허민지	 retrieveCompany 추가
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Service("memberService")
+public class MemberServiceImpl implements IMemberService {
+
+	@Inject
+	private IMemberDAO memberDAO;
+	
+//	@Inject
+//	private IAuthenticateService service;
+	
+	@Override
+	public MemberVO retrieveMember(MemberVO member) {
+		return memberDAO.selectMember(member);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult createMember(MemberVO member) {
+		ServiceResult result = null;
+		if("".equals(member.getAllId())) {
+			member.setAllId(null);
+		}
+		if(memberDAO.selectMember(member)==null) {
+			int cnt = memberDAO.insertAccount(member);
+			cnt += memberDAO.insertMember(member);
+			if(cnt > 3) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}else {
+			result = ServiceResult.PKDUPLICATED;
+		}
+		return result;
+	}
+
+	
+	@Override
+	public List<String> retrieveListAllergy() {
+		return memberDAO.selectAllergyList();
+	}
+
+	@Override
+	public List<String> retrieveSytomsList() {
+		return memberDAO.selectSytomsList();
+	}
+
+
+	@Override
+	public ComInfoVO retrieveCompanyForSignUp(String comNum) {
+		System.out.println(memberDAO.selectCompanyForSignUp(comNum));
+		return memberDAO.selectCompanyForSignUp(comNum);
+	}
+
+	@Override
+	public CompanyVO retrieveCompany(CompanyVO company) {
+		return memberDAO.selectCompany(company);
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult createCompany(CompanyVO company) {
+		ServiceResult result = null;
+		if(memberDAO.selectCompany(company)!=null) {
+			int cnt = memberDAO.insertAccount(company);
+			cnt += memberDAO.insertCompany(company);
+			if(cnt > 3) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}else {
+			result = ServiceResult.PKDUPLICATED;
+		}
+		return result;
+	}
+}

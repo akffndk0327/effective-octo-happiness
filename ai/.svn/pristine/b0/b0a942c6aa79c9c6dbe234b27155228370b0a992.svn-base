@@ -1,0 +1,24 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of="cartId")
+public class CartVO implements Serializable{
+	private String cartId;
+	private String prodId;
+	private String memId;
+	private int cartQty;
+	private String cartIndate;
+	private String prodDelivery; 
+	private int orderPrice; //prodId*cartQty
+	private int payPrice; //(prodId*cartQty)+prodDelivery 
+	
+	private ProdVO prod;
+	private CompanyVO company;
+}

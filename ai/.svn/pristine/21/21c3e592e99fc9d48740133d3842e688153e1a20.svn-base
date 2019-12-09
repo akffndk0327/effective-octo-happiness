@@ -1,0 +1,103 @@
+@charset "UTF-8";
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 허민지
+ * @since 2019. 11. 14.
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        		   수정자          수정내용
+ * --------     	--------    ----------------------
+ * 2019. 11. 14.      허민지          최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */ 
+@import url(https://fonts.googleapis.com/css?family=Karla);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:300);
+
+#letter{
+	font-size:62px;
+}
+.wrap{
+/*   padding:120px 0; */
+/*   font-size:62px; */
+  color:#888;
+  width:400px;
+  font-family:'Karla';
+  margin:0 auto;
+  text-align:center;
+  padding-top: 30px;
+  padding-bottom: 150px;
+}
+
+input{
+  font-family:'Ubuntu';
+  font-weight:300;
+  border:0;
+  border-bottom:1px solid #90c322;
+  width:100%;
+  height:36px;
+  font-size:26px;
+}
+
+input:focus{
+  outline:none;
+  box-shadow:none;
+  background:#ffeae2;
+}
+
+.loginBtn{
+  border:0;
+  background:gray;
+  padding:10px;
+  margin-top:30px;
+  position:relative;
+  outline:0;
+  font-size: 20px;
+  margin-left : -20px;
+}
+
+.buttonafter:after{
+content:'';
+display:block;
+position:absolute;
+top:8px;
+left:100%; /*should be set to 100% */
+width:0;
+height:0;
+border-color: transparent transparent transparent #14a03d; /*border color should be same as div div background color*/
+border-style: solid;
+border-width: 5px;
+
+}
+
+.forgot{
+  background:#a0a0a0;
+  color:#fff;
+  float:left;
+}
+
+.login{
+  background:#a0a0a0;
+  color:#fff;
+  float:right;
+  margin-top:72px;
+  margin-left:30px;
+}
+
+.login.buttonafter {
+    background:#14a03d;
+}
+
+#saveId{
+	width: 20px;
+    float: left;
+	margin-top: 10px;
+}
+#idspan{
+  float: left;
+  margin-top: 14px;
+}
+

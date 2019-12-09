@@ -1,0 +1,59 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* 2019. 11. 7   허민지     마이페이지 눌렀을때 마이페이지 메뉴들 추가
+*					    밑에 기업 마이페이지 주석처리
+* ----------  ---------  -----------------
+* 2019. 11. 1.      박주연      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+
+<link rel="stylesheet" href="${cPath }/css/comleft.css"><div class="titleTopBar">
+<style>
+.input{
+	border: 0;
+    border-bottom: 1px solid #90c322;
+}
+</style>
+<li id="ComTitle">마이페이지</li>
+</div>
+	<ul>
+		<li data-toggle="modal" class="leftli"
+         data-target="#exampleModal"><a>회원정보수정</a></li>
+		<li class="leftli"><a href="${cPath }/order/orderEmpList.do" id="comCart">주문관리</a></li>
+		<li class="leftli"><a href="${cPath }/prod/prodInsert.do" id="comProdInsert">신규상품등록</a></li>
+		<li class="leftli"><a href="${cPath }/prod/prodEmpList.do" id="comProd">판매상품관리</a></li>
+		<li class="leftli"><a href="${cPath }/advertise/adList.do" id="comAdv">광고 관리 </a></li>
+	</ul>
+
+<!-- Modal -->
+<!-- 회원 정보 수정 들어가기 위한 비밀번호 확인 Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">회원정보 수정</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" style="text-align:center">
+				<form action="${cPath}/member/checkPassForUpdate.do" method="post">
+				   <div>비밀번호 확인 : &nbsp;
+	               		<input name="memPass" class="input" type="password" />           
+               	   </div>
+			</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btnAi1"
+						data-dismiss="modal">취소</button>
+					<button type="submit" class="btn btnAi0">확인</button>
+				</div>
+				</form>
+		</div>
+	</div>
+</div>

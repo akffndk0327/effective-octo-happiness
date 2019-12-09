@@ -1,0 +1,20 @@
+package kr.or.ddit.correctboard.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/correct")
+public class CorrectViewController {
+	
+	@RequestMapping("correctList.do")
+	public String listView() {
+		return "correct/correctList";
+	}
+	
+	@RequestMapping("correctView.do")
+	public String correctView() {
+		return "correct/correctView";
+	}
+
+}

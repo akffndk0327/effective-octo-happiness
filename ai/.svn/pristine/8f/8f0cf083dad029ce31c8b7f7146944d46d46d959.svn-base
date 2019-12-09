@@ -1,0 +1,57 @@
+package kr.or.ddit.allergy.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.AllergyVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+@Repository
+public interface IAllergyDAO {
+	 	
+	/**
+	 * 페이징
+	 * @param pagingVO
+	 * @return
+	 */
+	public int selectAllergyCount(PagingInfoVO<AllergyVO> pagingVO);
+	/**
+	 * 목록조회
+	 * @param pagingVO
+	 * @return
+	 */
+	public List<AllergyVO> selectAllergyList(PagingInfoVO<AllergyVO> pagingVO);
+	/**
+	 * 알레르기상세보기 
+	 * @param allergy
+	 * @return
+	 */
+	public AllergyVO selectAllergy(AllergyVO allergy); //알레르기 상세보기
+	/**
+	 * 알레르기 등록
+	 * @param allergy
+	 * @return
+	 */
+	public int insertAllergy(AllergyVO allergy);
+	/**
+	 * 알레르기 수정
+	 * @param allergy
+	 * @return
+	 */
+	public int updateAllergy(AllergyVO allergy);
+	/**
+	 * 알레르기 삭제
+	 * @param allergy
+	 * @return
+	 */
+	public int deleteAllergy(AllergyVO allergy);
+	
+	/**
+	 * 알레르기 조회수
+	 * @param allergy
+	 * @return
+	 */
+	public int updateAllergyHit(AllergyVO allergy);
+	
+}

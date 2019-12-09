@@ -1,0 +1,86 @@
+package kr.or.ddit.diet.dao;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.mybatis.spring.SqlSessionTemplate;
+
+import kr.or.ddit.vo.MenuAllergyVO;
+import kr.or.ddit.vo.MenuVO;
+import kr.or.ddit.vo.MonthlyVO;
+import kr.or.ddit.vo.OnedayVO;
+import kr.or.ddit.vo.PagingInfoVO;
+/**
+ * 
+ * @author 박슬기
+ * @since 2019. 11. 7.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                수정자         수정내용
+ *  2019.11.13		박슬기		하루식단 수정
+ * --------     --------    ----------------------
+ * 2019. 11. 7.      박슬기       최초작성
+ * 2019.11.8	   박슬기      상세조회 추가
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+public class DietDAOImpl implements IDietDAO {
+	@Inject
+	SqlSessionTemplate sqlSession;
+	
+	
+	//식단 공유게시판 리스트 조회
+	@Override
+	public List<MonthlyVO> selectDietList(PagingInfoVO<MonthlyVO> pagingVO) {
+		IDietDAO mapper = sqlSession.getMapper(IDietDAO.class);
+		return mapper.selectDietList(pagingVO);
+	}
+
+	
+	//페이징 처리를 위한 게시글 갯수 조회
+	@Override
+	public int selectDietCount(PagingInfoVO<MonthlyVO> pagingVO) {
+		IDietDAO mapper = sqlSession.getMapper(IDietDAO.class);
+		return mapper.selectDietCount(pagingVO);
+	}
+
+	
+	//상세조회
+	@Override
+	public List<OnedayVO> selectDiet(String monthlyId) {
+		IDietDAO mapper = sqlSession.getMapper(IDietDAO.class);
+		return mapper.selectDiet(monthlyId);
+	}
+
+
+	@Override
+	public List<MenuVO> selectMenuList() {
+		IDietDAO mapper = sqlSession.getMapper(IDietDAO.class);
+		return mapper.selectMenuList();
+	}
+
+
+	@Override
+	public List<MenuAllergyVO> selectAllergyMenuList(String memId) {
+		IDietDAO mapper = sqlSession.getMapper(IDietDAO.class);
+		return mapper.selectAllergyMenuList(memId);
+	}
+
+
+	@Override
+	public int updateMonthly(MonthlyVO monthlyVO) {
+		IDietDAO mapper = sqlSession.getMapper(IDietDAO.class);
+		return mapper.updateMonthly(monthlyVO);
+	}
+
+
+	@Override
+	public int updateOneday(OnedayVO onedayVO) {
+		IDietDAO mapper = sqlSession.getMapper(IDietDAO.class);
+		return mapper.updateOneday(onedayVO);
+	}
+
+}

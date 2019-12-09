@@ -21,8 +21,8 @@
  	=> 표현방법 : \${속성명=el변수명}
 	<%
 		String attr = "속성데이터";
-		pageContext.setAttribute("attr", attr);
-		request.setAttribute("attr", "요청 속성");
+		pageContext.setAttribute("attr", attr); // 하나의 jsp페이지에서
+		request.setAttribute("attr", "요청 속성"); // 모든 jsp페이지에서 적용 
 		
 	%>
 	<%=attr %> ==> ${attr}, ${requestScope.attr }

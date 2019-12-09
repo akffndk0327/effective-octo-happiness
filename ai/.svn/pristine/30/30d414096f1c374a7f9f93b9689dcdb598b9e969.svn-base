@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.recipereply.dao.IReplyDAO">
+
+    <select id="selectReplyList" resultType="ReplyVO" parameterType="PagingInfoVO">
+        SELECT B.*
+        FROM(
+            SELECT ROWNUM RNUM, A.*
+            FROM(
+                <![CDATA[
+                SELECT LEVEL,
+                    REP_ID,
+                     case when REP_DEL='Y' then '삭제된 댓글입니다' else
+                    LPAD('   re:', 12*(level-1), '&nbsp;&nbsp;') || REP_CONT end as rep_cont,
+                    RECIPE_NO,   PAR_REP,    MEM_ID,
+                    TO_CHAR(REP_DATE, 'YYYY-MM-DD HH:MI') REP_DATE,REP_DEL   
+                FROM   REPLY
+                 WHERE RECIPE_NO=#{pk}
+
+                ]]>
+                START WITH PAR_REP IS NULL
+                CONNECT BY PRIOR REP_ID = PAR_REP
+                ORDER SIBLINGS BY REP_ID DESC
+            ) A
+        ) B
+       WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+    
+    <select id="selectReplyCount" resultType="int" parameterType="PagingInfoVO">
+        SELECT COUNT(*)
+        FROM REPLY
+    </select>
+    
+    <update id="deleteReply" parameterType="ReplyVO"> 
+               UPDATE reply
+                 SET
+                    REP_DEL = 'Y'
+                 WHERE
+                     rep_id =#{repId}
+    </update>
+    
+    <update id="updateReply" parameterType="ReplyVO">
+        UPDATE reply
+	    SET
+	        REP_CONT = #{repCont}
+	    WHERE
+	        rep_id =#{repId}
+    
+    </update>
+    
+    <insert id="insertReply" parameterType="ReplyVO">
+    INSERT INTO reply (
+        rep_id,rep_date,rep_cont,
+	    recipe_no,mem_id
+	) VALUES (
+	   REPLY_SEQ.nextval,sysdate,#{repCont},
+	   #{recipeNo},#{memId}
+	)
+    </insert>
+</mapper>

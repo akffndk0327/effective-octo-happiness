@@ -1,0 +1,105 @@
+package kr.or.ddit.mypage.controller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
+
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.member.service.IMemberService;
+import kr.or.ddit.mypage.service.IMemMypageService;
+import kr.or.ddit.vo.MemAllergyVO;
+import kr.or.ddit.vo.MemberVO;
+	
+/**
+ * @author 허민지
+ * @since 2019. 11. 6.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          	 수정자               수정내용
+ * ------------     	--------    ----------------------
+ * 2019. 11. 6.          허민지       	   최초작성
+ * 2019. 11. 18.         허민지               selectAllergy 추가
+ * 
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Controller
+@RequestMapping("/memMypage")
+public class MemberAllergyInsertController {
+	
+	@Inject
+	IMemberService memService;
+	
+	@Inject
+	IMemMypageService mypageService;
+
+	
+	@RequestMapping(value="memAllergyView.do", method=RequestMethod.GET)
+	public String selectAllergy(
+			Authentication authentication,
+			Model model) {
+//		회원 정보, 회원의 알레르기 정보
+		List<MemAllergyVO> memAllergyList = memService.selectMemAllergy(authentication.getName());
+		//회원이 선택 할 수 있는 모든 알레르기 정보
+		List<String> allergyList = memService.retrieveListAllergy();
+		//알레르기 증상에 대한 정보
+		List<String> symtomList = memService.retrieveSytomsList();
+		
+		
+		model.addAttribute("memAllergyList", memAllergyList);
+		model.addAttribute("allergyList", allergyList);
+		model.addAttribute("symtomList", symtomList);
+		
+		return "memMypage/memAllergyForm";
+	}
+	
+	
+	@RequestMapping(value="memAllergyList.do", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public List<MemAllergyVO> memberAllergyList(
+			Authentication authentication){
+		List<MemAllergyVO> memAllergyList = memService.selectMemAllergy(authentication.getName());
+		
+		return memAllergyList;
+	}
+	
+	
+	@RequestMapping(value="memAllergyInsert.do", method=RequestMethod.POST)
+	public String updateAllergy(
+			@Valid @ModelAttribute("member")MemberVO member,
+			RedirectAttributes redirectAttributes,
+			Authentication authentication) {
+		String viewName = null;
+		String message = null;
+		String memId = authentication.getName();
+		member.setMemId(memId);
+		ServiceResult result = mypageService.createMemAllergy(member);
+		switch(result) {
+		case FAILED:
+			message = "수정 실패";
+			viewName = "memMypage/memAllergyForm";
+			break;
+		case OK:
+			viewName = "redirect:/memMypage/memAllergyView.do";
+			message = "추가 성공";
+			break;
+		}
+		
+		redirectAttributes.addFlashAttribute("message", message);
+		return viewName;
+	}
+}
+

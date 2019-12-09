@@ -1,0 +1,158 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 	수정일  	                 수정자		           수정내용
+* -------------  ---------  -----------------
+* 2019. 11. 7.     박주연      		최초작성
+* 2019. 11. 7.	       박주연			View 구현
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<script type="text/javascript"
+	src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<link rel="stylesheet" href="${cPath }/css/orderForm.css">
+<script src="${cPath }/js/orderForm.js"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<!-- Datepicker 한국어로 변환 -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/datepicker-ko.js"></script>
+
+<div id="InnerContainer">
+	<h1>광고 신청 하기</h1>
+	<div>
+	<form action="" method="post" enctype="multipart/form-data" name="">
+			<caption>신청자 정보</caption>
+		<table border="0" cellpadding="0" cellspacing="0" class="Write">
+			<tbody>
+				<tr>
+					<th>* 제목</th>
+					<td><input type="text" name="title" value="" class="INP100"></td>
+				</tr>
+				<tr>
+					<th scope="row">* 담당자</th>
+					<td><input type="text" name="Name" value="" class="INP100"></td>
+				</tr>
+				<tr>
+					<td>광고 시작 날짜</td>
+					<td>
+						<form>
+							<label for="fromDate">시작일</label> <input type="text"
+								class="inputDate" name="fromDate" id="fromDate" size="8">
+							~ <label for="toDate">종료일</label> <input type="text"
+								class="inputDate" name="toDate" id="toDate" size="8">
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td>이동 URL</td>
+					<td><input type="text" placeholder="https://"></td>
+				</tr>
+				<tr>
+					<td>위치</td>
+					<td>
+						<div id="location">
+							<div>
+								<img src="${cPath }/images/peng1.jpg" width="100px"
+									height="100px" />
+								<p />
+								<input type="radio" value="top" name="adlocate" />상단
+							</div>
+							<div>
+								<img src="${cPath }/images/peng1.jpg" width="100px"
+									height="100px" />
+								<p />
+								<input type="radio" value="bottom" name="adlocate" />하단
+							</div>
+							<div>
+								<img src="${cPath }/images/peng1.jpg" width="100px"
+									height="100px" />
+								<p />
+								<input type="radio" value="left" name="adlocate" />왼쪽
+							</div>
+							<div>
+								<img src="${cPath }/images/peng1.jpg" width="100px"
+									height="100px" />
+								<p />
+								<input type="radio" value="right" name="adlocate" />오른쪽
+							</div>
+						</div>
+					</td>
+				</tr>
+
+				<tr>
+					<td>첨부파일</td>
+					<td><input type="file" name="FileName" data-width="300"
+						data-height="300" /></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="title">결제수단</div>
+		<br>
+		<table class="t4">
+			<tr>
+				<th colspan="1">카카오페이 결제</th>
+				<td colspan="4"><input type="radio" checked /><img
+					src="${cPath }/images/kp.jpg"></td>
+			</tr>
+			<tr>
+				<th colspan="5">구매자 주문 동의</th>
+			</tr>
+			<tr>
+				<td colspan="5">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="Y"
+							id="defaultCheck1" /> <label class="form-check-label"
+							for="defaultCheck1"> 구매 및 결제대행 서비스 이용약관 등에 모두 동의합니다. </label>
+					</div>
+					<ul class="payul">
+						<li>구매조건 확인 및 결제 진행 동의</li>
+						<li>결제 대행 서비스 이용약관 동의</li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+	</form>
+	</div>
+	<input id="ok" type="button" value="확인">
+	<input id="cancle" type="button" value="취소">
+</div>
+
+<script>
+	$(function() {
+		$.datepicker.setDefaults($.datepicker.regional['ko']);
+		//시작일.
+		$('#fromDate').datepicker({
+			showOn : "both", // 달력을 표시할 타이밍 (both: focus or button)
+			//      buttonImage: "resources/images/calendar.png", // 버튼 이미지
+			buttonImageOnly : true, // 버튼 이미지만 표시할지 여부
+			buttonText : "날짜선택", // 버튼의 대체 텍스트
+			dateFormat : "yy-mm-dd", // 날짜의 형식
+			changeMonth : true, // 월을 이동하기 위한 선택상자 표시여부
+			minDate : 0, // 선택할수있는 최소날짜, ( 0 : 오늘 이전 날짜 선택 불가)
+			onClose : function(selectedDate) {
+				// 시작일(fromDate) datepicker가 닫힐때
+				// 종료일(toDate)의 선택할수있는 최소 날짜(minDate)를 선택한 시작일로 지정
+				$("#toDate").datepicker("option", "minDate", selectedDate);
+			}
+		});
+
+		//종료일
+		$('#toDate').datepicker({
+			showOn : "both",
+			//      buttonImage: "resources/images/calendar.png", 
+			buttonImageOnly : true,
+			buttonText : "날짜선택",
+			dateFormat : "yy-mm-dd",
+			changeMonth : true,
+			minDate : 0, // 오늘 이전 날짜 선택 불가
+			onClose : function(selectedDate) {
+				// 종료일(toDate) datepicker가 닫힐때
+				// 시작일(fromDate)의 선택할수있는 최대 날짜(maxDate)를 선택한 종료일로 지정 
+				$("#fromDate").datepicker("option", "maxDate", selectedDate);
+			}
+		});
+	});
+</script>

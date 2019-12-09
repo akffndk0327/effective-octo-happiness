@@ -1,0 +1,6 @@
+package kr.or.ddit.vo;
+
+public class RawMaterialVO {
+	private String rawId;
+	private String rawName;
+}

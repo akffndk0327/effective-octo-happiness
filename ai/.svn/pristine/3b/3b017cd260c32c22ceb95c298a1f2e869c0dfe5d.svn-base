@@ -1,0 +1,149 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*	2019.11.10		박슬기	공유기능추가
+* ----------  ---------  -----------------
+* 2019. 11. 6.      박슬기      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<style>
+table {
+	/*  	width:600px;  */
+	margin: auto;
+	align-content: center;
+}
+
+.t {
+	border: 1px solid black;
+	width: 150px;
+	text-align: center;
+}
+
+.btnLo {
+	text-align: right;
+}
+
+thead{
+	height: 300px;
+	font-size: 30px;
+	text-align: center;
+	}
+img{
+	width: 50px;
+	height: 50px;
+}
+</style>
+<!-- 	<meta property="og:title" content="AI"> -->
+<!-- 	<meta property="og:description" content="공유테스트"> -->
+<!-- 	<meta property="og:url" content="https://localhost/ai/diet/dietView.do?monthlyId=M0009&memId=r001"> -->
+	
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+<title>KakaoLink v2 Demo(Default / List) - Kakao JavaScript SDK</title>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<div id="InnerContainer">
+	<c:set var="diet" value="${o_list}" />
+	<table>
+	<thead>
+		<tr>
+			<a id="kakao-link-btn" href="javascript:;">
+			<img src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"/>
+			</a>
+			<img src="${pageContext.request.contextPath }/images/facebook.png" class="facebook">
+		</tr>
+		<tr>
+			<th colspan="7">
+				작성자 : ${writer}<br>
+				제목 : ${diet[0].monthlyTitle}
+	
+			</th>
+
+		</tr>
+	</thead>
+	<tbody>
+
+		<c:forEach items="${diet}" var="d" begin="0" varStatus="i" step="1">
+			<c:if test="${(i.index%35) eq 0}">
+				<tr>
+			</c:if>
+			<c:if test="${(i.index%5) eq 0}">
+				<td class="t diet" id="${d.onedayId }">
+			</c:if><p id="${d.menuId}">${d.menuName}</p>
+			<c:if test="${(i.index%5) eq 4}">
+				</td>
+			</c:if>
+			<c:if test="${(i.index%35) eq 34}">
+				</tr>
+			</c:if>
+		</c:forEach>
+		<tr>
+			<td colspan="7" class="btnLo">
+				<c:if test="${writer eq loginId}">
+					<c:url value="/diet/dietUpdate.do" var="updateURL">
+						<c:param name="monthlyId" value="${diet[0].monthlyId}"/>
+						<c:param name="memId" value="${writer}"/>
+					</c:url>
+					<button type="button" class="btn btn-outline-success" onclick="location.href='${updateURL}';">수정하기</button>
+					<button type="button" class="btn btn-outline-success" id="del">삭제하기</button>
+				</c:if>
+					<button type="button" class="btn btn-outline-success" id="back">뒤로가기</button>
+			</td>
+		</tr>
+	</tbody>
+	</table>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#back").on("click",function(){
+			history.back();
+		})
+		var url = location.href;
+		var param = url.substring(url.indexOf('?')+1, url.length);
+		$(".facebook").on("click",function(){
+// 			alert(param);
+			window.open("http://www.facebook.com/sharer/sharer.php?u=https://192.168.206.31/ai/diet/dietView.do?" + encodeURIComponent(param) ,'Share on Facebook',
+	                'scrollbars=no, width=500, height=500');
+
+		})//facebook end
+		
+		
+		Kakao.init("6c959fda57f7b84bb8fbbbc911356a80");
+	    // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+		 Kakao.Link.createDefaultButton({
+		      container: '#kakao-link-btn',
+		      objectType: 'feed',
+		      content: {
+		        title: 'AI식단 공유',
+		        description: '#AI #ai #식단공유 #식단 #알레르기 #검색',
+		        imageUrl: 'https://miro.medium.com/max/1200/1*LhyCwtrewwc4q4OW6Ucrog.png',
+		        link: {
+		          mobileWebUrl: 'https://developers.kakao.com',
+		          webUrl: "https://localhost/ai/diet/dietView.do?" + param
+		        }
+		      },
+		      buttons: [
+		        {
+		          title: '홈페이지가기',
+		          link: {
+		        	 mobileWebUrl: "https://localhost/ai",
+			         webUrl: "https://localhost/ai/"
+		          }
+		        },
+		        {
+		          title: '게시글보기',
+		          link: {
+		            mobileWebUrl: "https://localhost/ai/diet/dietView.do?" +param,
+		            webUrl: "https://localhost/ai/diet/dietView.do?" + param
+		          }
+		        }
+		      ]
+		    }); //kakao end
+	
+ 	})//function end
+// 		
+</script>

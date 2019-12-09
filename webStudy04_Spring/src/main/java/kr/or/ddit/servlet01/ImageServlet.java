@@ -32,11 +32,11 @@ public class ImageServlet extends HttpServlet{
 		
 		
 		//09.16 쿠키 예제
-				String value = URLEncoder.encode("한글값","UTF-8");
-				Cookie cookie = new Cookie(imageName,value); //쿠키 객체 생성 
-				cookie.setPath("/");
-				cookie.setMaxAge(60*60*24*2); //데이터 정보 2일 살아잉ㅆ어 
-				resp.addCookie(cookie); //응답보내기
+		String value = URLEncoder.encode("한글값","UTF-8");
+		Cookie cookie = new Cookie(imageName,value); //쿠키 객체 생성 
+		cookie.setPath("/");
+		cookie.setMaxAge(60*60*24*2); //데이터 정보 2일 살아잉ㅆ어 
+		resp.addCookie(cookie); //응답보내기
 		
 		
 		

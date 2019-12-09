@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 7.    최서희     최초작성               -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.cart.dao.ICartDAO">
+	
+	<resultMap type="CartVO" id="cartMap" autoMapping="true">
+		<id column="CART_ID" property="cartId"/>
+		<association property="prod" javaType="ProdVO" autoMapping="true">
+			<id column="PROD_ID" property="prodId"/>
+			<association property="company" javaType="CompanyVO" autoMapping="true">
+				<id column="MEM_ID" property="memId"/>
+			</association>
+		</association>
+	</resultMap>
+	<select id="selectCartList" parameterType="String" resultMap="cartMap">
+		SELECT
+		    A.CART_QTY,  A.CART_INDATE,
+		    A.PROD_ID,   A.CART_ID,
+		    B.PROD_NAME, B.PROD_IMG,
+		    B.PROD_PRICE, C.COM_NAME, PROD_DELIVERY,
+		    (PROD_PRICE*CART_QTY) AS ORDER_PRICE,
+		    (PROD_PRICE*CART_QTY)+PROD_DELIVERY AS PAY_PRICE,
+            (SELECT SUM((PROD_PRICE*CART_QTY)+PROD_DELIVERY)
+               FROM  CART A, PROD B, COMPANY C
+              WHERE A.PROD_ID = B.PROD_ID
+                AND B.MEM_ID = C.MEM_ID
+                AND A.MEM_ID = #{memId}) AS TOTAL_PRICE,
+            (SELECT SUM(PROD_PRICE*CART_QTY) 
+               FROM CART A, PROD B, COMPANY C
+              WHERE A.PROD_ID = B.PROD_ID
+                AND B.MEM_ID = C.MEM_ID
+                AND A.MEM_ID = #{memId}) AS ORDER_TOTAL
+		FROM
+		    CART A, PROD B, COMPANY C
+		WHERE 
+		    A.PROD_ID = B.PROD_ID
+		    AND B.MEM_ID = C.MEM_ID
+		    AND A.MEM_ID = #{memId}
+	</select>
+	
+	<insert id="insertCart" parameterType="CartVO">
+		INSERT INTO CART (
+		    CART_QTY,  PROD_ID,
+		    CART_ID,   
+		    MEM_ID
+		) VALUES (
+		  #{cartQty}, #{prodId},
+		  to_char(sysdate,'YYMMDD')||trim(to_char(CART_SEQ.nextval,'00000')), 
+		  #{memId}
+		)
+	</insert>
+
+	<update id="updateCart" parameterType="CartVO">
+		UPDATE CART
+		SET
+		    CART_QTY = #{cartQty}
+		WHERE
+		    CART_ID = #{cartId}
+	</update>
+	
+	<delete id="deleteCart" parameterType="Order2VO">
+		DELETE FROM CART
+		WHERE  CART_ID IN 
+		<foreach collection="delCartId" item="delNo" open="(" close=")" separator=",">
+		#{delNo}
+		 </foreach>	
+	</delete>
+</mapper>

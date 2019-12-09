@@ -1,0 +1,7 @@
+package kr.or.ddit.vo;
+
+public class AdpositionVO {
+	private String adpoId;
+	private String adpoName;
+	private String resId;
+}

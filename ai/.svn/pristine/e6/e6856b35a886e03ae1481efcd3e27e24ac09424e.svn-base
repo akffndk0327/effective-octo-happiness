@@ -1,0 +1,54 @@
+package kr.or.ddit.correctboard.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import kr.or.ddit.correctboard.dao.ICorrectBoardDAO;
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.vo.CorrectBoardVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+public class CorrectBoardServiceImp implements ICorrectBoardService{
+
+	@Inject
+	ICorrectBoardDAO dao;
+	
+	
+	@Override
+	public ServiceResult createCorrectBoard(CorrectBoardVO vo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ServiceResult updateCorrectBoard(CorrectBoardVO vo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CorrectBoardVO selectCorrect(CorrectBoardVO vo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int selectCorrectCount(PagingInfoVO<CorrectBoardVO> pagingVO) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<CorrectBoardVO> selectCorrectList(PagingInfoVO<CorrectBoardVO> pagingVO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ServiceResult deleteCorrect(CorrectBoardVO vo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

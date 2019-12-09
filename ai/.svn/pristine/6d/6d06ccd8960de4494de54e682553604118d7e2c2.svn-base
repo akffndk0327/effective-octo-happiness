@@ -1,0 +1,19 @@
+package kr.or.ddit.faq.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class FAQRetrieve {
+
+	@RequestMapping("/faq/faqList.do")
+	public String selectFaqList() {
+		return "faq/faqList";
+	}
+	
+	@RequestMapping("/faq/faqView.do")
+	public String selectFaqView() {
+		return "faq/faqView";
+	}
+	
+}

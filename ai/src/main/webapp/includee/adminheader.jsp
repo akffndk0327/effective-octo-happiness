@@ -1,0 +1,475 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<link rel="stylesheet" href="${cPath }/css/adminheader.css">
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="authMember" />
+</sec:authorize>
+<c:set var="loginId" scope="request" value="${authMember.memId}" />
+<c:set var="authorId" scope="request" value="${authMember.authorId }" />
+<c:set var="loginPass" scope="request" value="${authMember.memPass }" />
+<c:set var="memName" scope="request" value="${authMember.memName }" />
+
+<form name="logoutForm" action="${cPath }/logout" method="post"></form>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 17    박주연      최초작성
+* 2019. 12. 04         박주연	 헤더 아이콘 수정 		
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+ <style>
+.headerLogin {
+	position: absolute;
+	left: 1191px;
+	top: 17px;
+	width: 700px;
+}
+#otherside {
+	margin-left : 100% ;
+	margin-top : -41px ; 
+	background : 
+		}
+</style>
+
+<section id="top" style="background: #322C5C">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2" style="margin-left: 25%;">
+				<div class="search-box">
+					<form action="${cPath }/search/searchList.do" name="searchFrom"
+						style="width: 500px">
+						<input name="prdlstnm" placeholder="Search Here" type="text"
+							class="form-control" style="font-size: 22px" /> <input
+							type="hidden" name="similerWords" id="similerWords" />
+						<div id="searchbuttons">
+
+							<img src="${cPath }/images/voiceBtn.jpg" class="voiceBtn"
+								data-toggle="modal" data-target="#buttonModal"
+								style="margin-right: 5px;"> <img
+								src="${cPath }/images/imageBtn.jpg" class="imageBtn">
+							<button class="btn btnMainSearch" type="submit" />
+						</div>
+					</form>
+					<!-- 이미지 검색 폼 -->
+					<form id="imgForm" action="${cPath }/search/searchImgage"
+						method="post" enctype="multipart/form-data">
+						<input type="file" name="file" id="imagefile"
+							style="display: none;" />
+					</form>
+					<!-- 					</div> -->
+					<!-- /.input-group -->
+				</div>
+				<!-- /.search-box -->
+			</div>
+			<div class="col-md-3 clearfix headerLogin">
+				<ul class="login-cart">
+					<c:set var="ROLE_MEM" value="ROLE_MEM" />
+					<c:set var="ROLE_EMP" value="ROLE_EMP" />
+					<c:set var="ROLE_ADMIN" value="ROLE_ADMIN" />
+					<c:choose>
+						<c:when test="${not empty authMember}">
+							<c:if test="${authMember.authorId eq ROLE_MEM}">
+								<c:url value="/mypage/member" var="memPage">
+									<c:param name="memId" value="${loginId }"></c:param>
+								</c:url>
+								<li id="memPage" class="fa fa-user"><a href="${memPage }">${authMember.memName }님</a></li>
+								<c:url value="/cart/cartList.do" var="cartURL">
+									<c:param name="memId" value="${loginId}" />
+								</c:url>
+								<li class="fa fa-user"><a href="${cartURL }" title="장바구니">CART</a></li>
+							</c:if>
+							<c:if test="${authMember.authorId eq ROLE_EMP}">
+								<li class="fa fa-user"><a href="${cPath }/mypage/company">${authMember.memName }님</a></li>
+							</c:if>
+							<c:if test="${authMember.authorId eq ROLE_ADMIN}">
+								<li class="fa fa-user"><a href="${cPath }/mypage/admin">관리자님</a></li>
+							</c:if>
+							<li class="fa fa-user"><a href="#"
+								onclick="document.logoutForm.submit();">LOG OUT</a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="fa fa-user"><a href="${cPath}/login" title="로그인">LOGIN</a></li>
+							<li class="fa fa-user"><a
+								href="${cPath}/member/memberInsert.do" title="회원가입">SIGN IN</a></li>
+						</c:otherwise>
+					</c:choose>
+				</ul>
+			</div>
+
+		</div>
+		<!-- End Of /.row -->
+	</div>
+	<!-- End Of /.Container -->
+</section>
+<!-- End of /Section -->
+
+
+<!-- LOGO Start
+    ================================================== -->
+
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<a href="${cPath }"> <img id="mainlogo"
+					src="${cPath}/images/newlogo.png" alt="logo"
+					style="margin-left: auto; margin-right: auto;">
+				</a>
+			</div>
+			<!-- End of /.col-md-12 -->
+		</div>
+		<!-- End of /.row -->
+	</div>
+	<!-- End of /.container -->
+</header>
+<!-- End of /Header -->
+
+
+<!-- MENU Start
+    ================================================== -->
+
+<nav class="navbar navbar-default">
+	<div class="container">
+		<!-- 		메뉴바 -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1"
+			style="margin-left: 100px; height: 50px;">
+			<ul class="nav navbar-nav nav-main" style="margin-top: 8px">
+				<li class="dropdown"><a>ALLERGY</a>
+					<ul class="dropdown-menu">
+						<li><a href="${cPath }/allergy/allergyList.do">알레르기 검색 </a></li>
+						<li class="dropdown" id="other"><a>그외 알레르기</a>
+								<ul class="dropdown-menu" id="otherside">
+							<c:url value="/othersAllergies/othersAllergies.do" var="asthmaURl">
+								<c:param name="allId" value="D3"></c:param>
+							</c:url>
+							<li><a onclick="location.href='${asthmaURl}';">천식</a></li>
+	
+							<c:url value="/othersAllergies/othersAllergies.do" var="dustURL">
+								<c:param name="allId" value="B1"></c:param>
+							</c:url>
+							<li><a onclick="location.href='${dustURL}';">먼지 알레르기</a></li>
+							<c:url value="/othersAllergies/othersAllergies.do"
+								var="materialURL">
+								<c:param name="allId" value="D6"></c:param>
+							</c:url>
+							<li><a onclick="location.href='${materialURL}';">금속 알레르기</a></li>
+							<c:url value="/othersAllergies/othersAllergies.do" var="animalURL">
+								<c:param name="allId" value="D7"></c:param>
+							</c:url>
+							<li><a onclick="location.href='${animalURL}';">동물털 알레르기</a></li>
+	
+							<c:url value="/othersAllergies/othersAllergies.do" var="moldURL">
+								<c:param name="allId" value="D8"></c:param>
+							</c:url>
+							<li><a onclick="location.href='${moldURL}';">곰팡이 알레르기</a></li>
+	
+							<c:url value="/othersAllergies/othersAllergies.do" var="rareURL">
+								<c:param name="allId" value="D9"></c:param>
+							</c:url>
+							<li><a onclick="location.href='${rareURL}';">희귀 알레르기</a></li>
+							</ul>
+							</li>
+						<li><a href="${cPath }/dailysupply/dsList.do">생활용품 상세 검색</a></li>
+						<li><a href="${cPath }/food/foodCategory.do">식품 상세 검색</a></li>
+						<li><a href="${cPath }/uneatable/uneatableList.do">부적합한
+								식품</a></li>
+						<li><a href="${cPath }/stopSellingFood/stopSellingList.do">회수
+								판매 중지 식품 </a></li>
+					</ul>
+				</li>
+			
+				<li class="dropdown"><a href="#">SERVICE</a>
+					<ul class="dropdown-menu">
+						<li><a href="${cPath }/diet/dietInsert.do">SMART 식단</a></li>
+						<li><a href="${cPath }/diet/dietList.do">식단 공유 게시판 </a></li>
+						<li><a href="${cPath}/recipe/recipeList.do">레시피 게시판</a></li>
+
+					</ul></li>
+				
+				<li class="dropdown"><a>WEATHER</a>
+					<ul class="dropdown-menu">
+						<li><a href="${cPath}/weather/weatherView.do">대기중 중금속 오염
+								정보 조회</a></li>
+						<li><a href="${cPath}/weather/weatherPollution.do">대기오염정보
+								조회</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#">WACCP PRODUCT</a>
+					<ul class="dropdown-menu">
+						<li><a href="${cPath }/prod/prodIntro.do">인증절차 소개</a></li>
+						<li><a href="${cPath }/prod/prodList.do">제품 조회</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#">BOARD</a>
+					<ul class="dropdown-menu">
+						<li><a href="${cPath }/notice/noticeList.do">공지사항</a></li>
+						<li><a href="${cPath }/faq/faqList.do">FAQ 자주 묻는 질문</a></li>
+						<li><a href="${cPath }/news/newsList.do">뉴스</a></li>
+						<li><a href="${cPath }/correct/correctList.do">정정게시판</a></li>
+						<li><a href="${cPath}/survey/surveyList.do">설문게시판</a></li>
+					</ul></li>
+				<!-- End of /.dropdown -->
+			</ul>
+		</div>
+		<!-- End of /.nav-main -->
+	</div>
+	<!-- 	</div>	/.container-fluid -->
+</nav>
+<!-- End of /.nav -->
+<form id="${loginId }" class="noteid"></form>
+
+<!-- Modal -->
+<div class="modal fade" id="buttonModal" tabindex="-1" role="dialog"
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="right">
+				<button id="start_button" onclick="startButton(event)">
+					<img id="start_img" src="${cPath }/images/mic.gif" alt="Start">
+				</button>
+			</div>
+			<div id="results" style="display: none">
+				<span id="final_span" class="final"></span> <span id="interim_span"
+					class="interim"></span>
+				<p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btnAi0" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript" src="<c:url value="/js/sockjs.js"/>"></script>
+<script>
+    var id ="${loginId}";
+    var sock = new SockJS("<c:url value="/echo"/>");
+    var speech = $("#speech");
+       window.onload = function(){
+            if(id!=null){
+            $.ajax({
+                url :"${cPath}/note",
+                method : "get",
+                dataType : "json",
+                success : function(resp1) {
+                    $('#noteCount').html(resp1);
+                },
+                error : function(xhr) {
+                    console.log(xhr.status);
+                }
+            });
+            }
+        }
+    
+    
+    sock.onmessage = function(evt) {
+
+        onMessage(evt);
+
+    };
+    
+    function onMessage(evt){  
+        var data = evt.data;
+        console.log(data);
+        var result=data.split(",");
+        $('#'+result[0]).attr("count",result[1]);
+        $('#'+result[0]).submit();
+    }
+
+    $(".noteid").on("submit", function() {
+        event.preventDefault();
+        var count=$(this).attr("count");
+        $('#noteCount').html(count);
+        Swal.fire({
+            position: 'bottom-end',
+            title : '쪽지가 도착했습니다',
+            html : "<span style='font-size: 15px;'>확인을 누르면 쪽지함으로 이동합니다</span>",
+            imageUrl: '${cPath}/images/message.png',
+            imageWidth: 100,
+            imageHeight: 100,
+            showCancelButton : true,
+            focusConfirm : false,
+            confirmButtonText : '확인',
+            cancelButtonText : '나중에 보기'
+        }).then(function(result) {
+            if (result.value) {
+                window.location.href="${cPath}/note/noteRecieve.do?memId="+id;
+            }
+        });
+        return false;
+    })
+    
+    //이미지 검색
+    var imageBtn = $(".imageBtn");
+    var imagefile = $("#imagefile");
+    var imgForm = $("#imgForm");
+    var resultInput = $(".form-control");
+    var submitBtn = $(".btnMainSearch");
+    var similerWords = $("#similerWords");
+    
+    imageBtn.on("click", function(){
+        //파일선택창 오픈
+        $(imagefile).click();
+        imagefile.on("change", function(){
+        //이미폼 비동기서브밋
+        $(imgForm).ajaxSubmit({
+        dataType : "json",
+        success : function(data){
+            console.log(data);
+            let list = data.result;
+            $(list).each(function(i, v) {
+                resultInput.val(v.label_kr[0]);
+                similerWords.val(v.label_kr +", ");
+                $(submitBtn).click();
+            })
+        }
+    })
+        })
+        
+    });
+     
+  //speechToText 
+   var voiceBtn = $(".voiceBtn");
+   
+   voiceBtn.on("click",function(){
+	   document.addEventListener('DOMContentLoaded', function (evt) {
+	        startButton(event);
+	    }, false);  
+   })
+		var create_email = false;
+	    var final_transcript = '';
+	    var recognizing = false;
+	    var ignore_onend;
+	    var start_timestamp;
+	    if (!('webkitSpeechRecognition' in window)) {
+	        upgrade();
+	    } else {
+	        start_button.style.display = 'inline-block';
+	        var recognition = new webkitSpeechRecognition();
+	        recognition.continuous = true;
+	        recognition.interimResults = true;
+	        recognition.onstart = function() {
+	            recognizing = true;
+	            start_img.src = '${cPath}/images/mic-animate.gif';
+	        };
+	        recognition.onerror = function(event) {
+	            if (event.error == 'no-speech') {
+	                start_img.src = '${cPath}/images/mic.gif';
+	                ignore_onend = true;
+	            }
+	            if (event.error == 'audio-capture') {
+	                start_img.src = '${cPath}/images/mic.gif';
+	                showInfo('info_no_microphone');
+	                ignore_onend = true;
+	            }
+	            if (event.error == 'not-allowed') {
+	                if (event.timeStamp - start_timestamp < 100) {
+	                    showInfo('info_blocked');
+	                } else {
+	                    showInfo('info_denied');
+	                }
+	                ignore_onend = true;
+	            }
+	        };
+	        recognition.onend = function() {
+	            recognizing = false;
+	            if (ignore_onend) {
+	                return;
+	            }
+	            start_img.src = '${cPath}/images/mic.gif';
+	            if (!final_transcript) {
+	                showInfo('info_start');
+	                return;
+	            }
+	         
+	        };
+	        
+	        recognition.onresult = function(event) {
+	            var interim_transcript = '';
+	            for (var i = event.resultIndex; i < event.results.length; ++i) {
+	                if (event.results[i].isFinal) {
+	                    final_transcript += event.results[i][0].transcript;
+	                } else {
+	                    interim_transcript += event.results[i][0].transcript;
+	                }
+	            }
+	            final_transcript = capitalize(final_transcript);
+	            final_span.innerHTML = linebreak(final_transcript);
+	            interim_span.innerHTML = linebreak(interim_transcript);
+	        
+	            if (final_transcript || !interim_transcript) {
+	                start_img.src = '${cPath}/images/mic.gif';
+	                ignore_onend = true;
+	                startButton();
+	                	if (final_transcript.indexOf('검색해줘') !== -1 || final_transcript.indexOf('검색해 줘') !== -1
+	                			|| final_transcript.indexOf('이동해줘') !== -1 || final_transcript.indexOf('가 줘') !== -1) {
+	                        if (final_transcript.indexOf('먼지알레르기') !== -1 || final_transcript.indexOf('먼지 알레르기') !== -1
+	                        		|| final_transcript.indexOf('먼 지알레르기') !== -1 || final_transcript.indexOf('먼지알레 르기') !== -1) {
+	                            location.href = "https://localhost/ai/othersAllergies/othersAllergies.do?allId=B1";
+	                        }else if(final_transcript.indexOf('천식') !== -1 || final_transcript.indexOf('먼지 알레르기') !== -1){
+	                        	 location.href = "https://localhost/ai/othersAllergies/othersAllergies.do?allId=D3";
+	 	                    }else if(final_transcript.indexOf('밀 알레르기') !== -1 || final_transcript.indexOf('밀알레르기') !== -1){
+	                        	 location.href = "https://localhost/ai/allergy/allergyView.do?what=6";
+	 	                    }else if(final_transcript.indexOf('닭고기알레르기') !== -1 || final_transcript.indexOf('닭고기 알레르기') !== -1
+	 	                    		|| final_transcript.indexOf('닭 고기알레르기') !== -1 || final_transcript.indexOf('닭고기알레 르기') !== -1){
+	                        	 location.href = "https://localhost/ai/allergy/allergyView.do?what=15";
+	 	                    }else if(final_transcript.indexOf('금속알레르기') !== -1 || final_transcript.indexOf('금속 알레르기') !== -1
+	 	                    		|| final_transcript.indexOf('금 속알레르기') !== -1 || final_transcript.indexOf('금속알레 르기') !== -1){
+	                        	 location.href = "https://localhost/ai/othersAllergies/othersAllergies.do?allId=D6";
+	 	                    }else if(final_transcript.indexOf('홈페이지') !== -1 || final_transcript.indexOf('홈 페이지') !== -1
+	 	                    		|| final_transcript.indexOf('홈페 이지') !== -1){
+	                        	 location.href = "https://localhost/ai";
+	 	                    }else if(final_transcript.indexOf('마이페이지') !== -1 || final_transcript.indexOf('마이 페이지') !== -1){
+	                        	 location.href = "https://localhost/ai/memMypage/member?memId="+id;
+	 	                    }
+	                    }else{
+	                    	alert("인식하지못했습니다. 다시 한번 말씀해주세요");
+	                    }
+	                startButton(event);
+	                startButton(event);
+	            }
+	        };
+	    }
+	    
+	    function upgrade() {
+	        start_button.style.visibility = 'hidden';
+	        showInfo('info_upgrade');
+	    }
+	    var two_line = /\n\n/g;
+	    var one_line = /\n/g;
+	    function linebreak(s) {
+	        return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+	    }
+	    var first_char = /\S/;
+	    function capitalize(s) {
+	        return s.replace(first_char, function(m) { return m.toUpperCase(); });
+	    }
+	   
+	    function startButton(event) {
+	        if (recognizing) {
+	            recognition.stop();
+	            return;
+	        }
+	        final_transcript = '';
+	        recognition.lang = ['ko-KR'];
+	        recognition.start();
+	        ignore_onend = false;
+	        recognition.continuous = true;
+	        final_span.innerHTML = '';
+	        interim_span.innerHTML = '';
+	        start_img.src = '${cPath}/images/mic-slash.gif';
+	        showInfo('info_allow');
+	        showButtons('none');
+	        start_timestamp = event.timeStamp;
+	    }		
+  		
+</script>

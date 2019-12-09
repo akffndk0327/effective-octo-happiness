@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일              수정자      수정내용               -->
+<!--  2019. 11. 9   허민지   insertAccount,insertMember,insertAuthorities 추가   -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 5   허민지     최초작성               -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.member.dao.IMemberDAO">
+
+   <select id="selectMember" parameterType="MemberVO" resultType="MemberVO">
+         SELECT
+          MEM_NAME, MEM_TEL, MEM_ADDR1,
+          MEM_ADDR2, MEM_ZIP, MEM_MAIL,
+          MEM_DELETE, MEM_GENDER, MEM_AGE,
+          A.MEM_ID, MEM_PASS, AUTHOR_ID
+      FROM
+          MEMBER A, ACCOUNT B, AUTHORITIES C
+      WHERE
+          A.MEM_ID = B.MEM_ID
+          AND B.MEM_ID = C.MEM_ID
+          AND A.MEM_ID = #{memId}
+        UNION ALL
+        SELECT
+          A.ADMIN_NAME, A.ADMIN_TEL, '',
+          '', '', '',
+          '', '', '',
+          A.MEM_ID, C.MEM_PASS, B.AUTHOR_ID
+        FROM ADMIN A, AUTHORITIES B, ACCOUNT C
+        WHERE 
+             A.MEM_ID = B.MEM_ID
+             AND B.MEM_ID = C.MEM_ID
+             AND A.MEM_ID = #{memId}
+        UNION ALL
+        SELECT
+          B.COM_NAME, B.COM_NUM, '',
+          '', '', '',
+          '', '', '',
+          C.MEM_ID, C.MEM_PASS, D.AUTHOR_ID
+        FROM
+            COMPANY B, ACCOUNT C, AUTHORITIES D
+        WHERE
+            C.MEM_ID = B.MEM_ID
+            AND C.MEM_ID = D.MEM_ID
+            AND B.MEM_ID = #{memId}
+   </select>
+   
+   
+   <!-- ACCOUNT TABLE -->
+   <insert id="insertAccount" parameterType="MemberVO">
+   INSERT INTO ACCOUNT (
+        MEM_ID,
+        MEM_PASS
+    ) VALUES (
+        #{memId}, #{memPass}
+    )
+   </insert>
+   
+   <!-- if 써서 기업회원도 추가해야함 -->
+   <!-- MEMBER table insert -->
+   <insert id="insertMember" parameterType="MemberVO">
+   INSERT ALL
+   INTO MEMBER (
+       MEM_NAME,   MEM_TEL,   MEM_ADDR1,
+       MEM_ADDR2,   MEM_ZIP,   MEM_MAIL,
+       MEM_GENDER,   MEM_AGE,   MEM_ID
+   ) VALUES (
+       #{memName},   #{memTel},   #{memAddr1},
+       #{memAddr2},   #{memZip},   #{memMail},
+       #{memGender},   #{memAge},   MEM_ID
+   )
+   INTO AUTHORITIES (
+       AUTHOR_ID,
+       MEM_ID
+   ) VALUES (
+       #{authorId},
+       MEM_ID
+   )
+
+   <if test="allId != null">
+   INTO MEMALLERGY (
+   		MEM_ID
+   		,ALL_ID
+   		,SYM_ID
+   ) VALUES (
+   		MEM_ID
+   		,#{allId}
+   		,#{symId}
+   )
+   	</if>
+   SELECT  MEM_ID
+   FROM ACCOUNT
+   WHERE MEM_ID = #{memId}
+   </insert>
+   
+<!--    <insert id="insertMemAllergy" parameterType=""></insert> -->
+   
+   
+   <select id="selectAllergyList" resultType="AllergyVO">
+   SELECT 
+   		ALL_ID,
+        ALL_NAME,
+        ALL_TYPE
+   FROM ALLERGY
+   </select>
+   
+   <select id="selectSytomsList" resultType="AllergySymtomVO">
+   SELECT
+   		SYM_ID,
+   		SYM_NAME
+   FROM ALLERGYSYMTOM
+   </select>
+   
+   
+</mapper>

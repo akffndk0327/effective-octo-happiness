@@ -1,0 +1,40 @@
+package kr.or.ddit.newsboard.controller;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.newsboard.service.INewsService;
+import kr.or.ddit.vo.NewsVO;
+
+@Controller
+public class NewsDeleteController {
+	@Inject
+	INewsService service;
+	
+	@RequestMapping(value="/news/newsDelete.do", method=RequestMethod.POST)
+	public String newsDelete(
+			@RequestParam(required=true) int newsNo
+			, RedirectAttributes redirectAttributes
+			) {
+		ServiceResult result = service.removeNews(new NewsVO(newsNo));
+		String viewName = "redirect:/news/newsView.do?what="+newsNo;
+		String message = null;
+		switch (result) {
+			case FAILED:
+				message = "서버 오류";
+				break;
+	
+			default:
+				viewName = "redirect:/news/newsList.do";
+				break;
+		}
+		redirectAttributes.addFlashAttribute("message", message);
+		return viewName;
+	}
+}

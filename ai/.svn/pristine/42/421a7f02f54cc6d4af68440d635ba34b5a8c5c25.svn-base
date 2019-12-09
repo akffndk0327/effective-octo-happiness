@@ -1,0 +1,15 @@
+package kr.or.ddit.correctboard.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/correct")
+public class CorrectDeleteController {
+	
+	@RequestMapping("correctDelete.do")
+	public String deleteCorrect() {
+		return "correct/correctList";
+	}
+
+}

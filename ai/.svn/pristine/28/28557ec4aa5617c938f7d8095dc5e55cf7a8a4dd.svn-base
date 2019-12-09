@@ -1,0 +1,131 @@
+package kr.or.ddit.prod.dao;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.mybatis.spring.SqlSessionTemplate;
+
+import kr.or.ddit.vo.LprodVO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.ProdAttatchVO;
+import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.vo.ReviewVO;
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 4.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 4.      최서희       최초작성
+ * 2019. 11. 5.	    최서희	       리뷰 추가
+ * 2019. 11. 10.  최서희          대분류 중분류 셀렉트박스
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+public class ProdDAOImpl implements IProdDAO {
+
+	@Inject
+	SqlSessionTemplate sqlSession;
+
+	@Override
+	public int selectProdCount(PagingInfoVO<ProdVO> pagingVO) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectProdCount(pagingVO);
+	}
+
+	@Override
+	public List<ProdVO> selectProdList(PagingInfoVO<ProdVO> pagingVO) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectProdList(pagingVO);
+	}
+
+	@Override
+	public ProdVO selectProd(String prodId) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectProd(prodId);
+	}
+
+	@Override
+	public int insertProd(ProdVO prod) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		int cnt = mapper.insertProd(prod);
+		sqlSession.commit();
+		return cnt;
+	}
+
+	@Override
+	public int updateProd(ProdVO prod) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		int cnt = mapper.updateProd(prod);
+		sqlSession.commit();
+		return cnt;
+	}
+
+	@Override
+	public int deleteProd(String prodId) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		int cnt = mapper.deleteProd(prodId);
+		sqlSession.commit();
+		return cnt;
+	}
+
+	@Override
+	public int selectReviewCount(String prodId) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectReviewCount(prodId);
+	}
+
+	@Override
+	public List<ReviewVO> selectReviewList(PagingInfoVO<ReviewVO> pagingVO) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectReviewList(pagingVO);
+	}
+
+	@Override
+	public int insertReview(ReviewVO Review) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		int cnt = mapper.insertReview(Review);
+		sqlSession.commit();
+		return cnt;
+	}
+
+	@Override
+	public int deleteReview(int reviewNo) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		int cnt = mapper.deleteReview(reviewNo);
+		sqlSession.commit();
+		return cnt;
+	}
+
+	@Override
+	public List<LprodVO> selectLprodAList() {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectLprodAList();
+	}
+
+	@Override
+	public List<LprodVO> selectLprodBList(String lprodParent) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectLprodBList(lprodParent);
+	}
+
+	@Override
+	public int insertAttatches(ProdVO prod) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.insertAttatches(prod);
+	}
+
+	@Override
+	public ProdAttatchVO selectAttatch(int prodattId) {
+		IProdDAO mapper = sqlSession.getMapper(IProdDAO.class);
+		return mapper.selectAttatch(prodattId);
+	}
+	
+
+
+}

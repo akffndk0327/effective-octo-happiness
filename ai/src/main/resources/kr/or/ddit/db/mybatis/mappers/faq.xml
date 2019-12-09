@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]           -->
+<!--  수정일        		    수정자	       수정내용                     -->
+<!--  =============   ======    ==================  -->
+<!--  2019. 11. 21.     최서희         최초작성                    -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.faq.dao.IFaqDAO">
+	<select id="selectFaqCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM FAQ
+		 WHERE FAQ_USE = '1'
+	</select>
+
+	<resultMap type="FaqVO" id="faqListMap" autoMapping="true">
+		<id property="faqNo" column="FAQ_NO"/>
+		<association property="admin" javaType="AdminVO" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		</association>
+	</resultMap>
+	<select id="selectFaqList" parameterType="PagingInfoVO" resultMap="faqListMap">
+		SELECT B.*
+			FROM(
+			    SELECT ROWNUM RNUM, A.*
+			    FROM(
+			    	SELECT
+                           FAQ_NO, FAQ_TITLE, FAQ_USE,
+                           TO_CHAR(FAQ_INDATE, 'YYYY-MM-DD') AS FAQ_INDATE, 
+                           FAQ_HIT, A.MEM_ID,
+                           FAQ_CONTENT, ADMIN_NAME
+                      FROM FAQ A, ADMIN B
+                     WHERE FAQ_USE = '1'
+                       AND A.MEM_ID = B.MEM_ID
+                     ORDER BY 1 DESC   
+			    ) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<resultMap type="FaqVO" id="faqMap" autoMapping="true">
+		<id property="faqNo" column="FAQ_NO"/>
+		<association property="admin" javaType="AdminVO" autoMapping="true">
+		<id property="memId" column="MEM_ID"/>
+		</association>
+	</resultMap>
+	<select id="selectFaq" parameterType="int" resultMap="faqMap">
+		SELECT
+		       FAQ_NO, FAQ_TITLE, FAQ_USE,
+			   FAQ_INDATE, FAQ_HIT, A.MEM_ID,
+			   FAQ_CONTENT, ADMIN_NAME
+		  FROM FAQ A, ADMIN B
+		 WHERE FAQ_USE = '1'
+		   AND A.MEM_ID = B.MEM_ID
+		   AND FAQ_NO = #{faqNo}
+	</select>
+	
+	<insert id="insertFaq" parameterType="FaqVO">
+		INSERT INTO FAQ (
+		    FAQ_NO, FAQ_TITLE,
+		    MEM_ID, FAQ_CONTENT
+		) VALUES (
+		   FAQ_SEQ.NEXTVAL, #{faqTitle},
+		   #{memId}, #{faqContent}
+		)
+	</insert>
+	
+	<update id="updateFaqHit" parameterType="int">
+		UPDATE  FAQ
+		   SET  FAQ_HIT = FAQ_HIT+1
+		 WHERE  FAQ_NO = #{faqNo}
+	</update>
+	
+	<update id="updateFaq" parameterType="FaqVO">
+		UPDATE FAQ
+	 	   SET FAQ_TITLE = #{faqTitle},
+		       FAQ_CONTENT = #{faqContent}
+		 WHERE FAQ_NO = #{faqNo}
+	</update>
+	
+	<update id="deleteFaq" parameterType="int">
+		UPDATE FAQ
+		   SET FAQ_USE = '0'
+		 WHERE FAQ_NO = #{faqNo}
+	</update>
+</mapper>

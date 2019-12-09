@@ -1,0 +1,87 @@
+package kr.or.ddit.newsboard.controller;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kr.or.ddit.newsboard.service.INewsService;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.NewsVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+@Controller
+@RequestMapping("/news")
+public class RetriveNewsController {
+	@Inject
+	INewsService service;
+	
+	@Inject
+	WebApplicationContext container;
+	ServletContext application;
+
+	@PostConstruct
+	public void init() {
+		application = container.getServletContext();
+	}
+
+	@RequestMapping("/newsList.do")
+	public String newsList( 
+		@RequestParam(name = "page", required = false, defaultValue = "1") 
+		int currentPage, Model model
+			) {
+		PagingInfoVO<NewsVO> pagingVO = new PagingInfoVO<NewsVO>(10, 5);
+		int totalRecord = service.retrievBoardCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		List<NewsVO> list = service.retrieveBoardList(pagingVO);
+		pagingVO.setDataList(list);
+
+		model.addAttribute("pagingVO", pagingVO);
+
+		return "news/newsList";
+
+	}
+	
+	@RequestMapping("/newsView.do")
+	public String newsView(
+			@RequestParam(required=true) int what,
+			Model model
+			,@CookieValue(name="likeCookie",required=false) String cookieValue
+			)throws JsonParseException,JsonMappingException, IOException {
+		NewsVO news = service.retrieveNews(new NewsVO(what));
+		model.addAttribute("news",news);
+		
+		boolean likable = false;
+		if(cookieValue!=null) {
+			ObjectMapper mapper = new ObjectMapper();
+			int[] boNos = mapper.readValue(cookieValue, int[].class);
+			Arrays.sort(boNos);
+			int idx = Arrays.binarySearch(boNos, what);
+			if(idx < 0) likable = true;
+		}else {
+			likable = true;
+		}
+		model.addAttribute("likable", likable);
+		return "news/newsView";
+	}
+	
+
+}

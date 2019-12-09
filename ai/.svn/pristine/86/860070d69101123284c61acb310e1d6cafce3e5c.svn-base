@@ -1,0 +1,65 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 5.      박주연      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<div id="InnerContainer">
+		<h1>뉴스</h1>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>번호</th>
+			<th>제목</th>
+			<th>작성자</th>
+			<th>작성일</th>
+			<th>조회수</th>
+		</tr>
+	</thead>
+	<tbody id="listBody">
+		<c:set var="newsList" value="${pagingVO.dataList }" />
+		<c:choose>
+			<c:when test="${not empty newsList }">
+				<c:forEach items="${newsList }" var="newsList">
+					<td>${newsList.rnum }</td>
+					<td>${newsList.newsTitle }</a></td>
+					<td>${newsList.memId }</td>
+					<td>${newsList.newsIndate }</td>
+					<td>${newsList.newsHit }</td>
+					</tr>
+				</c:forEach>
+			</c:when>
+			<c:otherwise>
+								<tr>
+									<td colspan="6">조건에 맞는 글이 없음.</td>
+								</tr>
+			</c:otherwise>
+		</c:choose>
+	</tbody>
+</table>
+<tfoot>
+	<div id="pagingArea">${pagingVO.pagingHTML }</div>
+</tfoot>
+</div>
+<script>
+	var listBody = $("#listBody");
+	var pagingArea = $("#pagingArea");
+	var searchForm = $("#searchForm");
+	var pageTag = $("[name='page']");
+	
+	listBody.on("click", "a", function(){
+		let bono = $(this).data("bono");
+		location.href="${cPath}/news/newsView.do?what="+newsNo;
+	});
+	pagingArea.on("click", "a", function(event){
+		event.preventDefault();
+		let page = $(this).data("page");
+		if(page<1) return false;
+		pageTag.val(page);
+		searchForm.submit();
+		return false;
+	});
+	</script>

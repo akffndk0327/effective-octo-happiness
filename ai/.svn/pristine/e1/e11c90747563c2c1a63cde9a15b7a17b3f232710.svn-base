@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 21.    박슬기     최초작성               -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.statistics.dao.IStatisticDAO">
+	<insert id="insertLogin" parameterType="BrowserVO">
+		INSERT INTO BROWSER (BRO_TYPE,BRO_DATE,OS_TYPE) 
+		VALUES (#{broType},sysdate,#{osType})
+	</insert>
+
+</mapper>

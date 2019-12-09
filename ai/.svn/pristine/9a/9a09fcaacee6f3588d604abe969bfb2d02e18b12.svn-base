@@ -1,0 +1,132 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+*
+* ----------  ---------  -----------------
+* 2019. 11. 13.      박슬기      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+
+ 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<style>
+	#tform {
+	/*  	width:600px;  */
+	margin: auto;
+	align-content: center;
+	}
+	form{
+		text-align: center;
+		font-size: 18px;
+	} 
+	
+	.t {
+	border: 1px solid black;
+	width: 150px;
+	text-align: center;
+	}
+	
+	#tHead{
+	height: 300px;
+	font-size: 30px;
+	text-align: center;
+	}
+</style>
+
+<!-- Datepicker 한국어로 변환 -->
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/datepicker-ko.js"></script> -->
+<div id="InnerContainer">
+<br>
+		<form>
+			<label for="fromDate">시작일</label> 
+				<input type="text" class="inputDate" name="fromDate" id="fromDate" size="8" readonly="readonly" /> ~ 
+			<label for="toDate">종료일</label>
+				<input type="text" class="inputDate" name="toDate" id="toDate" size="8"readonly="readonly" />
+			<input type="button" id="test" value="날짜선택" class="btn btn-outline-success"/>
+		</form>
+		<br>
+		<br>
+		<table id="tform">
+			<thead id="tHead">
+			</thead>
+			<tbody id="dietform" >
+			
+			</tbody>
+		</table>
+</div>
+<script type="text/javascript">
+$(function () {
+ //시작일.
+ $('#fromDate').datepicker({
+//      showOn: "both",                     // 달력을 표시할 타이밍 (both: focus or button)
+//     buttonImageOnly : false,             // 버튼 이미지만 표시할지 여부
+     buttonText: "날짜선택",             // 버튼의 대체 텍스트
+     dateFormat: "yymmdd",             // 날짜의 형식
+     changeMonth: true,                  // 월을 이동하기 위한 선택상자 표시여부
+     minDate: 0,                       // 선택할수있는 최소날짜, ( 0 : 오늘 이전 날짜 선택 불가)
+     onClose: function( selectedDate ) {    
+         // 시작일(fromDate) datepicker가 닫힐때
+         // 종료일(toDate)의 선택할수있는 최소 날짜(minDate)를 선택한 시작일로 지정
+         $("#toDate").datepicker( "option", "minDate", selectedDate );
+     }
+ });
+
+ //종료일
+ $('#toDate').datepicker({
+//      showOn: "both", 
+//      buttonImageOnly : false,
+     buttonText: "날짜선택",
+     dateFormat: "yymmdd",
+     changeMonth: true,
+     minDate: 0, // 오늘 이전 날짜 선택 불가
+     onClose: function( selectedDate ) {
+         // 종료일(toDate) datepicker가 닫힐때
+         // 시작일(fromDate)의 선택할수있는 최대 날짜(maxDate)를 선택한 종료일로 지정 
+         $("#fromDate").datepicker( "option", "maxDate", selectedDate );
+     }                
+ });
+	 
+ function parse(str) {
+		var y = str.substr(0,4),
+		m = str.substr(4,2) - 1,
+		d = str.substr(6,2);
+		return new Date(y,m,d);
+	}
+ 
+ 
+ $("#test").on("click",function(){
+	 $("#dietform").html("");
+	 var start =  $("#fromDate").val();
+	 var end  = $("#toDate").val();	
+	 start = parse(start);
+	 end = parse(end);
+	 
+	 var period = (end-start)/86400000;
+	 if(period>=31) {
+		alert("최대기간은 30일입니다.");
+		 $("#fromDate").val("");
+		 $("#toDate").val("");	
+	  }
+	 var code = "<tr class='view'>";
+	 for (var i = 1; i <= period; i++) {
+		if (i%7==0) {
+			code+="<td class='t diet'>"+i+"</td></tr><tr class='view'>"
+		}else{
+			code+="<td class='t diet'>"+i+"</td>";
+		}
+		if(i==period){
+			code+="</tr>";
+		}
+		
+	}
+	 $("#dietform").append(code);
+	 
+ })
+
+ 
+})
+</script>

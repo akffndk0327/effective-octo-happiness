@@ -1,0 +1,142 @@
+package kr.or.ddit.newsboard.service;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.exception.CommonException;
+import kr.or.ddit.newsboard.dao.INewsAttatchDAO;
+import kr.or.ddit.newsboard.dao.INewsboardDAO;
+import kr.or.ddit.vo.AdvertiseVO;
+import kr.or.ddit.vo.NewsAttatchVO;
+import kr.or.ddit.vo.NewsVO;
+import kr.or.ddit.vo.PagingInfoVO;
+/**
+ * 
+ * @author 박주연
+ * @since 2019. 11. 6.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ *
+ * --------     --------    ----------------------
+ * 2019. 11. 6.        박주연		 최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+
+@Service
+public class NewsServiceImpl implements INewsService {
+	@Inject
+	INewsboardDAO newsDAO;
+
+	@Inject
+	INewsAttatchDAO attachDAO;
+
+	File saveFolder = new File("d:/saveFiles");
+	private int processAttatch(NewsVO news) {
+		List<NewsAttatchVO> attatchList = news.getAttatchList();
+		int cnt = 0;
+		if(attatchList!=null && attatchList.size()>0) {
+			cnt = attachDAO.insertAttatches(news);
+			for(int i = 0; i<attatchList.size(); i++) {
+				//				if(1==1) throw new RuntimeException("강제 발생 예외");
+				try {
+					NewsAttatchVO attatch = attatchList.get(i);
+					attatch.saveFile(saveFolder);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return cnt;
+	}
+
+	private int deleteAttatch(NewsVO news) {
+		Integer[] delAtts = news.getDelAttaches();
+		int cnt = 0;
+		if(delAtts!=null && delAtts.length>0) {
+			for(int delNo : delAtts) {
+				NewsAttatchVO attatch = (NewsAttatchVO) attachDAO.selectAttatch(delNo);
+				FileUtils.deleteQuietly(
+						new File(saveFolder, attatch.getNewsattSavename()));
+			}
+			cnt  += attachDAO.deleteAttatches(news);
+		}
+		return cnt;
+	}
+
+	@Override
+	public int retrievBoardCount(PagingInfoVO<NewsVO> pagingVO) {
+		return newsDAO.selectBoardCount(pagingVO);
+	}
+
+	@Override
+	public List<NewsVO> retrieveBoardList(PagingInfoVO<NewsVO> pagingVO) {
+		return newsDAO.selectBoardList(pagingVO);
+	}
+
+	@Override
+	public NewsVO retrieveNews(NewsVO news) {
+		NewsVO saveAd = newsDAO.selectNews(news);
+		if(saveAd ==null)  throw new CommonException(saveAd.getNewsNo()+", 해당 글이 없음.");
+		return saveAd;
+	}
+
+	@Override
+	public ServiceResult insertNews(NewsVO news) {
+		int cnt = newsDAO.insertNews(news);
+		cnt = processAttatch(news);
+		ServiceResult result = null;
+		if(cnt>0) result = ServiceResult.OK;
+		else result = ServiceResult.FAILED;
+		return result;
+	}
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult modifyNews(NewsVO news) {
+		NewsVO saveNews = retrieveNews(news);
+		ServiceResult result = null;
+		if(saveNews.getMemId().equals(news.getMemId())) {
+			int cnt = newsDAO.updateNews(news);
+			cnt += processAttatch(news);
+			cnt += deleteAttatch(news);
+			if(cnt>0) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}
+		return result;
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	@Override
+	public ServiceResult removeNews(NewsVO news) {
+		NewsVO saveNews = retrieveNews(news);
+		ServiceResult result = null;
+		if(saveNews.getMemId().equals(news.getMemId())) {
+			int cnt = 0;
+			if(cnt>0) {
+				cnt += newsDAO.deleteNews(saveNews);
+			}else {
+				result = ServiceResult.OK;
+			}
+		}
+		else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+}

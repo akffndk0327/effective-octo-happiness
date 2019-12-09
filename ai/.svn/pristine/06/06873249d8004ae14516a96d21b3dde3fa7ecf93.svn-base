@@ -1,0 +1,178 @@
+package kr.or.ddit.prod.service;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.order.dao.IOrderDAO;
+import kr.or.ddit.prod.dao.IProdDAO;
+import kr.or.ddit.vo.LprodVO;
+import kr.or.ddit.vo.Order2VO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.ProdAttatchVO;
+import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.vo.ReviewVO;
+
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 4.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                  수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 4.    최서희           최초작성
+ * 2019. 11. 5.	    최서희		 리뷰 추가
+ * 2019. 11. 10.  최서희           대분류 중분류 셀렉트박스
+ * 2019. 11. 10.  최서희           첨부파일 저장
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Service
+public class ProdServiceImpl implements IProdService{
+	@Inject
+	IProdDAO dao;
+	@Inject
+	IOrderDAO orderDao;
+	
+	/**
+	 * 첨부파일 붙이기
+	 */
+	File saveFolder = new File("d:/saveFiles");
+
+	private int processAttatch(ProdVO prod) {
+		List<ProdAttatchVO> attatchList = prod.getAttatchList();
+		int cnt = 0;
+		if(attatchList!=null && attatchList.size()>0) {
+			cnt = dao.insertAttatches(prod);
+			for(int i = 0; i<attatchList.size(); i++) {
+				try {
+					ProdAttatchVO attatch = attatchList.get(i);
+					attatch.saveFile(saveFolder);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return cnt;
+	}
+
+	@Override
+	public int retrieveProdCount(PagingInfoVO<ProdVO> pagingVO) {
+		return dao.selectProdCount(pagingVO);
+	}
+
+	@Override
+	public List<ProdVO> retrieveProdList(PagingInfoVO<ProdVO> pagingVO) {
+		return dao.selectProdList(pagingVO);
+	}
+
+	@Override
+	public ProdVO retrieveProd(String prodId) {
+		return dao.selectProd(prodId);
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED) 
+	@Override
+	public ServiceResult createProd(ProdVO prod) {
+		ServiceResult result = null;
+		int cnt = dao.insertProd(prod);
+		cnt += processAttatch(prod);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult modifyProd(ProdVO prod) {
+		ServiceResult result = null;
+		int cnt = dao.updateProd(prod);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult removeProd(String prodId) {
+		ServiceResult result = null;
+		int cnt = dao.deleteProd(prodId);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public int retrieveReviewCount(String prodId) {
+		return dao.selectReviewCount(prodId);
+	}
+
+	@Override
+	public List<ReviewVO> retrieveReviewList(PagingInfoVO<ReviewVO> pagingVO) {
+		return dao.selectReviewList(pagingVO);
+	}
+
+	@Override
+	public ServiceResult createReview(ReviewVO review, Order2VO order) {
+		ServiceResult result = null;
+		List<String> list = orderDao.selectOrderIdList(order);
+		String orderId = null;
+		if(list.size()>0) {
+			orderId=list.get(0);
+			review.setOrderId(orderId);
+			int cnt = dao.insertReview(review);
+			if(cnt>0) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult removeReview(int reviewNo) {
+		ServiceResult result = null;
+		int cnt = dao.deleteReview(reviewNo);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public List<LprodVO> retrieveLprodAList() {
+		return dao.selectLprodAList();
+	}
+
+	@Override
+	public List<LprodVO> retrieveLprodBList(String lprodParent) {
+		return dao.selectLprodBList(lprodParent);
+	}
+
+	@Override
+	public ProdAttatchVO downloadAttatch(int prodattId) {
+		return dao.selectAttatch(prodattId);
+	}
+
+	
+}

@@ -1,0 +1,42 @@
+package kr.or.ddit.vo;
+
+import java.util.List;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+/**
+ * @author 허민지
+ * @since 2019. 11. 13.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 13.      허민지       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+
+@Data
+@EqualsAndHashCode(of= {"memId", "allId"})
+@NoArgsConstructor
+public class MemAllergyVO {
+	
+	public MemAllergyVO(String allId) {
+		this.allId = allId;
+	}
+	
+	private String symRecital;
+	private String memId;
+	private String allId;
+	private String symId;
+	
+	private AllergyVO allergy;
+	
+	private boolean containAllergy = false;
+	
+
+}

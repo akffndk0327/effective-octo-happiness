@@ -1,0 +1,42 @@
+package kr.or.ddit.mypage.service;
+
+import java.util.List;
+
+import kr.or.ddit.vo.CompanyVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+public interface IAdminMypageService {
+
+	public List<MemberVO> retrieveMemberList(PagingInfoVO<MemberVO> pagingVO);
+	
+	public MemberVO retrieveMember(MemberVO member);
+	
+	public List<CompanyVO> retrieveCompanyList(PagingInfoVO<CompanyVO> pagingVO);
+	
+	public int retrieveMemberCount(PagingInfoVO<MemberVO> pagingVO);
+	
+	public int selectWindowChrome();
+	
+	public int selectLinuxChrome();
+	
+	public int selectTheOthersChrome();
+	
+	public int selectWindowFireFox();
+	
+	public int selectLinuxFireFox();
+	
+	public int selectTheOthersFireFox();
+	
+	public int selectWindowExp();
+	
+	public int selectLinuxExp();
+	
+	public int selectTheOthersExp();
+	
+	public int selectWindowEtc();
+	
+	public int selectLinuxEtc();
+	
+	public int selectTheOthersEtc();
+}

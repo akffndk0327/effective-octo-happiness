@@ -1,0 +1,53 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                수정자      수정내용
+* ----------  ---------  -----------------
+* 2019. 11. 15.      	 허민지      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table>
+					<tr>
+						<td>${savedMember.memName }의 알러지 정보</td>
+						<c:choose>
+							<c:when test="${not empty savedMember.memAllList  }">
+							<c:forEach var="savedMember" items="${savedMember.memAllList}">
+								<td>
+									<input type="text" value="${savedMember.allergy.allName }">
+								</td>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<td>
+								알레르기 정보 없음.
+							</td>
+						</c:otherwise>
+						</c:choose>
+					</tr>
+					<tr>
+						<td>레시피 글</td>
+						<c:forEach var="savedRecipe" items="${savedMember.recipeBoardList}">
+							<td>
+								<input type="text" value="${savedRecipe.recipeTitle }">
+							</td>
+						</c:forEach>
+					</tr>
+					<tr>
+						<td>식단공유</td>
+						<c:forEach var="savedMonthly" items="${savedMember.monthlyList}">
+							<td>
+								<input type="text" value="${savedMonthly.monthlyTitle }">
+							</td>
+						</c:forEach>
+					</tr>
+			</table>
+</body>
+</html>

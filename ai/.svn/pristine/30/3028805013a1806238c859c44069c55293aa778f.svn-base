@@ -1,0 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                 수정자      수정내용
+* 
+* ----------  ---------  -----------------
+* 2019. 11. 15.      이유진      최초작성
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+
+
+<div id="InnerContainer">
+	<div style="text-align: center;">
+		<h2>제출완료</h2>
+		<h6>답변이 등록되었습니다. 참여해주셔서 감사합니다</h6>
+		<input type="button" class="btn btnAi0" value="목록으로" onclick="location.href ='${cPath}/survey/surveyList.do'">
+	</div>
+</div>

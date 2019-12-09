@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일             	    수정자          수정내용               -->
+<!--  =============   ======    ==============        -->
+<!--  2019. 11. 19.    최서희          최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.chemicals.dao.IChemicalsDAO">
+	
+	<select id="selectChemicals" resultType="ChemicalsVO" parameterType="String">
+	SELECT DISTINCT (NVL(CAS_ID,' ')) AS CAS_ID,
+					(NVL(CHE_NAME_KO,' ')) AS CHE_NAME_KO,
+		 			(NVL(CHE_NAME_EN,' ')) AS CHE_NAME_EN
+	FROM CHEMICALS 
+	WHERE CHE_NAME_KO LIKE '%'||#{cheNameKo}||'%'
+	OR CHE_NAME_EN LIKE '%'||#{cheNameEn}||'%'
+	</select>
+	
+	<select id="selectRawMaterial" resultType="RawMaterialVO" parameterType="String">
+	SELECT DISTINCT(NVL(RAW_ID,' ')) AS RAW_ID,
+		   	 	   (NVL(RAW_NAME,' ')) AS RAW_NAME  
+	FROM RAWMATERIAL 
+	WHERE RAW_NAME LIKE '%'||#{rawName}||'%'
+	</select>
+	
+	<resultMap type="ProdChemicalVO" id="chemicalsMap" autoMapping="true">
+		<association property="chemical" javaType="ChemicalsVO" autoMapping="true">
+			<id column="CAS_ID" property="casId"/>
+		</association>
+	</resultMap>
+	<select id="selectProdChemicals" resultMap="chemicalsMap" parameterType="String">
+		SELECT A.CAS_ID, CHE_NAME_KO, CHE_NAME_EN
+		FROM PRODCHEMICAL A, CHEMICALS B
+		WHERE A.CAS_ID = B.CAS_ID
+		AND PROD_ID = #{prodId}
+	</select>
+	
+	<resultMap type="ProdNutritionVO" id="rawMap" autoMapping="true">
+		<association property="raw" javaType="RawMaterialVO" autoMapping="true">
+			<id column="RAW_ID" property="rawId"/>
+		</association>
+	</resultMap>
+	<select id="selectProdRawMaterial"  resultMap="rawMap" parameterType="String">
+		SELECT A.RAW_ID, RAW_NAME
+		FROM PRODNUTRITION A, RAWMATERIAL B
+		WHERE A.RAW_ID = B.RAW_ID
+		AND PROD_ID = #{prodId}
+	</select>
+	
+	<insert id="insertProdChemicals" parameterType="ProdChemicalVO">
+		INSERT ALL
+		<foreach collection="cheList" item="ch">
+		INTO PRODCHEMICAL (
+		    PROD_ID,  CAS_ID
+		) VALUES (
+		    #{prodId}, #{ch.casId}
+		)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	<insert id="insertProdRaws" parameterType="ProdNutritionVO">
+		INSERT ALL
+		<foreach collection="rawList" item="raw">
+		INTO PRODNUTRITION (
+		    PROD_ID,  RAW_ID
+		) VALUES (
+		    #{prodId}, #{raw.rawId}
+		)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+</mapper>

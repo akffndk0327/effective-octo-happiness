@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일      		  	수정자     		수정내용               -->
+<!--  =============    ======    ==============        -->
+<!--  2019. 11. 10.     박주연                    최초작성               -->
+<!--  2019. 11. 11.		박주연		 목록 조회 		 -->
+<!--  2019. 11. 12		박주연	상세보기, 작성 뷰 구현     -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.advertise.dao.IAdvertiseDAO">
+<select id="selectAdCount" parameterType="PagingInfoVO" resultType="int" >
+	SELECT COUNT(*) FROM ADVERTISE
+</select>
+<!-- 광고 목록 출력  -->
+<select id="selectadAdList" parameterType="PagingInfoVO" resultType="AdvertiseVO">
+<!-- 	 <if test="authorId == 'ROLE_EMP'"> -->
+	 SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		       SELECT AD_ID, AD_TITLE, MEM_ID, TO_CHAR(AD_INDATE,'YYYY/MM/DD') AD_INDATE, 
+				C.CODE_NAME AS AD_APPROVE, D.CODE_NAME AS AD_USE, TO_CHAR(AD_TERM,'YYYY/MM/DD') AD_TERM
+				FROM ADVERTISE, CODE C, CODE D
+				WHERE AD_APPROVE = C.CODE_ID
+				AND AD_USE = D.CODE_ID
+				and MEM_ID=#{pk}
+		    ) A
+		) B
+	WHERE RNUM BETWEEN #{startRow} AND #{endRow} 
+<!-- </if> -->
+</select>
+<resultMap type="AdvertiseVO" id="adMap" autoMapping="true">
+	<id property="adId" column="AD_ID"/>
+	<collection property="adattatchList" ofType="AdattatchVO" autoMapping="true">
+		<id property="adattId" column="ADATT_ID"/>
+	</collection>
+	<collection property="adreplyList" ofType="AdreplyVO" autoMapping="true">
+		<id property="adreplyId" column="ADREPLY_ID"/>
+	</collection>		
+</resultMap>
+
+<!-- 광고댓글 -->
+<!-- <select id="selectReplyList" resultType="AdreplyVO"> -->
+<!-- 		SELECT ADREPLY_ID, AD_ID, MEM_ID, -->
+<!-- 		FROM ADREPLY -->
+<!-- 		WHERE AD_ID = #{adId} -->
+<!-- 	</select> -->
+
+<!-- 광고 상세보기+ 이미지 -->
+<select id="selectAd" parameterType="AdvertiseVO" resultMap="adMap">
+	SELECT 
+		AD_ID, AD_TITLE, MEM_ID, AD_APPROVE,  
+		TO_CHAR(AD_INDATE,'YYYY/MM/DD') AD_INDATE, 
+		TO_CHAR(AD_TERM,'YYYY/MM/DD') AD_TERM, AD_LINK
+	FROM ADVERTISE   
+    WHERE AD_ID = #{adId}
+</select>
+
+<insert id ="insertAd" parameterType="AdvertiseVO">
+	INSERT INTO advertise (
+    AD_ID,    AD_TITLE, AD_TERM,   AD_INDATE,    AD_LINK,    MEM_ID
+) VALUES (
+    ad_seq.nextval,
+    #{adTitle},
+    #{adIndate},
+    to_date('#{adIndate}','YYYY/mm/dd'),
+    #{adLink},
+    #{memId}
+);
+</insert>
+
+<update id="updateAd" parameterType="int">
+	
+</update>
+
+
+<!--  관리자 리스트 --> 
+<!-- <select id="selectAdminCount" parameterType="PagingInfoVO" resultType="int" > -->
+<!-- 	SELECT COUNT(*) FROM ADVERTISE> -->
+<!-- </select> -->
+<!--  광고 목록 출력  --> 
+<!-- <select id="selectadAdminList" parameterType="PagingInfoVO" resultType="AdvertiseVO"> -->
+<!--  	 <if test="authorId=='ROLE_ADMIN'"> --> 
+<!-- 	 SELECT B.* -->
+<!-- 		FROM( -->
+<!-- 		    SELECT ROWNUM RNUM, A.* -->
+<!-- 		    FROM( -->
+<!-- 		       SELECT AD_ID, AD_TITLE, MEM_ID, TO_CHAR(AD_INDATE,'YYYY/MM/DD') AD_INDATE,  -->
+<!-- 				C.CODE_NAME AS AD_APPROVE, D.CODE_NAME AS AD_USE, TO_CHAR(AD_TERM,'YYYY/MM/DD') AD_TERM -->
+<!-- 				FROM ADVERTISE, CODE C, CODE D -->
+<!-- 				WHERE AD_APPROVE = C.CODE_ID -->
+<!-- 				AND AD_USE = D.CODE_ID -->
+<!-- 		    ) A -->
+<!-- 		) B -->
+<!-- 	WHERE RNUM BETWEEN #{startRow} AND #{endRow}  -->
+<!-- - 	</if> -->
+<!-- </select> -->
+
+
+
+
+</mapper>

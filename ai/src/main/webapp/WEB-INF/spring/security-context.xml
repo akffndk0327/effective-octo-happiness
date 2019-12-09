@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일                  수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 3.    허민지     최초작성               -->
+<!--  2019. 11. 20.   허민지      passwordEncoders 추가 -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<util:map id="passwordEncoders" map-class="java.util.LinkedHashMap">
+		<beans:entry key="bcrypt">
+			<beans:bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+		</beans:entry>
+		<beans:entry key="scrypt">
+			<beans:bean class="org.springframework.security.crypto.scrypt.SCryptPasswordEncoder" />
+		</beans:entry>
+		<beans:entry key="pbkdf">
+			<beans:bean class="org.springframework.security.crypto.password.Pbkdf2PasswordEncoder" />
+		</beans:entry>
+		<beans:entry key="sha512">
+			<beans:bean class="org.springframework.security.crypto.password.MessageDigestPasswordEncoder"
+				c:algorithm="Sha-512"
+				p:encodeHashAsBase64="true" 
+			/>
+		</beans:entry>
+	</util:map>
+	
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.DelegatingPasswordEncoder"
+		c:idForEncode="sha512"
+		c:idToPasswordEncoder-ref="passwordEncoders"
+	/>	
+
+
+   <!-- principal 내의 기본 인증 정보 이외의 정보를 세팅하고 싶다면, 별도의 UserDetails 와-->
+   <!-- UserDetailsService 를 구현 및 등록해 사용 할 수 있음. -->
+   <beans:bean id="userDetailsService" class="kr.or.ddit.member.service.CustomUserDetailService" />
+   
+   <beans:bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider" 
+      p:hideUserNotFoundExceptions="false"
+      p:userDetailsService-ref="userDetailsService"
+      p:passwordEncoder-ref="passwordEncoder"
+   />
+   
+   <authentication-manager id="authenticationManager">
+      <authentication-provider ref="authenticationProvider" />
+   </authentication-manager>
+
+   <!-- AffirmativeBased의 access decision 정책은 여러개의 AccessDecisionVoter 중 단 하나라도 -->
+   <!-- ACCESS_DENIED 를 던지면 접근 거부, ACCESS_ABSTAIN 과 하나 이상의 ACCESS_GRANTED로 구성된 경우 접근 허용. -->
+   <!-- 다수결의 원칙에 따른 모든 Voter의 투표결과를 합산하여 최종적으로 ACCESS_SUBSTAIN(0) 보다 큰 값일 지닌 경우 접근 허용. -->
+   <!-- 모두 ACCESS_ABSTAIN 을 던졌을 경우, 접근 거부를 위해  allowwIfAllabstainDecisions="false"를 설정. -->
+   <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased"
+        p:allowIfAllAbstainDecisions="false">
+        <!-- SecurityExpressionRoot의 securityEL 을 사용한 접근제어를 위해 필요한 AccessDecisionVoter -->
+      <beans:constructor-arg name="decisionVoters">
+         <beans:list>
+            <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+            <beans:bean class="org.springframework.security.access.vote.RoleVoter" />
+            <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter" />
+         </beans:list>
+      </beans:constructor-arg>
+   </beans:bean>
+   
+   <!-- 데이터베이스내의 보호된 리소스-권한 매핑 정보를 조회한 후 관리할 map을 생성하는 factory bean -->
+   <!-- 자원에 대한 접근 설정이 동적으로 변경되지 않는 경우, 데이터베이스의 접근 정보를 다시 로딩 할 필요가 없음. -->
+   <!--    보호된 자원에 설정된 권한 정보 조회 -->
+   <beans:bean id="requestMap" class="kr.or.ddit.common.security.auth.RequestMapFactoryBean" />
+   
+   <!-- 데이터베이스 기반으로 현재 시점의 url 보호자원-권한의 매핑 정보를 runtime에 동적으로 변경 반영하기 위해 관리되는 metadatasource -->
+   <!-- 시큐리티 필터가 자원에 대한 접근 여부를 허가할때 참고할 권한 정보 설정 담당 : role 명으로만 접근 제어를 할때 사용 -->
+<!--    <beans:bean id="filterInvocationSecurityMetadataSource" class="org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource"  -->
+<!--       c:requestMap-ref="requestMap" -->
+<!--    /> -->
+   
+
+<!--    spEL형태의 빌트인 함수를 파싱하기 위한 expressionHandler  -->   
+<!--    <beans:bean id="webSecurityExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"  /> -->
+<!--    시큐리티 필터가 자원에 대한 접근 여부를 허가할때 참고할 권한 정보 설정 담당 : spEL형태의 빌트인 함수로 접근 제어 -->
+<!--    <beans:bean id="filterInvocationSecurityMetadataSource" class="org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource"  -->
+<!--       c:requestMap-ref="requestMap" -->
+<!--       c:expressionHandler-ref="webSecurityExpressionHandler" -->
+<!--    /> -->
+
+	   <beans:bean id="filterInvocationSecurityMetadataSource" class="kr.or.ddit.common.security.auth.CompositeFilterInvocationSecurityMetadataSource" 
+      c:requestMap-ref="requestMap"
+  	 	/>
+
+   <!-- 리퀘스트를 가로챈 interceptor가 http 리소스에 대한 보호를 수행하기 위해 요청url-권한에 대한 정보를 가진 SecurityMetadataSource가 필요함 -->   
+   <!--    자원에 대한 접근 요청을 통제할 필터 -->
+   <beans:bean id="filterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" 
+      p:authenticationManager-ref="authenticationManager"
+      p:accessDecisionManager-ref="accessDecisionManager"
+      p:securityMetadataSource-ref="filterInvocationSecurityMetadataSource"
+   />
+   <!--    <security:authorize url="/member/memberList.do"></security:authorize> 와 같은 형태의 선택적 랜더링 적용을 위한 전략빈 -->
+   <beans:bean class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator" 
+      c:securityInterceptor-ref="filterSecurityInterceptor"   
+   />
+   
+   <!-- RememberMeToken 저장소 생성 : inMemory(InMemoryTokenRepositoryImpl)/DataBase(JdbcTokenRepositoryImpl)-->
+<!--       p:createTableOnStartup="true" : 처음 한번만 실행할 것. -->
+   <beans:bean id="persistentTokenRepository" class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl" 
+      p:dataSource-ref="dataSource"
+   />
+   
+   <beans:bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices" 
+      c:tokenRepository-ref="persistentTokenRepository"
+      c:userDetailsService-ref="userDetailsService"
+      c:key="sampleKey"
+      p:tokenValiditySeconds="#{60*60*24*7}"
+      p:parameter="idSave"	
+   /> 
+   
+    <beans:bean id="authenticationSuccessHandler" class="kr.or.ddit.common.security.CustomAuthenticateSuccessHandler" 
+      p:defaultTargetUrl="/"
+      p:alwaysUseDefaultTargetUrl="false"
+   />
+   
+   <beans:bean id="logoutSuccessHandler" class="kr.or.ddit.common.security.CustomLogoutSuccessHandler" />
+   
+   <http pattern="*.html" security="none" />
+   <http pattern="*.js" security="none" />
+   <http pattern="*.css" security="none" />
+   <http auto-config="true" use-expressions="true">
+      <form-login login-page="/login" 
+         username-parameter="memId"
+         password-parameter="memPass"
+         login-processing-url="/loginProcess"
+         default-target-url="/"
+         authentication-failure-url="/login?error=true"
+         always-use-default-target="false"
+         authentication-success-handler-ref="authenticationSuccessHandler"
+      />
+      <csrf disabled="true"/>
+      <logout logout-url="/logout" 
+         invalidate-session="true" 
+         success-handler-ref="logoutSuccessHandler"      
+      />
+      
+      <csrf disabled="true"/>
+	
+	  <remember-me services-ref="rememberMeServices" key="sampleKey"/>
+      		
+	  <custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR"/>
+	  <intercept-url pattern="T(org.springframework.web.cors.CorsUtils).isPreFlightRequest(request)" access="permitAll"/>
+      
+<!--       <custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR"/> -->
+<!--       <intercept-url pattern="/member/memberInsert.do" access="isAnonymous()"/> -->
+<!--       <intercept-url pattern="/member/memberUpdate.do" access="isAuthenticated()"/> -->
+<!--       <intercept-url pattern="/member/memberDelete.do" access="isAuthenticated()"/> -->
+<!--       <intercept-url pattern="/mypage/**" access="isAuthenticated()"/> -->
+<!--       <intercept-url pattern="/member/**" access="hasRole('ROLE_ADMIN')" /> -->
+<!--       <intercept-url pattern="/prod/prodUpdate.do" access="hasRole('ROLE_ADMIN')"/> -->
+<!--       <intercept-url pattern="/othersAllergies/othersAllergiesUpdate.do" access="hasRole('ROLE_ADMIN')"/> -->
+<!--       <intercept-url pattern="/prod/prodInsert.do" access="hasRole('ROLE_ADMIN')"/> -->
+<!--       <intercept-url pattern="/alba/**" access="hasRole('ROLE_ADMIN')"/> -->
+<!--       <intercept-url pattern="/**" access="permitAll"/> -->
+   </http>
+   
+</beans:beans>

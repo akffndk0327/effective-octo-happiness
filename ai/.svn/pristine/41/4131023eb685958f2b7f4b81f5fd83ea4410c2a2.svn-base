@@ -1,0 +1,8 @@
+package kr.or.ddit.vo;
+
+public class QuestionVO {
+	private String questId;
+	private String questCont;
+	private String questType;
+	private String tokenId;
+}

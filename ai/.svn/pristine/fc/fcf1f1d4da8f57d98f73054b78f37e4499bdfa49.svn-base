@@ -1,0 +1,14 @@
+package kr.or.ddit.survey.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class SurveyDeleteController {
+	
+	@RequestMapping("survey/surveyDelete.do")
+	public String surveyDelete() {
+		return "survey/surveyList";
+	}
+
+}

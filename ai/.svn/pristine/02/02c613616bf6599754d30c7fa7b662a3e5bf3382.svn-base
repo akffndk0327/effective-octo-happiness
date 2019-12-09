@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일                수정자        수정내용               -->
+<!--  ==========    ======    ==============        -->
+<!--  2019. 11. 18   허민지        최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mypage.dao.IMemMypageDAO">
+
+	<insert id="insertMemAllergy" parameterType="MemberVO">
+    INSERT ALL
+		<foreach collection="memAllList" item="allergy">
+    	INTO MEMALLERGY (
+    		MEM_ID
+        	,ALL_ID
+        	,SYM_ID
+    	) VALUES (
+        	#{memId}
+        	,#{allergy.allId}
+        	,#{allergy.symId}
+    	)
+    </foreach>
+    SELECT * FROM DUAL
+	</insert>
+	
+	
+	<delete id="deleteMemAllergy" parameterType="MemAllergyVO">
+	DELETE FROM MEMALLERGY
+	WHERE 
+		MEM_ID = #{memId}
+		AND ALL_ID = #{allId}
+	</delete>
+	
+   <update id="deleteMember" parameterType="String">
+   UPDATE MEMBER
+   SET
+   		MEM_DELETE = 'Y'
+   WHERE
+   		MEM_ID = #{memId}
+   </update>
+	
+</mapper>

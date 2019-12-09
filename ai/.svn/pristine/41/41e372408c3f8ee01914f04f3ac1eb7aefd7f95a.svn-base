@@ -1,0 +1,97 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%--
+* [[개정이력(Modification Information)]]
+* 수정일                     수정자             수정내용
+* ----------  	  ---------  -----------------
+* 2019. 11. 6.      허민지             최초작성
+* 2019. 11. 19      허민지         회원 보유 알러지 세팅
+* Copyright (c) 2019 by DDIT All right reserved
+ --%>
+<style>
+/*  .del{ */
+/*  	height : 10px; */
+/*  } */
+</style>
+<div class=titleLeftBar>${savedMember.memName }(${savedMember.memId })님의 알레르기 정보</div>
+<div id="InnerContainer">
+	
+	<c:forEach var="memAllergy" items="${memAllergyList }" varStatus="vs">
+		<c:choose>
+			<c:when test="${memAllergy.allId eq '0' }">
+				알레르기 정보 없음.
+			</c:when>
+			<c:otherwise>
+			<form method="post" action="${cPath}/memMypage/memAllergyDelete.do">
+				<div>${vs.count}.
+					<input type="hidden" name="allId" value="${memAllergy.allergy.allId }" />${memAllergy.allergy.allName } - 
+					<input type="hidden" name="symId" value="${memAllergy.allergy.allergySymtom.symName }" />${memAllergy.allergy.allergySymtom.symId }
+					<input type="submit"  value="${vs.count }번 알레르기 삭제하기" />
+					<br>
+					<br>
+				</div>
+			</form>
+			</c:otherwise>
+		</c:choose>	
+	</c:forEach>
+	<hr>
+	알러지 정보 추가하기
+	<br><br>
+	<form:form action="${cPath }/memMypage/memAllergyInsert.do" method="post" modelAttribute="member">
+		<div class="form-group">
+		<div class='original'>
+			<div class="input-group">
+			<select name="memAllList[0].allId">
+				<option value="0">해당없음</option>
+				<!-- contains로 왼10개 오른쪽 10개의 빵을 비교한다. 100개의 빵이 아님 -->
+				<!-- contains로 allId를 서로 비교해야함 -->
+				<c:forEach var="allergy" items="${allergyList }">
+					<c:if test="${allergy.notContains(memAllergyList)}">
+						<option value="${allergy.allId }">${allergy.allName }</option>
+					</c:if>
+				</c:forEach>
+			</select>
+			<select name="memAllList[0].symId">
+				<option value="S0">없음</option>
+				<c:forEach var="symtomList" items="${symtomList }">
+					<option value="${symtomList.symId }">${symtomList.symName }</option>
+				</c:forEach>
+			</select>
+<!-- 			<input type="button" class="btn bntAi0 plusBtn" value="추가하기"/> -->
+			<img src="${cPath }/images/plus.png" class="plusBtn"/>
+			<br>
+			<br>
+			</div>
+		</div>
+		</div>
+		<input type="submit" class="btn btnAi0"value="추가하기"/>
+	</form:form>
+</div>
+
+<script>
+	$("body").on("click", ".plusBtn", function(){
+// 		console.log($(".original").html());
+		//복사할 한 세트 지정
+		var parent = $(this).parents('.original');
+		console.log(parent);
+		var content = $(parent).get(0).outerHTML;
+// 		오리지널 세트의 갯수를 알아야함
+		var index = $(".original").length;
+		//가져온 html을 넣기전에 그 html의 인덱스를 바꿔줘야함
+		//바꿀 인덱스를 갯수만큼 바꿔줘야함
+		var newContent = content.replace(/memAllList\[\d\]/gm,"memAllList["+index+"]");
+		//바로 위 부모
+		var allergy = $(parent).parents('div:first');
+		allergy.append(newContent);
+// 		console.log(index);
+// 		console.log(newContent);
+	})
+	
+	
+	var minusBtn = $(".minusBtn");
+	$("body").on("click",".minusBtn", function(){
+		console.log(minusBtn.prop());
+	})
+</script>

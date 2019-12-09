@@ -1,0 +1,115 @@
+package kr.or.ddit.member.controller;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.member.exception.NotAuthenticatedException;
+import kr.or.ddit.member.exception.UserNotFoundException;
+import kr.or.ddit.member.service.IMemberService;
+import kr.or.ddit.vo.MemberVO;
+
+/**
+ * @author 허민지
+ * @since 2019. 11. 6.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     		--------    ----------------------
+ * 2019. 11. 6.      	허민지      	 최초작성
+ * 2019. 11. 16.        허민지		 checkPassForUpdate 추가
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Controller
+@RequestMapping("/member")
+public class MemberUpdateController {
+	
+	@Inject
+	IMemberService service;
+	
+	@Inject
+	DelegatingPasswordEncoder passwordEncoder;
+	
+	@RequestMapping(value="checkPassForUpdate.do", method=RequestMethod.POST)
+	public String checkPassForUpdate(
+			@RequestParam(required=true) String memPass,
+			Authentication authentication,
+			Model model,
+			RedirectAttributes redirect) {
+		
+		MemberVO authMember = (MemberVO) authentication.getPrincipal();
+		String viewName = null;
+		String message = null;
+		String memId = authentication.getName();
+		model.addAttribute("message", message);
+		//안됨
+		MemberVO member = service.retrieveMember(authMember);
+		if(!passwordEncoder.matches(authMember.getMemPass(), member.getMemPass())) {
+			message = "비밀번호 오류";
+			redirect.addFlashAttribute("message", message);
+			viewName="redirect:/memMypage/member?memId="+memId;
+//		}
+//		if(!authMember.getPassword().equals(memPass)) {
+//			message = "비밀번호 오류";
+//			redirect.addFlashAttribute("message", message);
+//			viewName="redirect:/memMypage/member?memId="+memId;
+		}else {
+			MemberVO savedMember = service.retrieveMember(authMember);
+			model.addAttribute("savedMember", savedMember);
+			viewName = "memMypage/memberView";
+		}
+		return viewName;
+	}
+	
+	@RequestMapping(value="memberUpdate.do", method=RequestMethod.POST)
+	public String doPost(
+			@Valid @ModelAttribute("member") MemberVO member, Errors errors, 
+			RedirectAttributes redirectAttributes,
+			Authentication authentication
+			){
+		String memId = authentication.getName();
+		boolean valid = !errors.hasErrors();
+		String viewName = "redirect:/memMypage/member?memId="+memId;
+		String message = null;
+		if(valid) {
+//		3. 통과
+//			1) 의존성
+//			2) 로직 선택(ServiceResult modifyMember(member))
+//			System.out.println(member.getMemPass());
+			ServiceResult result = service.modifyMember(member);
+			switch (result) {
+			case FAILED:
+//				- FAILED  : redirect -> mypage
+				message = "서버 오류";
+				break;
+			default:
+//				- OK   : redirect -> mypage
+				viewName = "redirect:/memMypage/member?memId="+memId;
+				message = "수정 성공";
+				break;
+			}
+			
+		}else {
+//		4. 불통  : redirect -> mypage
+			viewName="redirect:/mypage/member?memId="+memId;
+		}
+		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("errors", errors);
+		return viewName;
+	}
+}

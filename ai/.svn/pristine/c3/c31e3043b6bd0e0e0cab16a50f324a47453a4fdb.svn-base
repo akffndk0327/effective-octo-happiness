@@ -1,0 +1,98 @@
+package kr.or.ddit.uneatable.service;
+
+import java.util.List;
+
+import javax.cache.annotation.CacheResult;
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.uneatable.dao.IUneatableDAO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.UneatableVO;
+
+/**
+ * @author 이진희
+ * @since 2019. 11. 5.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                 수정자        수정내용
+ * 2019. 11. 6.      이진희       메서드추가
+ * --------     --------    ----------------------
+ * 2019. 11. 5.      이진희       최초작성
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Service
+public class UneatableServiceImp implements IUneatableService{
+
+	@Inject
+	IUneatableDAO dao;
+	
+	@Override
+	public int selectUneatableCount(PagingInfoVO<UneatableVO> pagingVO) {
+		return dao.selectUneatableCount(pagingVO);
+	}
+
+	@Override
+	@CacheResult(cacheName = "ehPeople") 
+	public List<UneatableVO> selectUneatableList(PagingInfoVO<UneatableVO> pagingVO) {
+		return dao.selectUneatableList(pagingVO);
+	}
+
+	@Override
+	public UneatableVO selectUneatable(UneatableVO uneatVO) {
+		return dao.selectUneatable(uneatVO);
+	}
+
+	@Override
+	public ServiceResult deleteUneatable(int id) {
+		ServiceResult result = null;
+		int cnt = dao.deleteUneatable(id);
+		
+		if(cnt>0) {
+			result=ServiceResult.OK;
+		}else {
+			result=ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public List<String> selectInsttNmList(String insttNm) {
+		return dao.selectInsttNmList(insttNm);
+	}
+
+	@Override
+	public List<String> selectTestNmList(String testNm) {
+		return dao.selectTestNmList(testNm);
+	}
+
+	@Override
+	public ServiceResult creatUneatable(UneatableVO uneatVO) {
+		ServiceResult result = null;
+		int cnt = dao.creatUneatable(uneatVO);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult updateUneatable(UneatableVO uneatVO) {
+		ServiceResult result = null;
+		int cnt = dao.updateUneatable(uneatVO);
+		if(cnt>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+}

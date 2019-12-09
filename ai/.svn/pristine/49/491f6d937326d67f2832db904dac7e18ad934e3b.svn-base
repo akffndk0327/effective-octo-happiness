@@ -1,0 +1,43 @@
+package kr.or.ddit.order.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.Order2VO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 7.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2019. 11. 7.      최서희       최초작성
+ * 2019. 11. 10.     최서희       주문결제 기능 추가
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+@Repository
+public interface IOrderDAO {
+	public String selectOrderId(String memId);
+	public List<String> selectOrderIdList(Order2VO order); //주문id 조회
+	
+	public int selectOrderCount(String pk);
+	public List<Order2VO> selectOrderList(PagingInfoVO<Order2VO> pagingVO);
+	public int selectOrderEmpCount(String pk);
+	public List<Order2VO> selectOrderEmpList(PagingInfoVO<Order2VO> pagingVO);
+	public Order2VO selectOrder(String orderId); //주문상세조회
+	
+	public int insertOrder(Order2VO order); //주문
+	public int insertOrderDetail(Order2VO order); //주문디테일
+	public int insertPayment(Order2VO order); //결제
+	
+	public int updateOrder(String orderId); //배송완료
+	public int updateOrderRefund(String orderId); //환불
+	public int deleteOrder(String orderId);//주문취소
+	
+}

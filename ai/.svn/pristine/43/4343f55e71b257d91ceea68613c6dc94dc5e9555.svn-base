@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용               -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 6.    최서희     최초작성               -->
+<!--  2019. 11. 7.    최서희     delete parameter 변경               -->
+<!--  2019. 11. 8.    최서희     prod insert, update sql문 추가         -->
+<!--  Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.prod.dao.IProdDAO">
+	<!-- 판매중인 제품 조회  -->
+	<select id="selectProdCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*)
+		FROM PROD
+		WHERE PROD_USE = 'p1'
+	</select>
+	<resultMap type="ProdVO" id="prodMap" autoMapping="true">
+		<id column="PROD_ID" property="prodId"/>
+		<association property="code" javaType="CodeVO" autoMapping="true">
+			<id column="CODE_ID" property="codeId"/>
+		</association>
+	</resultMap>
+	<select id="selectProdList" parameterType="PagingInfoVO" resultMap="prodMap">
+		SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		    	 SELECT
+				    PROD_ID,  PROD_NAME,  PROD_IMG,
+				    PROD_PRICE,   PROD_DELIVERY,   PROD_APPROVAL,
+				    PROD_INDATE,   PROD_CONT,   PROD_USE,
+				    LPROD_ID,   A.MEM_ID,
+				    COM_NAME,   CODE_NAME
+		        FROM   PROD A, COMPANY B, CODE C
+		        WHERE PROD_USE = 'p1'
+		        AND A.MEM_ID = B.MEM_ID
+                AND PROD_USE = CODE_ID
+		        ORDER BY PROD_ID DESC
+		    ) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- 모든 상태의 제품 조회 -->
+	<select id="selectProdAdminCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*)
+		FROM PROD
+		<if test="pk != null">
+		WHERE MEM_ID = #{pk}		        
+        </if>
+	</select>
+	<resultMap type="ProdVO" id="prodAdminMap" autoMapping="true">
+		<id column="PROD_ID" property="prodId"/>
+		<association property="code" javaType="CodeVO" autoMapping="true">
+			<id column="CODE_ID" property="codeId"/>
+		</association>
+	</resultMap>
+	<select id="selectProdAdminList" parameterType="PagingInfoVO" resultMap="prodAdminMap">
+		SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		    	 SELECT
+				    PROD_ID,   PROD_NAME,   PROD_IMG,
+				    PROD_PRICE,   PROD_DELIVERY,   PROD_APPROVAL,
+				    PROD_INDATE,  PROD_USE,
+				    LPROD_ID,  A.MEM_ID,
+				    COM_NAME,  CODE_NAME
+		        FROM   PROD A, COMPANY B, CODE C
+		        WHERE A.MEM_ID = B.MEM_ID
+                AND PROD_USE = CODE_ID
+		        <if test="pk != null">
+				AND B.MEM_ID = #{pk}		        
+		        </if>
+		        ORDER BY PROD_ID DESC
+		    ) A
+		) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- 제품 상세보기 -->
+	<select id="selectProd" parameterType="String" resultType="ProdVO">
+		 SELECT
+		    PROD_ID,
+		    PROD_NAME,
+		    PROD_IMG,
+		    PROD_PRICE,
+		    PROD_DELIVERY,
+		    PROD_APPROVAL,
+		    PROD_INDATE,
+		    PROD_CONT,
+		    PROD_USE,
+		    LPROD_ID,
+		    A.MEM_ID,
+		    COM_NAME             
+		FROM  PROD A, COMPANY B
+		WHERE PROD_ID = #{prodId}
+		AND A.MEM_ID = B.MEM_ID
+	</select>
+	
+	<!-- 기업회원 제품 등록 -->
+	<insert id="insertProd" parameterType="ProdVO">
+		<selectKey order="BEFORE" keyProperty="prodId" resultType="String">
+			SELECT 'P'||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(PROD_ID), 2)), 0)+1, 6, '0')
+			FROM PROD
+		</selectKey>
+		INSERT INTO PROD (
+		    PROD_ID, 
+		    PROD_IMG,
+		    PROD_NAME, PROD_PRICE,
+		    LPROD_ID, MEM_ID,  PROD_DELIVERY,
+		    PROD_CONT
+		) VALUES (
+		   #{prodId},
+		   #{prodImg}, 
+		   #{prodName}, #{prodPrice},
+		    #{lprodId}, #{memId}, #{prodDelivery},
+		   #{prodCont}
+		)
+	</insert>
+	
+	<insert id="insertAttatches" parameterType="ProdVO">
+		<foreach collection="attatchList" item="attatch">
+		INSERT	INTO PRODATTATCH (			    
+			 PRODATT_ID,   PRODATT_SAVENAME,   
+			 PRODATT_NAME,	 PRODATT_FILESIZE,  
+    		 PRODATT_FILETYPE,  PRODATT_FANCY,  PROD_ID
+			    
+			) VALUES (
+				PRODATT_SEQ.nextval,   #{attatch.prodAttSavename},  
+				#{attatch.prodAttName}, 	#{attatch.prodAttFilesize},  
+				#{attatch.prodAttFiletype},  #{attatch.prodAttName},	#{prodId}   
+			)
+		</foreach>
+	</insert>
+	
+	
+	<!-- 관리자 업데이트 -->
+	<update id="updateProd" parameterType="ProdVO">
+
+	</update>
+	
+	<!-- 제품 등록신청 반려 -->
+	<insert id="insertProdReject" parameterType="ProdRejectVO">
+		INSERT INTO PRODREJECT (
+        	PROD_ID, REJECT_REASON
+		) 
+		VALUES (
+			#{prodId}, #{rejectReason}    
+		)
+	</insert>
+	<update id="updateProdReject" parameterType="String">
+		UPDATE PROD
+		SET  PROD_USE = 'p0',
+	    	 PROD_APPROVAL = 'a0'
+		WHERE PROD_ID = #{prodId}
+	</update>
+	<!-- 반려사유 조회-->
+	<select id="selectProdReject" parameterType="String" resultType="ProdRejectVO">
+		SELECT  PROD_ID, REJECT_DATE, REJECT_REASON 
+		FROM PRODREJECT
+		WHERE PROD_ID = #{prodId}
+	</select>
+	
+	<!-- 제품 판매중지 -->
+	<update id="updateProdStop" parameterType="String">
+		UPDATE PROD
+		SET   PROD_USE = 'p0'
+		WHERE PROD_ID = #{prodId}
+	</update>
+	
+	<!-- 판매중지 제품 재판매 -->
+	<update id="updateProdStatus" parameterType="String">
+		UPDATE PROD
+		SET   PROD_USE = 'p1'
+		WHERE PROD_ID = #{prodId}
+	</update>
+	
+	
+	<!-- 제품 품목명 -->
+	<select id="selectLprodAList" resultType="LprodVO">
+		SELECT	LPROD_ID, LPROD_NM
+		FROM	LPROD
+		WHERE 	LPROD_PARENT IS NULL
+	</select>
+	<select id="selectLprodBList" parameterType="String" resultType="LprodVO">
+		SELECT	LPROD_ID, LPROD_NM
+		FROM    LPROD
+		WHERE	LPROD_PARENT = #{lprodParent}
+	</select>
+	
+</mapper>

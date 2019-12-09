@@ -1,0 +1,65 @@
+package kr.or.ddit.note.controller;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+public class PushMessageHandler extends TextWebSocketHandler{
+	@Resource(name="webSocketSessionList")
+	List<WebSocketSession> wsList;
+	
+	@Data
+	@AllArgsConstructor
+	@EqualsAndHashCode(of="mem_id")
+	public static class SendVO implements Serializable{
+		private String mem_id;
+		private String mem_name;
+	}
+	
+	public static class MessageVO{
+		private String sender;
+		private String messgae;
+		private String message_type;
+	}
+	
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		wsList.add(session);
+		System.out.println("세션 추가");
+	}
+	
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		wsList.remove(session);
+		System.out.println("세션 제거");
+	}
+	
+	@Override
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+	}
+	
+	@Override
+	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+		System.err.println(exception.getMessage());
+	}
+}
+
+
+
+
+
+
+
+
+
+

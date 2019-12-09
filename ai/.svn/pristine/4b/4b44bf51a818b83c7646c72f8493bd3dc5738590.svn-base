@@ -1,0 +1,37 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.Data;
+
+@Data
+@Repository
+public class RecipeBoardVO implements Serializable {
+	private int recipeNo;
+	private String recipeTitle;
+	private String recipeContent;
+	private String recipeIndate;
+	private String recipeType;
+	private String memId;
+	
+	private List<RecipeAttatchVO> attatchList;
+	private RecipeTypeVO reType;
+	private Integer rnum;
+	
+	private MultipartFile[] recipe_file;
+	public void setBo_file(MultipartFile[] recipe_file) {
+		this.recipe_file = recipe_file;
+		if(recipe_file==null || recipe_file.length==0) return;
+		attatchList = new ArrayList<>();
+		for(MultipartFile tmp : recipe_file) {
+			//  비어있는 파일 필터링
+			if(tmp.getSize()<=0) continue;
+			attatchList.add(new RecipeAttatchVO(tmp));
+		}
+	}
+}

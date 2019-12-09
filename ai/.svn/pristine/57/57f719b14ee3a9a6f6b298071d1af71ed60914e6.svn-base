@@ -1,0 +1,21 @@
+/**
+ * <pre>
+ * 
+ * </pre>
+ * @author 박주연
+ * @since ${date}
+ * @version 1.0
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일        수정자       수정내용
+ *
+ * --------     --------    ----------------------
+ * 2019.11.1      박주연       최초작성
+ * Copyright (c) ${year} by DDIT All right reserved
+ * </pre>
+ */ 
+@charset "UTF-8";
+
+div.left ul li{
+	padding : 30px;
+}

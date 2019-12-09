@@ -1,0 +1,105 @@
+package kr.or.ddit.advertise.controller;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kr.or.ddit.advertise.service.IAdvertiseService;
+import kr.or.ddit.vo.AdvertiseVO;
+import kr.or.ddit.vo.PagingInfoVO;
+
+@Controller
+@RequestMapping("/advertise")
+public class AdvertiseRetrieveController {
+	@Inject
+	IAdvertiseService service;
+	
+	@Inject
+	WebApplicationContext container;
+	ServletContext application;
+
+	@PostConstruct
+	public void init() {
+		application = container.getServletContext();
+	}
+	
+	@RequestMapping("adList.do")
+	public String AdvertiseList( 
+		@RequestParam(name = "page", required = false, defaultValue = "1") 
+		int currentPage, Model model
+			) {
+		PagingInfoVO<AdvertiseVO> pagingVO = new PagingInfoVO<AdvertiseVO>(10, 5);
+		int totalRecord = service.retrieveAdCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		List<AdvertiseVO> list = service.retrieveAdList(pagingVO);
+		pagingVO.setDataList(list);
+
+		model.addAttribute("pagingVO", pagingVO);
+
+		return "advertise/adList";
+
+	}
+	
+	@RequestMapping("adView.do")
+	public String AdvertiseView(
+			@RequestParam(required=true) int what, @RequestParam(required=true) String memId,
+			Model model
+			,@CookieValue(name="likeCookie",required=false) String cookieValue
+			)throws JsonParseException,JsonMappingException, IOException {
+		AdvertiseVO advertise = service.retrieveAd(new AdvertiseVO(what));
+		model.addAttribute("advertise",advertise);
+		
+		boolean likable = false;
+		if(cookieValue!=null) {
+			ObjectMapper mapper = new ObjectMapper();
+			int[] boNos = mapper.readValue(cookieValue, int[].class);
+			Arrays.sort(boNos);
+			int idx = Arrays.binarySearch(boNos, what);
+			if(idx < 0) likable = true;
+		}else {
+			likable = true;
+		}
+		model.addAttribute("likable", likable);
+		return "advertise/adView";
+	}
+	
+	//관리자
+	@RequestMapping("adViewAdmin.do")
+	public String AdminAdView(
+			@RequestParam(required=true) int what,
+			Model model
+			,@CookieValue(name="likeCookie",required=false) String cookieValue
+			)throws JsonParseException,JsonMappingException, IOException {
+		AdvertiseVO advertise = service.retrieveAd(new AdvertiseVO(what));
+		model.addAttribute("advertise",advertise);
+		boolean likable = false;
+		if(cookieValue!=null) {
+			ObjectMapper mapper = new ObjectMapper();
+			int[] boNos = mapper.readValue(cookieValue, int[].class);
+			Arrays.sort(boNos);
+			int idx = Arrays.binarySearch(boNos, what);
+			if(idx < 0) likable = true;
+		}else {
+			likable = true;
+		}
+		model.addAttribute("likable", likable);
+		return "advertise/adViewAdmin";
+	}
+	
+}

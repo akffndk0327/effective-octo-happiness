@@ -1,0 +1,60 @@
+package kr.or.ddit.prod.service;
+
+import java.util.List;
+
+import kr.or.ddit.enums.ServiceResult;
+import kr.or.ddit.vo.LprodVO;
+import kr.or.ddit.vo.Order2VO;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.ProdAttatchVO;
+import kr.or.ddit.vo.ProdRejectVO;
+import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.vo.ReviewVO;
+
+/**
+ * @author 최서희
+ * @since 2019. 11. 4.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                   수정자               수정내용
+ * -------------  --------    ----------------------
+ * 2019. 11. 4.     최서희            최초작성
+ * 2019. 11. 5.	      최서희	      리뷰 추가
+ * 2019. 11. 10.    최서희            대분류 중분류 셀렉트박스
+ * 2019. 11. 14.    최서희		모든상태의 판매상품에 대해 관리자 조회
+ * Copyright (c) 2019 by DDIT All right reserved
+ * </pre>
+ */
+public interface IProdService {
+	public int retrieveProdCount(PagingInfoVO<ProdVO> pagingVO);
+	public List<ProdVO> retrieveProdList(PagingInfoVO<ProdVO> pagingVO);//판매중인 제품 리스트
+	
+	public int retrieveProdAdminCount(PagingInfoVO<ProdVO> pagingVO);
+	public List<ProdVO> retrieveProdAdminList(PagingInfoVO<ProdVO> pagingVO);//모든 상태의 제품 리스트
+	
+	public ProdVO retrieveProd(String prodId); //상세조회
+	
+	public ServiceResult createProd(ProdVO prod);
+	
+	public ServiceResult modifyProd(ProdVO prod); 
+	public ProdRejectVO retrieveProdReject(String prodId);//반려사유 조회
+	public ServiceResult createProdReject(ProdRejectVO prodRejectVO);
+	public ServiceResult modifyProdStop(String prodId); 
+	public ServiceResult modifyProdStatus(String prodId); 
+	
+	//첨부파일 다운로드
+	public ProdAttatchVO downloadAttatch(int prodattId);
+	
+	//대분류
+	public List<LprodVO> retrieveLprodAList();
+	//중분류
+	public List<LprodVO> retrieveLprodBList(String lprodParent);
+
+	//리뷰
+	public int retrieveReviewCount(String prodId);
+	public List<ReviewVO> retrieveReviewList(PagingInfoVO<ReviewVO> pagingVO);
+	public ServiceResult createReview(ReviewVO review, Order2VO order); 
+	public ServiceResult removeReview(int reviewNo); 
+}

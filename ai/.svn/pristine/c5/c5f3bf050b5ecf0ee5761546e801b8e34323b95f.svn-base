@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 수정자 수정내용 -->
+<!-- -->
+<!-- ========== ====== ============== -->
+<!-- 2019. 11. 4 이유진 최초작성 -->
+<!-- Copyright (c) ${year} by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.recipeboard.dao.IRecipeBoardDAO">
+
+    <sql id="searchFrag">
+        <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(searchMap.searchWord)">
+            WHERE RECIPE_TYPE = #{searchVO.recipeType}
+              AND INSTR(RECIPE_TITLE, #{searchMap.searchWord}) > 0
+        </if>
+    </sql>
+
+    <resultMap type="RecipeBoardVO" id="recipeList"
+        autoMapping="true">
+        <id property="recipeNo" column="RECIPE_NO" />
+        <collection property="reType" ofType="RecipeTypeVO"
+            autoMapping="true">
+            <id property="recipeType" column="RECIPE_TYPE" />
+        </collection>
+    </resultMap>
+    <select id="selectRecipeList" resultMap="recipeList" parameterType="PagingInfoVO">
+        SELECT B.*
+          FROM ( SELECT ROWNUM RNUM, A.*
+                  FROM (
+                  SELECT RECIPE_NO
+                       , RECIPE_TITLE
+                       , RECIPE_CONTENT
+                       , TO_CHAR(RECIPE_INDATE, 'YYYY-MM-DD HH:MI')
+                         AS RECIPE_INDATE
+                       , R1.RECIPE_TYPE
+                       , RECIPE_TYPENM,MEM_ID
+                    FROM RECIPEBOARD R1
+                       , RECIPETYPE  R2
+                   WHERE R1.RECIPE_TYPE=R2.RECIPE_TYPE
+                    <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(searchMap.recipeType)">
+                        AND R1.RECIPE_TYPE = #{searchVO.recipeType}
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(searchMap.searchWord)">
+                        AND INSTR(RECIPE_TITLE, #{searchMap.searchWord}, 1, 1) <![CDATA[>]]> 0
+                    </if>
+                   ORDER BY RECIPE_NO DESC
+                 ) A
+               ) B
+         WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+
+    <select id="selectRecipeCount" resultType="int"
+        parameterType="PagingInfoVO">
+        SELECT COUNT(*)
+        FROM recipeboard
+              <include refid="searchFrag" />
+    </select>
+
+
+    <resultMap type="RecipeBoardVO" id="recipeMap"
+        autoMapping="true">
+        <id property="recipeNo" column="RECIPE_NO" />
+<!--         <collection property="attatchList" ofType="RecipeAttatchVO" -->
+<!--             autoMapping="true"> -->
+<!--             <id property="recipeattId" column="RECIPEATT_ID" /> -->
+<!--         </collection> -->
+        <collection property="reType" ofType="RecipeTypeVO"
+            autoMapping="true">
+            <id property="recipeType" column="RECIPE_TYPE" />
+        </collection>
+    </resultMap>
+    <select id="selectRecipe" parameterType="RecipeBoardVO"
+        resultMap="recipeMap">
+        SELECT
+        recipe_no,recipe_title,recipe_content,
+        TO_CHAR(recipe_indate, 'YYYY-MM-DD HH:MI') recipe_indate, mem_id,
+        (SELECT RECIPE_TYPENM FROM RECIPETYPE C
+        WHERE C.RECIPE_TYPE = A.RECIPE_TYPE) RECIPE_TYPENM
+        FROM recipeboard A
+        WHERE recipe_no =
+        #{recipeNo}
+    </select>
+
+    <select id="selectAllRecipeType" resultType="RecipeTypeVO">
+        SELECT
+            recipe_type,
+            recipe_typenm
+        FROM
+            recipetype
+    </select>
+    
+    <insert id="insertRecipe" parameterType="RecipeTypeVO">
+        INSERT INTO recipeboard (
+            recipe_no,recipe_title,recipe_content,
+            recipe_indate,recipe_type,mem_id
+        ) VALUES (
+            RECIPE_SEQ.NEXTVAL,#{recipeTitle},#{recipeContent},
+            sysdate,#{recipeType},#{memId}
+        )
+    </insert>
+    
+    <update id="UpdateRecipe" parameterType="RecipeTypeVO">
+      UPDATE recipeboard
+        SET
+            RECIPE_TITLE = #{recipeTitle},
+            RECIPE_CONTENT= #{recipeContent},
+            RECIPE_TYPE= #{recipeType}
+        WHERE
+            recipe_no =#{recipeNo}
+    </update>
+
+    <select id="selectRecentRecipe" resultType="Integer">
+         select max(recipe_no)
+         from recipeboard
+    </select>
+    
+    <delete id="deleteRecipe">
+        delete recipeboard 
+        where recipe_no=#{recipeNo}
+    </delete>
+    
+    
+</mapper>

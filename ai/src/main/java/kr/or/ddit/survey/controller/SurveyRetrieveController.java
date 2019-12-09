@@ -1,0 +1,55 @@
+package kr.or.ddit.survey.controller;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.jboss.logging.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.recipeboard.controller.RecipeRetrieveController;
+import kr.or.ddit.survey.service.ISurveyService;
+import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.vo.SurveyVO;
+
+@Controller
+public class SurveyRetrieveController {
+	@Inject
+	ISurveyService service;
+
+	@RequestMapping("survey/surveyList.do")
+	public String surveyList(@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false) String searchType, @RequestParam(required = false) String searchWord,
+			Model model) {
+		PagingInfoVO<SurveyVO> pagingVO = new PagingInfoVO<SurveyVO>(10, 5);
+		int totalRecord = service.selectSurveyCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		pagingVO.setCurrentPage(currentPage);
+		List<SurveyVO> list = service.selectSurveyList(pagingVO);
+		pagingVO.setDataList(list);
+
+		model.addAttribute("pagingVO", pagingVO);
+		return "survey/surveyList";
+	}
+
+	@RequestMapping("/survey/surveyView.do")
+	public String surveyView(@RequestParam(required = true) int surId, Model model) {
+		SurveyVO vo = service.selectSurvey(surId + "");
+		System.out.println(vo);
+		model.addAttribute("survey",vo);
+		return "survey/surveyView";
+	}
+	
+	@RequestMapping("/survey/survey.do")
+	public String surveyd() {
+		
+		return "survey/surveyResp";
+	}
+}

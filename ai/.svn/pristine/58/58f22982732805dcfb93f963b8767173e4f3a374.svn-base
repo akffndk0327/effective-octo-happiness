@@ -1,0 +1,26 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of="allId")
+public class AllergyVO implements Serializable {
+	private Object what;
+	
+	public AllergyVO(int what) {
+		this.what = what;
+	}
+	private String allId; // 아이디
+	private String allName; //이름
+	private String allType; //타입
+	private String allTherapy; //치료
+	private String allPrevent; //예방
+	private byte[] allImg;	 //사진
+	private String allCause; //원인
+	private String allSymptom; //알레르기 증상 
+}

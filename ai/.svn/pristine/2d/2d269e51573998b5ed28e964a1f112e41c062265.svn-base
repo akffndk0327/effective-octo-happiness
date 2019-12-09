@@ -1,0 +1,46 @@
+package kr.or.ddit.vo;
+
+import java.io.Serializable;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class StopSellingFoodVO implements Serializable{
+
+	@NotBlank
+	private String prdtnm; //제품명
+	
+	@NotBlank
+	private String bsshnm; //제조업체명
+	private String addr;  //업체주소
+	private String prcscitypointTelno;  //전화번호 
+	private String brcdno;  //바코드번호
+	private String frmlcunit; //포장단위
+	
+	@NotBlank
+	private String mnfdt;  // 제조일자
+	@NotBlank
+	private String rtrvlplandocRtrvlmthd; //회수방법 
+	private String distbtmlmt;  // 유통기한
+	private String prdlstType; // 식품분류
+	
+	@NotBlank
+	private String imgFilePath; // 제품사진URL
+	private String prdlstCd;  // 식품분류
+	private String cretDtm;  // 등록일
+	
+	@NotBlank
+	private Long rtrvldsuseSeq;  // 회수판매중지일련번호
+	@NotBlank
+	private String rtrvlprvns;   // 회수사유
+	private Long prdlstReportNo;   // 품목제조보고번호
+	private int stopsellId;     // 회수판매중지식품아이디
+	private int rnum;
+	private byte[] stopsellImg;  // 회수판매중지식품이미지
+	
+	
+}

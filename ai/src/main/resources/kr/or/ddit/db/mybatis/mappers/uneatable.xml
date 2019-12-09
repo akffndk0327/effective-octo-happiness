@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.uneatable.dao.IUneatableDAO">
+	<sql id="searchFrag">
+		<where>
+			<if test="searchMap!=null">
+			 <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+			<choose>
+				<when test="'name'.equals(searchMap.searchType)">
+					PRDTNM LIKE '%'||#{searchMap.searchWord}||'%'
+				</when>
+				<when test="'check'.equals(searchMap.searchType)" >
+					INSTT_NM LIKE '%'||#{searchMap.searchWord}||'%'
+				</when>
+				<when test="'testQue'.equals(searchMap.searchType)" >
+					TEST_ITMNM  LIKE '%'||#{searchMap.searchWord}||'%'
+				</when>
+				<otherwise>
+					PRDTNM LIKE '%'||#{searchMap.searchWord}||'%'
+					OR INSTT_NM LIKE '%'||#{searchMap.searchWord}||'%'
+					OR TEST_ITMNM LIKE '%'||#{searchMap.searchWord}||'%'
+				</otherwise>
+			</choose>
+			</if>
+		   </if>
+		</where>
+	</sql>
+   <select id="selectUneatableCount" parameterType="PagingInfoVO" resultType="int" >
+    	SELECT COUNT(*) FROM UNEATABLE
+    	<include refid="searchFrag" />
+   </select>
+
+   <select id="selectUneatableList" parameterType="PagingInfoVO" resultType="UneatableVO">
+   SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		            PRDTNM,
+                    NVL(INSTT_NM,'알수없음') INSTT_NM,
+                    TEST_ITMNM,UNEAT_ID  
+		        FROM UNEATABLE
+		        <include refid="searchFrag" />
+		    ) A
+		) B
+	WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+   </select>
+   <select id="selectUneatable" parameterType="UneatableVO" resultType="UneatableVO">
+   		SELECT 
+	   		RTRVLDSUSE_SEQ,
+	   		PRDTNM,BSSHNM,
+	   		MNFDT,
+	   		NVL(DISTBTMLMT,'데이터없음') DISTBTMLMT,ADDR,
+	   		INSTT_NM,TEST_ITMNM,STDR_STND,
+	   		TESTANALS_RSLT,CRET_DTM,UNEAT_ID
+	   	FROM UNEATABLE	
+   		WHERE UNEAT_ID=#{uneatId}
+   
+   </select>
+   
+   <delete id="deleteUneatable" parameterType="int">
+   		DELETE FROM UNEATABLE WHERE UNEAT_ID=#{uneatId}
+   </delete>
+   
+   <select id="selectInsttNmList" parameterType="string" resultType="string">
+         SELECT DISTINCT(NVL(INSTT_NM,'알수없음')) AS INSTT_NM FROM UNEATABLE WHERE INSTT_NM LIKE '%'||#{insttNm}||'%'
+   </select>
+   
+   <select id="selectTestNmList" parameterType="string" resultType="string">
+         SELECT DISTINCT(NVL(TEST_ITMNM,'알수없음')) AS TEST_ITMNM FROM UNEATABLE WHERE TEST_ITMNM LIKE '%'||#{testItmnm}||'%'
+   </select>
+   
+   <insert id="creatUneatable"  parameterType="UneatableVO">
+   		<selectKey order="BEFORE" keyProperty="uneatId" resultType="int">
+   			SELECT NVL(MAX(UNEAT_ID),0)+1 FROM UNEATABLE
+   		</selectKey>
+   		INSERT INTO UNEATABLE(
+		    rtrvldsuse_seq,prdtnm,mnfdt,
+		    distbtmlmt,addr,instt_nm,
+		    test_itmnm,stdr_stnd,
+		    testanals_rslt,cret_dtm,
+		    uneat_id
+		) VALUES (
+		    #{rtrvldsuseSeq},#{prdtnm},#{mnfdt},
+		    #{distbtmlmt},#{addr},#{insttNm},
+		    #{testItmnm},#{stdrStnd},#{testanalsRslt},
+		    SYSDATE,#{uneatId}
+		)   		
+   </insert>
+   
+   <update id="updateUneatable" parameterType="UneatableVO">
+   	UPDATE uneatable
+		    SET
+		        rtrvldsuse_seq = #{rtrvldsuseSeq},
+		        prdtnm = #{prdtnm},
+		        mnfdt = #{mnfdt},
+		        distbtmlmt= #{distbtmlmt},
+		        addr = #{addr},
+		        instt_nm = #{insttNm},
+		        test_itmnm = #{testItmnm},
+		        stdr_stnd = #{stdrStnd},
+		        testanals_rslt = #{testanalsRslt},
+		        cret_dtm = SYSDATE
+		WHERE
+		   uneat_id = #{uneatId}
+   </update>
+   
+   
+</mapper>

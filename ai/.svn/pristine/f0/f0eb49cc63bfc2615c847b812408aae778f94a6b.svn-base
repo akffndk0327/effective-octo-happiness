@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  [[개정이력(Modification Information)]]       -->
+<!--  수정일        수정자     수정내용     -->
+<!--  2019.11.13	박슬기	하루식단 수정-->
+<!--  2019.11.11	박슬기	상세조회, update수정	-->
+<!--  2019.11.10	박슬기  상세조회 수정 -->
+<!--  ==========   ======    ==============        -->
+<!--  2019. 11. 7.     박슬기     최초작성               -->
+<!--  Copyright (c) 2019 by DDIT All right reserved -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.diet.dao.IDietDAO">
+	<sql id="searchFrag">
+		<if test="searchMap!=null">
+			 <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchMap.searchWord)">
+			<choose>
+				<when test="'name'.equals(searchMap.searchType)">
+					MEM_ID LIKE '%'||#{searchMap.searchWord}||'%'
+				</when>
+			</choose>
+			</if>
+		   </if>
+	</sql>
+	<select id="selectDietList" parameterType="PagingInfoVO" resultType="MonthlyVO">
+		 SELECT B.*
+		FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		        SELECT 
+		            to_char(MONTHLY_INDATE,'YYYY.MM.DD') MONTHLY_INDATE,
+                    MEM_ID,
+                    MONTHLY_ID,
+                    MONTHLY_USE,
+                    MONTHLY_TITLE,
+                    MON_PASS
+		        FROM MONTHLY
+				ORDER BY MONTHLY_INDATE DESC
+		        <include refid="searchFrag"></include>
+		    ) A
+		) B
+	WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectDietCount" parameterType="PagingInfoVO" resultType="int">
+		SELECT COUNT(*)
+		FROM MONTHLY
+	</select>
+	
+	<select id="selectDiet" parameterType="String" resultType="OnedayVO">
+		SELECT
+		    ONEDAY_ID,
+		    ONEDAY.MENU_ID,
+		    MENU.MENU_NAME,
+		    MONTHLY_TITLE,
+		    ONEDAY.MONTHLY_ID
+		FROM
+		    ONEDAY ,MENU, MONTHLY
+		where MONTHLY.MONTHLY_ID = #{monthlyId}
+		and ONEDAY.MENU_ID = MENU.MENU_ID
+        and MONTHLY.MONTHLY_ID = ONEDAY.MONTHLY_ID
+		order BY ONEDAY_ID,MENU_ID DESC
+	</select>
+	
+	<select id="selectMenuList" resultType="menuVO">
+		SELECT
+		    MENU_ID,
+		    MENU_NAME
+		FROM
+		    MENU
+		ORDER BY MENU_ID
+	</select>
+	
+	<select id="selectAllergyMenuList" parameterType="String" resultType="MenuAllergyVO">
+		SELECT DISTINCT MENU_ID
+		FROM MENUALLERGY
+		WHERE ALL_ID IN(SELECT
+		                   ALL_ID
+		                FROM
+		                    MEMALLERGY
+		                WHERE MEM_ID = #{memId})
+		ORDER BY MENU_ID
+	</select>
+	
+	<update id="updateMonthly" parameterType="MonthlyVO">
+		UPDATE MONTHLY
+		
+	    SET MONTHLY_USE = #{monthlyUse},
+	        MONTHLY_TITLE = #{monthlyTitle}
+	    <if test='monthlyUse == "N"'>
+	    	,MON_PASS = #{monPass}
+	    </if>    
+		WHERE MONTHLY_ID = #{monthlyId}
+	</update>
+	
+	<update id="updateOneday" parameterType="OnedayVO">
+		UPDATE ONEDAY
+	    SET MENU_ID = #{afterMenu}
+		WHERE ONEDAY_ID = #{onedayId}
+		AND   MENU_ID = #{menuId}
+	</update>
+	
+	<insert id="insertMonthly" parameterType="MonthlyVO">
+		INSERT INTO MONTHLY (
+    			MONTHLY_INDATE,MONTHLY_ID,MEM_ID,
+    			MONTHLY_USE,MONTHLY_TITLE,MON_PASS) 
+		VALUES (sysdate, (select 'M'||lpad(substr(max(monthly_id),2)+1,4,0) from monthly), #{memId} , #{monthlyUse} ,#{monthlyTitle}
+				<if test='monthlyUse=="N"'>
+					,#{monPass}
+				</if>
+				<if test='monthlyUse=="Y"'>
+					,''
+				</if>
+			)
+	</insert>
+
+
+	<insert id="insertOneday" parameterType="OnedayVO">
+		<selectKey order="BEFORE" keyProperty="monthlyId" resultType="String">
+			SELECT 'M'||LPAD(SUBSTR(MAX(MONTHLY_ID),2),4,0) 
+			FROM MONTHLY
+		</selectKey>
+		INSERT INTO ONEDAY 
+			(ONEDAY_ID,MENU_ID,MONTHLY_ID) 
+		VALUES 
+			(#{onedayId}, #{menuId}, #{monthlyId})
+	</insert>
+	
+	<delete id="deleteDiet" parameterType="String">
+		DELETE FROM MONTHLY
+		WHERE MONTHLY_ID = #{monthlyId}
+	</delete>
+	
+</mapper>

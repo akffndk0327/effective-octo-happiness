@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- [[개정이력(Modification Information)]] -->
+<!-- 수정일 수정자 수정내용 -->
+<!-- ============= ====== ============== -->
+<!-- 2019. 11. 10. 박주연 최초작성 -->
+<!-- 2019. 11. 11. 박주연 목록 조회 -->
+<!-- 2019. 11. 12 박주연 상세보기, 작성 뷰 구현 -->
+<!-- Copyright (c) 2019 by DDIT All right reserved -->
+<mapper namespace="kr.or.ddit.advertise.dao.IAdvertiseDAO">
+	<select id="selectAdCount" parameterType="PagingInfoVO"
+		resultType="int">
+		SELECT COUNT(*) FROM ADVERTISE
+	</select>
+	<!-- 광고 목록 출력 -->
+	<select id="selectadAdList" parameterType="PagingInfoVO"
+		resultType="AdvertiseVO">
+		<!-- <if test="authorId == 'ROLE_EMP'"> -->
+		SELECT B.*
+		FROM(
+		SELECT ROWNUM RNUM, A.*
+		FROM(
+		SELECT AD_ID, AD_TITLE,
+		MEM_ID, TO_CHAR(AD_INDATE,'YYYY/MM/DD') AD_INDATE,
+		C.CODE_NAME AS
+		AD_APPROVE, D.CODE_NAME AS AD_USE,
+		TO_CHAR(AD_TERM,'YYYY/MM/DD')
+		AD_TERM
+		FROM ADVERTISE, CODE C, CODE D
+		WHERE AD_APPROVE = C.CODE_ID
+		AND
+		AD_USE = D.CODE_ID
+		AND MEM_ID = #{pk}
+		ORDER BY AD_ID DESC
+		) A
+		) B
+		WHERE
+		RNUM BETWEEN
+		#{startRow} AND #{endRow}
+		<!-- </if> -->
+	</select>
+
+	<resultMap type="AdvertiseVO" id="adView" autoMapping="true">
+		<id property="adId" column="AD_ID" />
+		<association property="code" javaType="CodeVO"
+			autoMapping="true">
+			<id column="CODE_ID" property="codeId" />
+		</association>
+		<association property="adhit" javaType="AdHitVO"
+			autoMapping="true">
+			<id column="ADPO_ID" property="adpoId" />
+			<association property="adposition"
+				javaType="AdpositionVO" autoMapping="true">
+				<id column="ADPO_ID" property="adpoId" />
+				<association property="resource" javaType="Resource2VO"
+					autoMapping="true">
+					<id column="RES_ID" property="resId" />
+				</association>
+			</association>
+		</association>
+		<collection property="adattatchList" autoMapping="true"
+			ofType="AdattatchVO">
+			<id column="ADATT_ID" property="adattId" />
+		</collection>
+	</resultMap>
+
+
+	<!-- 광고 상세보기+ 이미지 -->
+	<select id="selectAd" parameterType="AdvertiseVO"
+		resultMap="adView">
+		SELECT
+		A.AD_ID, A.AD_TITLE, A.MEM_ID, B.CODE_NAME AS AD_APPROVE,
+		C.CODE_NAME AS AD_USE,
+		TO_CHAR(A.AD_INDATE,'YYYY-MM-DD') AD_INDATE,
+		TO_CHAR(A.AD_TERM,'YYYY-MM-DD') AD_TERM,
+		A.AD_LINK , E.ADPO_NAME,
+		F.RES_NAME , G.*, AD_REP,D.*
+		FROM ADVERTISE A, CODE B , CODE C, ADHIT D ,
+		ADPOSITION E, RESOURCE2 F , ADATTATCH G 
+		WHERE A.AD_ID= #{adId}
+		AND
+		A.AD_APPROVE = B.CODE_ID
+		AND A.AD_USE = C.CODE_ID
+		AND A.AD_ID = D.AD_ID
+		AND D.ADPO_ID =E.ADPO_ID
+		AND D.RES_ID = F.RES_ID
+		AND A.AD_ID = G.AD_ID
+	</select>
+
+
+	<insert id="insertAd" parameterType="AdvertiseVO">
+		INSERT INTO ADVERTISE (
+		AD_ID, AD_TITLE,
+		AD_INDATE, AD_TERM, AD_LINK,
+		MEM_ID
+		) VALUES (
+		ad_seq.nextval,
+		#{adTitle},
+		to_date(#{adIndate},'yyyy-mm-dd'),
+		to_date(#{adTerm},'yyyy-mm-dd'),
+		#{adLink},
+		#{memId}
+		)
+		<selectKey keyProperty="adId" resultType="int" order="AFTER">
+			SELECT
+			MAX(AD_ID) FROM ADVERTISE
+		</selectKey>
+	</insert>
+	<insert id="insertposition" parameterType="AdhitVO">
+		INSERT INTO ADHIT
+		(
+		ADPO_ID,
+		RES_ID,
+		AD_ID
+		) VALUES (
+		#{adpoId},
+		#{resId},
+		(SELECT MAX(AD_ID)
+		FROM ADVERTISE)
+		)
+	</insert>
+<!-- 	회원광고 update -->
+	<update id="updateAd" parameterType="AdvertiseVO">
+	UPDATE ADVERTISE
+	SET
+		AD_TITLE = #{adTitle},
+		AD_INDATE = to_date(#{adIndate},'yyyy-mm-dd'),
+		AD_TERM = to_date(#{adTerm},'yyyy-mm-dd'),
+		AD_LINK =#{adLink}
+	WHERE
+		AD_ID = #{adId}
+	</update>
+	
+<!-- 	회원위치 수정  -->
+	<update id="updateposition" parameterType="AdvertiseVO">
+		UPDATE ADHIT
+		SET 
+			ADPO_ID = ${adpoId},
+			RES_ID = ${resId},
+			AD_ID = ${adId}
+		WHERE 
+		 	AD_ID = #{adId}
+	</update>
+	
+	<!-- 관리자 리스트 -->
+	<select id="selectAdminCount" parameterType="PagingInfoVO"
+		resultType="int">
+		SELECT COUNT(*) FROM ADVERTISE
+	</select>
+	<resultMap type="AdvertiseVO" id="adListMap"
+		autoMapping="true">
+		<association property="code" javaType="CodeVO">
+			<id column="CODE_ID" property="codeId" />
+		</association>
+	</resultMap>
+	<!-- 광고 목록 출력 -->
+	<select id="selectadAdminList" parameterType="PagingInfoVO"
+		resultType="AdvertiseVO">
+		SELECT B.*
+		FROM(
+		SELECT ROWNUM RNUM, A.*
+		FROM(
+		SELECT AD_ID,
+		AD_TITLE, MEM_ID, TO_CHAR(AD_INDATE,'YYYY/MM/DD') AD_INDATE,
+		C.CODE_NAME AS AD_APPROVE, D.CODE_NAME AS AD_USE,
+		TO_CHAR(AD_TERM,'YYYY/MM/DD') AD_TERM
+		FROM ADVERTISE, CODE C, CODE D
+		WHERE AD_APPROVE = C.CODE_ID
+		AND AD_USE = D.CODE_ID
+		ORDER BY AD_ID DESC
+		) A
+		) B
+		WHERE RNUM
+		BETWEEN #{startRow} AND #{endRow}
+		
+	</select>
+
+	<update id="updateApprove" parameterType="AdvertiseVO">
+		UPDATE ADVERTISE
+		SET
+		AD_APPROVE = #{adApprove},
+		<if test='adApprove== "a1"'>
+			AD_USE ='u1'
+		</if>
+		<if test='adApprove == "a0"'>
+			AD_USE ='u2'
+			,AD_REP = #{adRep}
+		</if>
+
+		WHERE
+		AD_ID =#{adId}
+	</update>
+	
+	<update id="updateAdHit" parameterType="int">
+		UPDATE ADHIT
+		   SET AD_HIT = AD_HIT+1
+		WHERE  AD_ID = #{adId}
+	</update>
+	
+	<select id="selectAdImage" parameterType="int" resultType="AdvertiseVO">
+		SELECT  ADVERTISE.AD_LINK,
+		        ADATTATCH.ADATT_SAVENAME
+		FROM    ADATTATCH, ADVERTISE
+		WHERE ADVERTISE.AD_ID = ADATTATCH.AD_ID
+		AND ADVERTISE.AD_ID = #{adId}
+		
+	</select>
+
+</mapper>
