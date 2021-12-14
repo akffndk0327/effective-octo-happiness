@@ -13,7 +13,7 @@
 		<!-- java version -->
 		<java-version>1.8</java-version>
 		<!-- log4j 버전 -->
-		<org.apache.log4j-version>2.12.1</org.apache.log4j-version>
+		<org.apache.log4j-version>2.16.0</org.apache.log4j-version>
 		<!-- springframework-version -->
 		<org.springframework-version>4.3.25.RELEASE</org.springframework-version>
 		<!-- test용 slf4j -->
