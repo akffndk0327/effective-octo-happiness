@@ -15,7 +15,7 @@
 		<!-- log4j 버전 -->
 		<org.apache.log4j-version>2.12.1</org.apache.log4j-version>
 		<!-- springframework-version -->
-		<org.springframework-version>4.3.25.RELEASE</org.springframework-version>
+		<org.springframework-version>5.3.18</org.springframework-version>
 		<!-- test용 slf4j -->
 		<org.slf4j-version>1.7.28</org.slf4j-version>
 		<!-- spring-security -->
